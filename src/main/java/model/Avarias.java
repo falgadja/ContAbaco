@@ -44,6 +44,7 @@ public class Avarias {
 
     // TO STRING
 
+    @Override
     public String toString() {
         return "Avarias{" +
                 "id=" + id +

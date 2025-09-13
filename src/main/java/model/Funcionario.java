@@ -6,60 +6,53 @@ import java.time.LocalDateTime;
 public class Funcionario {
     private int id;
     private String nome;
+    private String sobrenome;
     private LocalDate dataNascimento;
-    private int idSetor;
-    private int idTurno;
 
-    // Construtores
-    public Funcionario(int id, String nome, LocalDate dataNascimento, int idSetor, int idTurno) {
+    // CONSTRUTOR
+
+    public Funcionario(int id, String nome, LocalDate dataNascimento) {
         this.id = id;
         this.nome = nome;
         this.dataNascimento = dataNascimento;
-        this.idSetor = idSetor;
-        this.idTurno = idTurno;
     }
 
-    //MÉTODOS GET
+    //MÉTODOS GETTERS
+
     public int getId() {
         return id;
     }
+
     public String getNome() {
         return nome;
     }
+
     public LocalDate getDataNascimento() {
         return dataNascimento;
-    } 
-    public int getIdSetor() {
-        return idSetor;
     }
-    public int getIdTurno() {
-        return idTurno;
-    }
-    //MÉTODOS SET
+
+    // SETTERS
+
     public void setId(int id) {
         this.id = id;
-    }  
+    }
+
     public void setNome(String nome) {
         this.nome = nome;
     }
+
     public void setDataNascimento(LocalDate dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
-    public void setIdSetor(int idSetor) {
-        this.idSetor = idSetor;
-    }
-    public void setIdTurno(int idTurno) {
-        this.idTurno = idTurno;
-    }
-    //Método to String
 
+    // TO STRING
+
+    @Override
     public String toString() {
         return "Funcionario{" +
                 "id=" + id +
                 ",Nome: '" + nome + '\'' +
                 ", Data de nascimento: " + dataNascimento +
-                ", idSetor:" + idSetor +
-                ", idTurno:" + idTurno +
                 '}';
     }
 
@@ -67,12 +60,9 @@ public class Funcionario {
     public boolean verificaDataNascimento(LocalDateTime dataNascimento) {
         LocalDateTime agora = LocalDateTime.now(); //Instanciar data de agora
         System.out.println(agora);
+        //Verifica se a data de agora é igual a data de nascimento
         if (agora.isBefore(dataNascimento)) { //Verifica se a data de agora é antes da data de nascimento
             return false;
-        } else if (agora.isEqual(dataNascimento)) { //Verifica se a data de agora é igual a data de nascimento
-            return false;
-        } else {
-            return true;
-        }
+        } else return !agora.isEqual(dataNascimento);
     }
 }

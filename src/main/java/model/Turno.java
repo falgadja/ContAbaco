@@ -45,6 +45,7 @@ public class Turno {
 
     // TO STRING
 
+    @Override
     public String toString() {
         return "Turno{" +
                 "quantidade de funcionarios=" + qtdFuncionarios +

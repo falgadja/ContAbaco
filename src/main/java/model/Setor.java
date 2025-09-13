@@ -33,6 +33,7 @@ public class Setor {
 
     // TO STRING
 
+    @Override
     public String toString() {
         return "Setor{" +
                 "id=" + id +

@@ -1,58 +1,79 @@
 package model;
 
+import java.util.List;
+
 public class Empresa {
-    //ATRIBUTOS
     private long cpnj;
-    private String nomeEmpresa;
+    private String nome;
     private Login login;
-    private int qtd_funcionarios;
-    private Funcionario funcionario;
+    private int qtdFuncionarios;
+    private List<Funcionario> funcionarios;
 
-   //CONSTRUTORES
-    public Empresa(long cpnj, String nomeEmpresa, int qtd_funcionarios) {
+    //CONSTRUTORES
+
+    public Empresa(long cpnj, String nome, Login login, int qtdFuncionarios, List<Funcionario> funcionarios) {
         this.cpnj = cpnj;
-        this.nomeEmpresa = nomeEmpresa;
-        this.qtd_funcionarios = qtd_funcionarios;
+        this.nome = nome;
+        this.login = login;
+        this.qtdFuncionarios = qtdFuncionarios;
+        this.funcionarios = funcionarios;
+    }
 
-    }
-    public Empresa(String nomeEmpresa, Funcionario funcionario) {
-        this.nomeEmpresa = nomeEmpresa;
-        this.funcionario = funcionario;
-    }
-    //MÉTODO GET
+    // GETTERS
+
     public long getCpnj() {
         return cpnj;
     }
-    public String getNomeEmpresa() {
-        return nomeEmpresa;
+
+    public String getNome() {
+        return nome;
     }
+
     public Login getLogin() {
         return login;
     }
-    public int getQtd_funcionarios() {
-        return qtd_funcionarios;
+
+    public List<Funcionario> getFuncionarios() {
+        return funcionarios;
     }
-    public Funcionario getFuncionario() {
-        return funcionario;
+
+    public int getQtdFuncionarios() {
+        return qtdFuncionarios;
     }
-    //MÉTODOS SET
+    
+    // SETTERS
+
     public void setCpnj(long cpnj) {
         this.cpnj = cpnj;
     }
-    public void setNomeEmpresa(String nomeEmpresa) {
-        this.nomeEmpresa = nomeEmpresa;
+
+    public void setFuncionarios(List<Funcionario> funcionarios) {
+        this.funcionarios = funcionarios;
     }
+
+    public void setQtdFuncionarios(int qtdFuncionarios) {
+        this.qtdFuncionarios = qtdFuncionarios;
+    }
+
     public void setLogin(Login login) {
         this.login = login;
     }
-    public void setQtd_funcionarios(int qtd_funcionarios) {
-        this.qtd_funcionarios = qtd_funcionarios;
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
-    public void setFuncionario(Funcionario funcionario) {
-        this.funcionario = funcionario;
-    }
-    //MÉTODO TO STRING
+
+
+    // TO STRING
+
+    @Override
     public String toString() {
-        return "Nome da empresa: "+ nomeEmpresa+"\n Cnpj: "+cpnj+"\nLogin: "+login+"\nFuncionario: "+funcionario;
+        return "Empresa{" +
+                "cpnj=" + cpnj +
+                ", nome='" + nome + '\'' +
+                ", login=" + login +
+                ", qtdFuncionarios=" + qtdFuncionarios +
+                ", funcionarios=" + funcionarios +
+                '}';
     }
 }

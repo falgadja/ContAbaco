@@ -55,6 +55,7 @@ public class Pagamento {
 
     // TO STRING
 
+    @Override
     public String toString() {
         return "Pagamento{" +
                 "id=" + id +

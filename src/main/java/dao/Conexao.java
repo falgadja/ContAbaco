@@ -20,10 +20,8 @@ public class Conexao {
         try {
             Class.forName("org.postgresql.Driver");
             conn = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
-        } catch (ClassNotFoundException cnfe){
-            cnfe.printStackTrace();
-        } catch (SQLException sqle){
-            sqle.printStackTrace();
+        } catch (ClassNotFoundException | SQLException sqleCnfe){
+            sqleCnfe.printStackTrace();
         }
         return conn;
     }

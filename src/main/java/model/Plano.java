@@ -1,56 +1,56 @@
 package model;
 
 public class Plano {
-    //ATRIBUTOS
     private int id;
-    private String nomePlano;
-    private double valor;
-    private String descricao;
+    private String nome;
+    private double preco;
 
     //CONSTRUTOR
-    public Plano(int id, String nomePlano, double valor, String descricao) {
+
+    public Plano(int id, String nome, double preco) {
         this.id = id;
-        this.nomePlano = nomePlano;
-        this.valor = valor;
-        this.descricao = descricao;
+        this.nome = nome;
+        this.preco = preco;
     }
 
-    //MÉTODOS GET
+    // GETTERS
+
+
     public int getId() {
         return id;
     }
-    public String getNomePlano() {
-        return nomePlano;
-    }
-    public double getValor() {
-        return valor;
-    }
-    public String getDescricao() {
-        return descricao;
+
+    public double getPreco() {
+        return preco;
     }
 
-    //MÉTODOS SET
+    public String getNome() {
+        return nome;
+    }
+
+    // SETTERS
+
+
+    public void setPreco(double preco) {
+        this.preco = preco;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
-    public void setNomePlano(String nomePlano) {
-        this.nomePlano = nomePlano;
-    }
-    public void setValor(double valor) {
-        this.valor = valor;
-    }
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
-    //MÉTODO TO STRING
+    // TO STRING
+
     @Override
     public String toString() {
         return "Plano{" +
                 "id=" + id +
-                ", nomePlano='" + nomePlano + '\'' +
-                ", valor=" + valor +
-                ", descricao='" + descricao + '\'' +
+                ", nome='" + nome + '\'' +
+                ", preco=" + preco +
                 '}';
     }
 }

@@ -27,11 +27,11 @@ public class LoginDAO {
         }
     }
     //READ-LER OS LOGIN
-    public void lerUsuario(Login login)throws SQLException {
-        String sql = "SELECT * FROM LOGIN WHERE email=?";
+    public Login buscarPorID(int id)throws SQLException {
         try {
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setString(1, login.getEmail());
+
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM LOGIN WHERE ID=?");
+            ps.setString(1, login.getID());
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 login.setEmail(rs.getString("email"));
