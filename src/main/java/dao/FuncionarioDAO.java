@@ -14,46 +14,79 @@ public class FuncionarioDAO {
     public FuncionarioDAO(Connection connection) {
         this.connection = connection;
     }
-    // CREATE
-    public void inserir(Funcionario funcionario) throws SQLException {
-        String sql = "INSERT INTO funcionario (nome, data_nascimento, id_setor, id_turno) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement pst = connection.prepareStatement(sql)) { //PreparedStatament executa instruçoes e permite parametros//
-            pst.setString(1, funcionario.getNome());        //substitui o ? com o nome
-            pst.setDate(2, funcionario.getDataNascimento());
+    // INSERIR UM NOVO FUNCIONARIO
+    public int inserir(Funcionario funcionario) throws SQLException {
+        Conexao conexao = new Conexao();
+        Connection con = conexao.conectar();
+        int retorno = 0;
+
+        try {
+            PreparedStatement pst = con.prepareStatement(
+                    "INSERT INTO funcionario (nome, data_nascimento, id_setor, id_turno) VALUES (?, ?, ?, ?)");
+            pst.setString(1, funcionario.getNome());
+            pst.setDate(2, java.sql.Date.valueOf(funcionario.getDataNascimento()));
             pst.setInt(3, funcionario.getIdSetor());
             pst.setInt(4, funcionario.getIdTurno());
-            pst.executeUpdate();    //roda o comando
+
+            int linhas = pst.executeUpdate();
+            if (linhas > 0) {
+               retorno= 1;
+               return retorno;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return retorno;
+        } finally {
+            conexao.desconectar(con);
         }
+
+        return retorno;
     }
+
+
+
 
     // READ - buscar por codigo
     public Funcionario buscarPorId(int id) throws SQLException {
-        String sql = "SELECT * FROM funcionario WHERE id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            ResultSet resultado = stmt.executeQuery();
+        Conexao conexao = new Conexao();
+        Connection con = conexao.conectar();
+        Funcionario funcionario = null;
 
-            if (resultado.next()) {
-                return new Funcionario(
-                        resultado.getInt("id"),
-                        resultado.getString("nome"),
-                        resultado.getDate("data_nascimento").toLocalDate(),
-                        resultado.getInt("id_setor"),
-                        resultado.getInt("id_turno")
+        try {
+            PreparedStatement stmt = con.prepareStatement("SELECT * FROM funcionario WHERE id = ?");
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                funcionario = new Funcionario(
+                        rs.getInt("id"),
+                        rs.getString("nome"),
+                        rs.getDate("data_nascimento").toLocalDate(),
+                        rs.getInt("id_setor"),
+                        rs.getInt("id_turno")
                 );
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            conexao.desconectar(con);
         }
-        return null;
+
+        return funcionario;
     }
 
-    // READ - listar todos
-    public List<Funcionario> listarTodos() throws SQLException {
+    // READ - Buscar por Nome
+    public List<Funcionario> buscarPorNome(String nome) throws SQLException {
+        Conexao conexao = new Conexao();
+        Connection con = conexao.conectar();
         List<Funcionario> funcionarios = new ArrayList<>();
-        String sql = "SELECT * FROM funcionario";
-        try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            //Percorrer as linhas e adicionar na lista para mostrar
-            while (rs.next()) {
+
+        try {
+            PreparedStatement stmt = con.prepareStatement("SELECT * FROM funcionario WHERE nome ILIKE ?");
+            stmt.setString(1, "%" + nome + "%");//COMPLEMENTO DO ILIKE
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) { //MOSTRAR EM TABELA
                 funcionarios.add(new Funcionario(
                         rs.getInt("id"),
                         rs.getString("nome"),
@@ -62,30 +95,85 @@ public class FuncionarioDAO {
                         rs.getInt("id_turno")
                 ));
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            conexao.desconectar(con);
         }
+
         return funcionarios;
+    }
+    // READ - listar todos
+    public List<Funcionario> listarTodos() throws SQLException {
+    Conexao conexao = new Conexao();
+    Connection con = conexao.conectar();
+    List<Funcionario> funcionarios = new ArrayList<>();
+
+    try{
+        Statement stmt = con.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT * FROM funcionario");
+
+        while (rs.next()) {
+            funcionarios.add(new Funcionario(
+                    rs.getInt("id"),
+                    rs.getString("nome"),
+                    rs.getDate("data_nascimento").toLocalDate(),
+                    rs.getInt("id_setor"),
+                    rs.getInt("id_turno")
+            ));
+        }
+    }catch (SQLException sqe) {
+        sqe.printStackTrace();
+    }finally {
+        conexao.desconectar(con);
+    }
+    return funcionarios; //RETORNA LISTA DOS FUNCIONARIOS EM FORMA DE TABELA
     }
 
     // UPDATE - Atualiza
-    public void atualizar(Funcionario funcionario) throws SQLException {
-        //Comando sql
-        String sql = "UPDATE funcionario SET nome=?, data_nascimento=?, id_setor=?, id_turno=? WHERE id=?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, funcionario.getNome());
-            stmt.setDate(2, funcionario.getDataNascimento());
-            stmt.setInt(3, funcionario.getIdSetor())    ;
-            stmt.setInt(4, funcionario.getIdTurno());
-            stmt.setInt(5, funcionario.getId());
-            stmt.executeUpdate();
+    public int atualizarNome(Funcionario funcionario, String nomeNovo) throws SQLException {
+        Conexao conexao = new Conexao();
+        Connection con = conexao.conectar();
+        int retorno=0;
+
+        try{
+            PreparedStatement stmt = con.prepareStatement("UPDATE  FUNCIONARIO SET nome = ? WHERE id = ? ");
+            stmt.setString(1, nomeNovo);
+            stmt.setInt(2, funcionario.getId());
+            retorno = stmt.executeUpdate();
+            if (retorno> 0) {
+                retorno=1;
+                return retorno;
+            }
+        }catch (SQLException sqe) {
+            sqe.printStackTrace();
+            return retorno;
         }
+        finally {
+            conexao.desconectar(con);
+        }
+        return retorno;
     }
 
-    // DELETE- Apaga
-    public void deletar(int id) throws SQLException {
-        String sql = "DELETE FROM funcionario WHERE id=?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+    // DELETA UM FUNCIONARIO
+    public int deletar(int id) throws SQLException {
+        Conexao conexao = new Conexao();
+        Connection con = conexao.conectar();
+        int deletado = 0;
+        try {
+            PreparedStatement stmt = con.prepareStatement("DELETE FROM funcionario WHERE id = ?");
             stmt.setInt(1, id);
-            stmt.executeUpdate();
+            deletado = stmt.executeUpdate();
+            if (deletado > 0) {
+               deletado=1;
+               return deletado;
+            }
+        } catch (SQLException sqe) {
+            sqe.printStackTrace();
+            return deletado;
+        } finally {
+            conexao.desconectar(con);
         }
+        return deletado;
     }
 }
