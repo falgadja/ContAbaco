@@ -1,6 +1,7 @@
 package model;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class FechamentoTurno {
     private int id;
@@ -8,16 +9,20 @@ public class FechamentoTurno {
     private LocalDate dataRegistro;
     private int lote;
     private int quantidadeAvarias;
+    private List<Integer> idsAvarias;
+    private List<Integer> idsLeiturasAbacos;
 
 
     // CONSTRUTOR
 
-    public FechamentoTurno(int id, String descricao, LocalDate dataRegistro, int lote, int quantidadeAvarias) {
+    public FechamentoTurno(int id, String descricao, LocalDate dataRegistro, int lote, int quantidadeAvarias, List<Integer> idsAvarias, List<Integer> idsLeiturasAbacos) {
         this.id = id;
         this.descricao = descricao;
         this.dataRegistro = dataRegistro;
         this.lote=lote;
         this.quantidadeAvarias=quantidadeAvarias;
+        this.idsAvarias = idsAvarias;
+        this.idsLeiturasAbacos=idsLeiturasAbacos;
     }
 
     // GETTERS
@@ -68,10 +73,14 @@ public class FechamentoTurno {
 
     @Override
     public String toString() {
-        return "Fechamento do Turno{" +
+        return "FechamentoTurno{" +
                 "id=" + id +
                 ", descricao='" + descricao + '\'' +
                 ", dataRegistro=" + dataRegistro +
+                ", lote=" + lote +
+                ", quantidadeAvarias=" + quantidadeAvarias +
+                ", idsAvarias=" + idsAvarias +
+                ", idsLeiturasAbacos=" + idsLeiturasAbacos +
                 '}';
     }
 }

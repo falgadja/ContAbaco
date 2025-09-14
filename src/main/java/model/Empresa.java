@@ -8,15 +8,19 @@ public class Empresa {
     private Login login;
     private int qtdFuncionarios;
     private List<Funcionario> funcionarios;
+    private List<Integer> idsPagamentos;
+    private List<Integer> idsLogins;
 
     //CONSTRUTOR
 
-    public Empresa(long cpnj, String nome, Login login, int qtdFuncionarios, List<Funcionario> funcionarios) {
+    public Empresa(long cpnj, List<Integer> idsLogins, List<Integer> idsPagamentos, List<Funcionario> funcionarios, int qtdFuncionarios, Login login, String nome) {
         this.cpnj = cpnj;
-        this.nome = nome;
-        this.login = login;
-        this.qtdFuncionarios = qtdFuncionarios;
+        this.idsLogins = idsLogins;
+        this.idsPagamentos = idsPagamentos;
         this.funcionarios = funcionarios;
+        this.qtdFuncionarios = qtdFuncionarios;
+        this.login = login;
+        this.nome = nome;
     }
 
     // GETTERS
@@ -74,6 +78,8 @@ public class Empresa {
                 ", login=" + login +
                 ", qtdFuncionarios=" + qtdFuncionarios +
                 ", funcionarios=" + funcionarios +
+                ", idsPagamentos=" + idsPagamentos +
+                ", idsLogins=" + idsLogins +
                 '}';
     }
 }

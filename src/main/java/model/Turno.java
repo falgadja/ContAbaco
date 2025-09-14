@@ -1,18 +1,21 @@
 package model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class Turno {
     private int qtdFuncionarios;
     private int id;
     private LocalDateTime tempoDuracao;
+    private List<Integer> idsFuncionarios;
 
     // CONSTRUTOR
 
-    public Turno(int qtdFuncionarios, LocalDateTime tempoDuracao, int id) {
-        this.qtdFuncionarios = qtdFuncionarios;
-        this.tempoDuracao = tempoDuracao;
+    public Turno(int id, LocalDateTime tempoDuracao, List<Integer> idsFuncionarios) {
         this.id = id;
+        this.tempoDuracao = tempoDuracao;
+        this.idsFuncionarios = idsFuncionarios;
+        this.qtdFuncionarios = (idsFuncionarios != null) ? idsFuncionarios.size() : 0;
     }
 
     // GETTERS
@@ -31,7 +34,7 @@ public class Turno {
 
     // SETTERS
 
-    public void setQtd_funcionarios(int qtd_funcionarios) {
+    public void setQtdFuncionarios(int qtd_funcionarios) {
         this.qtdFuncionarios = qtd_funcionarios;
     }
 
@@ -39,7 +42,7 @@ public class Turno {
         this.id = id;
     }
 
-    public void setTempo_duracao(LocalDateTime tempo_duracao) {
+    public void setTempoDuracao(LocalDateTime tempo_duracao) {
         this.tempoDuracao = tempo_duracao;
     }
 
@@ -48,9 +51,10 @@ public class Turno {
     @Override
     public String toString() {
         return "Turno{" +
-                "quantidade de funcionarios=" + qtdFuncionarios +
-                ", id=" + id +
-                ", tempo de duracao=" + tempoDuracao +
+                "id=" + id +
+                ", tempoDuracao=" + tempoDuracao +
+                ", qtdFuncionarios=" + qtdFuncionarios +
+                ", idsFuncionarios=" + idsFuncionarios +
                 '}';
     }
 }

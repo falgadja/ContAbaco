@@ -18,7 +18,6 @@ public class LeituraAbaco {
 
     // GETTERS
 
-
     public int getId() {
         return id;
     }

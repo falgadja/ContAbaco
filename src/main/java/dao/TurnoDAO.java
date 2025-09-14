@@ -13,14 +13,15 @@ public class TurnoDAO {
             conexao.conectar();
 
             conexao.pstmt = conexao.conn.prepareStatement("SELECT * FROM TURNO WHERE ID = ?");
+
             conexao.pstmt.setInt(1, id);
 
             conexao.rs = conexao.pstmt.executeQuery();
 
             if (conexao.rs.next()) {
                 return new Turno(
-                        conexao.rs.getInt("qtdFuncionarios"),
-                        conexao.rs.getTimestamp("tempoDuracao").toLocalDateTime(),
+                        conexao.rs.getInt("qtd_funcionarios"),
+                        conexao.rs.getObject("tempo_duracao", java.time.LocalDateTime.class),
                         conexao.rs.getInt("id")
                 );
             }
@@ -42,7 +43,9 @@ public class TurnoDAO {
             conexao.pstmt = conexao.conn.prepareStatement("INSERT INTO TURNO (id, qtd_funcionarios, tempo_duracao) VALUES (?, ?, ?)");
 
             conexao.pstmt.setInt(1, turno.getId());
+
             conexao.pstmt.setInt(2, turno.getQtdFuncionarios());
+
             conexao.pstmt.setTimestamp(3, java.sql.Timestamp.valueOf(turno.getTempoDuracao()));
 
             return conexao.pstmt.executeUpdate() > 0;

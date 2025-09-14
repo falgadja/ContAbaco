@@ -2,20 +2,25 @@ package model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class Funcionario {
     private int id;
     private String nome;
     private String sobrenome;
     private LocalDate dataNascimento;
+    private List<Integer> idsTurnos;
+    private List<Integer> idsFechamentoTurnos;
 
     // CONSTRUTOR
 
-    public Funcionario(int id, String nome, LocalDate dataNascimento, String sobrenome) {
+    public Funcionario(int id, String nome, String sobrenome, LocalDate dataNascimento, List<Integer> idsTurnos, List<Integer> idsFechamentoTurnos) {
         this.id = id;
         this.nome = nome;
-        this.dataNascimento = dataNascimento;
         this.sobrenome = sobrenome;
+        this.dataNascimento = dataNascimento;
+        this.idsTurnos = idsTurnos;
+        this.idsFechamentoTurnos = idsFechamentoTurnos;
     }
 
     // GETTERS
@@ -60,8 +65,11 @@ public class Funcionario {
     public String toString() {
         return "Funcionario{" +
                 "id=" + id +
-                ",Nome: '" + nome + '\'' +
-                ", Data de nascimento: " + dataNascimento +
+                ", nome='" + nome + '\'' +
+                ", sobrenome='" + sobrenome + '\'' +
+                ", dataNascimento=" + dataNascimento +
+                ", idsTurnos=" + idsTurnos +
+                ", idsFechamentoTurnos=" + idsFechamentoTurnos +
                 '}';
     }
 

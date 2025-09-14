@@ -3,14 +3,14 @@ package model;
 public class Login {
     private String email;
     private String senha;
-    private int ID;
+    private int id;
 
     // CONSTRUTOR
 
-    public Login(String email, String senha, int ID) {
+    public Login(String email, String senha, int id) {
         this.email = email;
         this.senha = senha;
-        this.ID = ID;
+        this.id = id;
     }
 
     // GETTERS
@@ -23,8 +23,8 @@ public class Login {
         return senha;
     }
 
-    public int getID() {
-        return ID;
+    public int getId() {
+        return id;
     }
 
     // SETTERS
@@ -33,8 +33,8 @@ public class Login {
         this.email = email;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setSenha(String senha) {
@@ -48,7 +48,7 @@ public class Login {
         return "Login{" +
                 "email='" + email + '\'' +
                 ", senha='" + senha + '\'' +
-                ", ID=" + ID +
+                ", ID=" + id +
                 '}';
     }
 
