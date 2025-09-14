@@ -9,7 +9,7 @@ public class Empresa {
     private int qtdFuncionarios;
     private List<Funcionario> funcionarios;
 
-    //CONSTRUTORES
+    //CONSTRUTOR
 
     public Empresa(long cpnj, String nome, Login login, int qtdFuncionarios, List<Funcionario> funcionarios) {
         this.cpnj = cpnj;

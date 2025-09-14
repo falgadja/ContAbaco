@@ -11,13 +11,14 @@ public class Funcionario {
 
     // CONSTRUTOR
 
-    public Funcionario(int id, String nome, LocalDate dataNascimento) {
+    public Funcionario(int id, String nome, LocalDate dataNascimento, String sobrenome) {
         this.id = id;
         this.nome = nome;
         this.dataNascimento = dataNascimento;
+        this.sobrenome = sobrenome;
     }
 
-    //MÉTODOS GETTERS
+    // GETTERS
 
     public int getId() {
         return id;
@@ -29,6 +30,10 @@ public class Funcionario {
 
     public LocalDate getDataNascimento() {
         return dataNascimento;
+    }
+
+    public String getSobrenome() {
+        return sobrenome;
     }
 
     // SETTERS
@@ -43,6 +48,10 @@ public class Funcionario {
 
     public void setDataNascimento(LocalDate dataNascimento) {
         this.dataNascimento = dataNascimento;
+    }
+
+    public void setSobrenome(String sobrenome) {
+        this.sobrenome = sobrenome;
     }
 
     // TO STRING
