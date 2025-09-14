@@ -12,10 +12,12 @@ public class FechamentoTurno {
 
     // CONSTRUTOR
 
-    public FechamentoTurno(int id, String descricao, LocalDate dataRegistro) {
+    public FechamentoTurno(int id, String descricao, LocalDate dataRegistro, int lote, int quantidadeAvarias) {
         this.id = id;
         this.descricao = descricao;
         this.dataRegistro = dataRegistro;
+        this.lote=lote;
+        this.quantidadeAvarias=quantidadeAvarias;
     }
 
     // GETTERS
@@ -32,6 +34,14 @@ public class FechamentoTurno {
         return dataRegistro;
     }
 
+    public int getLote() {
+        return lote;
+    }
+
+    public int getQuantidadeAvarias() {
+        return quantidadeAvarias;
+    }
+
     // SETTERS
 
     public void setId(int id) {
@@ -46,6 +56,14 @@ public class FechamentoTurno {
         this.dataRegistro = dataRegistro;
     }
 
+    public void setLote(int lote) {
+        this.lote = lote;
+    }
+
+    public void setQuantidadeAvarias(int quantidadeAvarias) {
+        this.quantidadeAvarias = quantidadeAvarias;
+    }
+    
     // TO STRING
 
     @Override
