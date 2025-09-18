@@ -1,74 +1,147 @@
 package dao;
 
+import conexao.Conexao;
 import model.Setor;
-
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SetorDAO {
+    // CONEXÃO COM O BANCO
+    private Connection connection;
 
-    Conexao conexao = new Conexao();
+    public SetorDAO(Connection connection) {
+        this.connection = connection;
+    }
 
-    // Busca um setor pelo ID
-    public Setor buscarPorID(int id) {
+    // CREATE - Inserir Setor
+    public int inserir(Setor setor) {
+        Conexao conexao = new Conexao();
+        Connection con = conexao.conectar();
+        int retorno = 0;
+
         try {
-            conexao.conectar();
+            PreparedStatement pst = con.prepareStatement(
+                    "INSERT INTO setor (id, nome) VALUES (?, ?)"
+            );
+            pst.setInt(1, setor.getId());
+            pst.setString(2, setor.getNome());
 
-            conexao.pstmt = conexao.conn.prepareStatement("SELECT * FROM SETOR WHERE ID = ?");
-            conexao.pstmt.setInt(1, id);
+            int linhas = pst.executeUpdate();
+            if (linhas > 0) {
+                retorno = 1;
+                return retorno;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return retorno;
+        } finally {
+            conexao.desconectar(con);
+        }
 
-            conexao.rs = conexao.pstmt.executeQuery();
+        return retorno;
+    }
 
-            if (conexao.rs.next()) {
-                return new Setor(
-                        conexao.rs.getInt("id"),
-                        conexao.rs.getString("nome")
+    // READ - Buscar Setor por ID
+    public Setor buscarPorID(int id) {
+        Conexao conexao = new Conexao();
+        Connection con = conexao.conectar();
+        Setor setor = null;
+
+        try {
+            PreparedStatement pst = con.prepareStatement("SELECT * FROM setor WHERE id = ?");
+            pst.setInt(1, id);
+            ResultSet rs = pst.executeQuery();
+
+            if (rs.next()) {
+                setor = new Setor(
+                        rs.getInt("id"),
+                        rs.getString("nome")
                 );
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            conexao.desconectar(conexao.conn);
+            conexao.desconectar(con);
         }
 
-        return null;
+        return setor;
     }
 
-    // Insere um novo setor
-    public boolean inserirSetor(Setor setor) {
+    // READ - Listar todos os Setores
+    public List<Setor> listarTodos() {
+        Conexao conexao = new Conexao();
+        Connection con = conexao.conectar();
+        List<Setor> setores = new ArrayList<>();
+
         try {
-            conexao.conectar();
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM setor");
 
-            conexao.pstmt = conexao.conn.prepareStatement("INSERT INTO TURNO (id, nome) VALUES (?, ?)");
-
-            conexao.pstmt.setInt(1, setor.getId());
-            conexao.pstmt.setString(2, setor.getNome());
-
-            return conexao.pstmt.executeUpdate() > 0;
-
+            while (rs.next()) {
+                setores.add(new Setor(
+                        rs.getInt("id"),
+                        rs.getString("nome")
+                ));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            conexao.desconectar(conexao.conn);
+            conexao.desconectar(con);
         }
 
-        return false;
+        return setores;
     }
 
-    // remove um setor
-    public boolean removerSetor (int id) {
-        try{
-            conexao.conectar();
+    // UPDATE - Alterar Setor
+    public int atualizar(Setor setor) {
+        Conexao conexao = new Conexao();
+        Connection con = conexao.conectar();
+        int retorno = 0;
 
-            conexao.pstmt = conexao.conn.prepareStatement("DELETE FROM SETOR WHERE ID = ?");
+        try {
+            PreparedStatement pst = con.prepareStatement(
+                    "UPDATE setor SET nome = ? WHERE id = ?"
+            );
+            pst.setString(1, setor.getNome());
+            pst.setInt(2, setor.getId());
 
-            conexao.pstmt.setInt(1, id);
-            return conexao.pstmt.executeUpdate()>0;
-        } catch (SQLException sqle){
-            sqle.printStackTrace();
+            retorno = pst.executeUpdate();
+            if (retorno > 0) {
+                retorno = 1;
+                return retorno;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return retorno;
         } finally {
-            conexao.desconectar(conexao.conn);
+            conexao.desconectar(con);
         }
-        return false;
+
+        return retorno;
+    }
+
+    // DELETE - Deletar Setor
+    public int deletar(int id) {
+        Conexao conexao = new Conexao();
+        Connection con = conexao.conectar();
+        int deletado = 0;
+
+        try {
+            PreparedStatement pst = con.prepareStatement("DELETE FROM setor WHERE id = ?");
+            pst.setInt(1, id);
+            deletado = pst.executeUpdate();
+            if (deletado > 0) {
+                deletado = 1;
+                return deletado;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return deletado;
+        } finally {
+            conexao.desconectar(con);
+        }
+
+        return deletado;
     }
 }

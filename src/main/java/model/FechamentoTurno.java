@@ -10,19 +10,19 @@ public class FechamentoTurno {
     private int lote;
     private int quantidadeAvarias;
     private List<Integer> idsAvarias;
-    private List<Integer> idsLeiturasAbacos;
+    private int idLeiturasAbacos;
 
 
     // CONSTRUTOR
 
-    public FechamentoTurno(int id, String descricao, LocalDate dataRegistro, int lote, int quantidadeAvarias, List<Integer> idsAvarias, List<Integer> idsLeiturasAbacos) {
+    public FechamentoTurno(int id, String descricao, LocalDate dataRegistro, int lote, int quantidadeAvarias, List<Integer> idsAvarias,int idLeiturasAbacos) {
         this.id = id;
         this.descricao = descricao;
         this.dataRegistro = dataRegistro;
         this.lote=lote;
         this.quantidadeAvarias=quantidadeAvarias;
         this.idsAvarias = idsAvarias;
-        this.idsLeiturasAbacos=idsLeiturasAbacos;
+        this.idLeiturasAbacos=idLeiturasAbacos;
     }
 
     // GETTERS
@@ -76,11 +76,11 @@ public class FechamentoTurno {
         return "FechamentoTurno{" +
                 "id=" + id +
                 ", descricao='" + descricao + '\'' +
-                ", dataRegistro=" + dataRegistro +
+             ", dataRegistro=" + dataRegistro +
                 ", lote=" + lote +
                 ", quantidadeAvarias=" + quantidadeAvarias +
                 ", idsAvarias=" + idsAvarias +
-                ", idsLeiturasAbacos=" + idsLeiturasAbacos +
+                ", idsLeiturasAbacos=" + idLeiturasAbacos +
                 '}';
     }
 }

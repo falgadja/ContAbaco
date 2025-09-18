@@ -7,10 +7,11 @@ public class Login {
 
     // CONSTRUTOR
 
-    public Login(String email, String senha, int id) {
+    public Login(int id, String email, String senha) {
+        this.id = id;
         this.email = email;
         this.senha = senha;
-        this.id = id;
+
     }
 
     // GETTERS
@@ -23,7 +24,7 @@ public class Login {
         return senha;
     }
 
-    public int getId() {
+    public int  getId() {
         return id;
     }
 
@@ -53,7 +54,7 @@ public class Login {
     }
 
     //Método verificar email
-    public static boolean validarEmail(String email) {
+    public boolean validarEmail(String email) {
         if (email == null) { //Verifica se o email esta null//
             return false;
         }

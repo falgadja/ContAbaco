@@ -1,5 +1,6 @@
 package model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -18,6 +19,12 @@ public class Turno {
         this.qtdFuncionarios = (idsFuncionarios != null) ? idsFuncionarios.size() : 0;
     }
 
+
+    public Turno(int id, LocalDateTime tempoDuracao, int qtdFuncionarios) {
+        this.id = id;
+        this.tempoDuracao = tempoDuracao;
+        this.qtdFuncionarios = qtdFuncionarios;
+    }
     // GETTERS
 
     public int getQtdFuncionarios() {

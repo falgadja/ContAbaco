@@ -16,6 +16,11 @@ public class Pagamento {
         this.total = total;
         this.tipo = tipo;
     }
+    public Pagamento(LocalDate data, double total, String tipo) {
+        this.data = data;
+        this.total = total;
+        this.tipo = tipo;
+    }
 
     // GETTERS
 

@@ -1,66 +1,153 @@
 package dao;
 
+import conexao.Conexao;
 import model.Login;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoginDAO {
+    // CONEXÃO COM O BANCO
+    private Connection connection;
 
-    public LoginDAO() {
+    public LoginDAO(Connection connection) {
+        this.connection = connection;
     }
 
-    // CREATE - INSERIR UM LOGIN
-    public int inserirLogin(Login login) {
+    // CREATE - Inserir Login
+    public int inserir(Login login) throws SQLException {
+
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
         int retorno = 0;
+        if(login.validarEmail(login.getEmail())==true && login.validarSenha(login.getSenha())==true) {
+            try {
+                PreparedStatement pst = con.prepareStatement(
+                        "INSERT INTO login (email, senha) VALUES (?, ?)"
+                );
+                pst.setString(1, login.getEmail());
+                pst.setString(2, login.getSenha());
 
-        try {
-            PreparedStatement ps = con.prepareStatement("INSERT INTO login (email, password) VALUES (?, ?)");
-            ps.setString(1, login.getEmail());
-            ps.setString(2, login.getPassword());
-
-            int linhas = ps.executeUpdate();
-            if (linhas > 0) {
-                retorno = 1;
+                int linhas = pst.executeUpdate();
+                if (linhas > 0) {
+                    retorno = 1;
+                    return retorno;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                retorno= -1;
+            } finally {
+                conexao.desconectar(con);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            retorno = 0;
-        } finally {
-            conexao.desconectar(con);
         }
-
+        else {
+            retorno = 0;
+        }
         return retorno;
     }
-    //READ-LER OS LOGIN
-    public Login buscarPorID(int id)throws SQLException {
-        try {
 
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM LOGIN WHERE ID=?");
-            ps.setString(1, login.getID());
-
-    // READ- BUSCAR USUARIO PELO EMAIL
-    public int buscarPorEmail(Login login,String email) throws SQLException {
+    // READ - Buscar por ID
+    public Login buscarPorId(int id) throws SQLException {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
-        int retorno = 0;
+        Login login = null;
 
         try {
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM login WHERE email=?");
-            ps.setString(1, login.getEmail());
-            ResultSet rs = ps.executeQuery();
+            PreparedStatement pst = con.prepareStatement("SELECT * FROM login WHERE id = ?");
+            pst.setInt(1, id);
+            ResultSet rs = pst.executeQuery();
 
             if (rs.next()) {
-                login.setEmail(rs.getString("email"));
-                login.setPassword(rs.getString("password"));
-                retorno = 1; // encontrado
+                login = new Login(
+                        rs.getInt("id"),
+                        rs.getString("email"),
+                        rs.getString("senha")
+                );
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            retorno = 0;
+        } finally {
+            conexao.desconectar(con);
+        }
+
+        return login;
+    }
+
+    // READ - Buscar por Email
+    public Login buscarPorEmail(String email) throws SQLException {
+        Conexao conexao = new Conexao();
+        Connection con = conexao.conectar();
+        Login login = null;
+
+        try {
+            PreparedStatement pst = con.prepareStatement("SELECT * FROM login WHERE email ILIKE ?");
+            pst.setString(1, "%" + email + "%");
+            ResultSet rs = pst.executeQuery();
+
+            if (rs.next()) {
+                login = new Login(
+                        rs.getInt("id"),
+                        rs.getString("email"),
+                        rs.getString("senha")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            conexao.desconectar(con);
+        }
+
+        return login;
+    }
+
+    // READ - Listar todos
+    public List<Login> listarTodos() throws SQLException {
+        Conexao conexao = new Conexao();
+        Connection con = conexao.conectar();
+        List<Login> logins = new ArrayList<>();
+
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM login");
+
+            while (rs.next()) {
+                logins.add(new Login(
+                        rs.getInt("id"),
+                        rs.getString("email"),
+                        rs.getString("senha")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            conexao.desconectar(con);
+        }
+
+        return logins;
+    }
+
+    // UPDATE - Alterar Login
+    public int atualizar(Login login) throws SQLException {
+        Conexao conexao = new Conexao();
+        Connection con = conexao.conectar();
+        int retorno = 0;
+
+        try {
+            PreparedStatement pst = con.prepareStatement(
+                    "UPDATE login SET email = ?, senha = ? WHERE id = ?"
+            );
+            pst.setString(1, login.getEmail());
+            pst.setString(2, login.getSenha());
+            pst.setInt(3, login.getId());
+
+            retorno = pst.executeUpdate();
+            if (retorno > 0) {
+                retorno = 1;
+                return retorno;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return retorno;
         } finally {
             conexao.desconectar(con);
         }
@@ -68,53 +155,27 @@ public class LoginDAO {
         return retorno;
     }
 
-    // UPDATE - Atualizar email/senha
-    public int alterar(Login login, String antigoEmail) {
+    // DELETE - Deletar Login
+    public int deletar(int id) throws SQLException {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
-        int retorno = 0;
+        int deletado = 0;
 
         try {
-            PreparedStatement ps = con.prepareStatement("UPDATE login SET email=?, password=? WHERE email=?");
-            ps.setString(1, login.getEmail());
-            ps.setString(2, login.getPassword());
-            ps.setString(3, antigoEmail);
-
-            int linhas = ps.executeUpdate();
-            if (linhas > 0) {
-                retorno = 1;
+            PreparedStatement pst = con.prepareStatement("DELETE FROM login WHERE id = ?");
+            pst.setInt(1, id);
+            deletado = pst.executeUpdate();
+            if (deletado > 0) {
+                deletado = 1;
+                return deletado;
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            retorno = 0;
+            return deletado;
         } finally {
             conexao.desconectar(con);
         }
 
-        return retorno;
-    }
-
-    // DELETE - Excluir por email
-    public int excluir(Login login) {
-        Conexao conexao = new Conexao();
-        Connection con = conexao.conectar();
-        int retorno = 0;
-
-        try {
-            PreparedStatement psm = con.prepareStatement("DELETE FROM login WHERE email=?");
-            psm.setString(1, login.getEmail());
-
-            int linhas = psm.executeUpdate();
-            if (linhas > 0) {
-                retorno = 1;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            retorno = 0;
-        } finally {
-            conexao.desconectar(con);
-        }
-
-        return retorno;
+        return deletado;
     }
 }
