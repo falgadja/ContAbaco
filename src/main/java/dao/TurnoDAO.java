@@ -1,11 +1,17 @@
 package dao;
 
-import conexao.Conexao;
-import model.Turno;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import conexao.Conexao;
+import model.Turno;
 
 public class TurnoDAO {
     // CREATE - Inserir TURNO
