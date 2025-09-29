@@ -30,11 +30,6 @@ public class Plano {
 
     // SETTERS
 
-
-    public void setPreco(double preco) {
-        this.preco = preco;
-    }
-
     public void setId(int id) {
         this.id = id;
     }
@@ -43,14 +38,17 @@ public class Plano {
         this.nome = nome;
     }
 
+    public void setPreco(double preco) {
+        this.preco = preco;
+    }
+
     // TO STRING
 
     @Override
     public String toString() {
-        return "Plano{" +
-                "id=" + id +
-                ", nome='" + nome + '\'' +
-                ", preco=" + preco +
-                '}';
+        return " -- Plano -- " +
+                "\nID: " + id +
+                "\nNome: " + nome +
+                "\nPreço: " + preco;
     }
 }
