@@ -1,28 +1,24 @@
 package model;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public class FechamentoTurno {
     private int id;
-    private String descricao;
-    private LocalDate dataRegistro;
+    private int idFuncionario;
+    private LocalDate data;
     private int lote;
-    private int quantidadeAvarias;
-    private List<Integer> idsAvarias;
-    private int idLeiturasAbacos;
+    private int idLeitura;
 
+    public FechamentoTurno() {}
 
     // CONSTRUTOR
 
-    public FechamentoTurno(int id, String descricao, LocalDate dataRegistro, int lote, int quantidadeAvarias, List<Integer> idsAvarias,int idLeiturasAbacos) {
+    public FechamentoTurno(int id, int idFuncionario, LocalDate data, int lote, int idLeitura) {
         this.id = id;
-        this.descricao = descricao;
-        this.dataRegistro = dataRegistro;
-        this.lote=lote;
-        this.quantidadeAvarias=quantidadeAvarias;
-        this.idsAvarias = idsAvarias;
-        this.idLeiturasAbacos=idLeiturasAbacos;
+        this.idFuncionario = idFuncionario;
+        this.data = data;
+        this.lote = lote;
+        this.idLeitura = idLeitura;
     }
 
     // GETTERS
@@ -31,20 +27,20 @@ public class FechamentoTurno {
         return id;
     }
 
-    public String getDescricao() {
-        return descricao;
+    public int getIdFuncionario() {
+        return idFuncionario;
     }
 
-    public LocalDate getDataRegistro() {
-        return dataRegistro;
+    public LocalDate getData() {
+        return data;
     }
 
     public int getLote() {
         return lote;
     }
 
-    public int getQuantidadeAvarias() {
-        return quantidadeAvarias;
+    public int getIdLeitura() {
+        return idLeitura;
     }
 
     // SETTERS
@@ -53,34 +49,32 @@ public class FechamentoTurno {
         this.id = id;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
+    public void setData(LocalDate data) {
+        this.data = data;
     }
 
-    public void setDataRegistro(LocalDate dataRegistro) {
-        this.dataRegistro = dataRegistro;
+    public void setIdFuncionario(int idFuncionario) {
+        this.idFuncionario = idFuncionario;
+    }
+
+    public void setIdLeitura(int idLeitura) {
+        this.idLeitura = idLeitura;
     }
 
     public void setLote(int lote) {
         this.lote = lote;
     }
 
-    public void setQuantidadeAvarias(int quantidadeAvarias) {
-        this.quantidadeAvarias = quantidadeAvarias;
-    }
-    
     // TO STRING
 
     @Override
     public String toString() {
         return "FechamentoTurno{" +
                 "id=" + id +
-                ", descricao='" + descricao + '\'' +
-             ", dataRegistro=" + dataRegistro +
+                ", idFuncionario=" + idFuncionario +
+                ", data=" + data +
                 ", lote=" + lote +
-                ", quantidadeAvarias=" + quantidadeAvarias +
-                ", idsAvarias=" + idsAvarias +
-                ", idsLeiturasAbacos=" + idLeiturasAbacos +
+                ", idLeitura=" + idLeitura +
                 '}';
     }
 }

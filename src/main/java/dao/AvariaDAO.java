@@ -6,11 +6,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AvariasDAO {
+public class AvariaDAO {
     // CONEXÃO COM O BANCO
     private Connection connection;
 
-    public AvariasDAO(Connection connection) {
+    public AvariaDAO(Connection connection) {
         this.connection = connection;
     }
 

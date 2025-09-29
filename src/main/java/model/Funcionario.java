@@ -1,26 +1,30 @@
 package model;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 
 public class Funcionario {
     private int id;
     private String nome;
     private String sobrenome;
     private LocalDate dataNascimento;
-    private List<Integer> idsTurnos;
-    private List<Integer> idsFechamentoTurnos;
+    private String email;
+    private String senha;
+    private int idSetor;
+    private int idEmpresa;
+
+    public Funcionario() {}
 
     // CONSTRUTOR
 
-    public Funcionario(int id, String nome, String sobrenome, LocalDate dataNascimento, List<Integer> idsTurnos, List<Integer> idsFechamentoTurnos) {
+    public Funcionario(int id, String nome, String sobrenome, LocalDate dataNascimento, String email, String senha, int idEmpresa, int idSetor) {
         this.id = id;
         this.nome = nome;
         this.sobrenome = sobrenome;
         this.dataNascimento = dataNascimento;
-        this.idsTurnos = idsTurnos;
-        this.idsFechamentoTurnos = idsFechamentoTurnos;
+        this.email = email;
+        this.senha = senha;
+        this.idEmpresa = idEmpresa;
+        this.idSetor = idSetor;
     }
 
     // GETTERS
@@ -29,16 +33,32 @@ public class Funcionario {
         return id;
     }
 
+    public String getSobrenome() {
+        return sobrenome;
+    }
+
     public String getNome() {
         return nome;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public LocalDate getDataNascimento() {
         return dataNascimento;
     }
 
-    public String getSobrenome() {
-        return sobrenome;
+    public String getSenha() {
+        return senha;
+    }
+
+    public int getIdEmpresa() {
+        return idEmpresa;
+    }
+
+    public int getIdSetor() {
+        return idSetor;
     }
 
     // SETTERS
@@ -51,12 +71,28 @@ public class Funcionario {
         this.nome = nome;
     }
 
+    public void setSobrenome(String sobrenome) {
+        this.sobrenome = sobrenome;
+    }
+
     public void setDataNascimento(LocalDate dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
 
-    public void setSobrenome(String sobrenome) {
-        this.sobrenome = sobrenome;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setIdSetor(int idSetor) {
+        this.idSetor = idSetor;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public void setIdEmpresa(int idEmpresa) {
+        this.idEmpresa = idEmpresa;
     }
 
     // TO STRING
@@ -68,18 +104,10 @@ public class Funcionario {
                 ", nome='" + nome + '\'' +
                 ", sobrenome='" + sobrenome + '\'' +
                 ", dataNascimento=" + dataNascimento +
-                ", idsTurnos=" + idsTurnos +
-                ", idsFechamentoTurnos=" + idsFechamentoTurnos +
+                ", email='" + email + '\'' +
+                ", senha='" + senha + '\'' +
+                ", idSetor=" + idSetor +
+                ", idEmpresa=" + idEmpresa +
                 '}';
-    }
-
-    //Método para verificar data de nascimento
-    public boolean verificaDataNascimento(LocalDateTime dataNascimento) {
-        LocalDateTime agora = LocalDateTime.now(); //Instanciar data de agora
-        System.out.println(agora);
-        //Verifica se a data de agora é igual a data de nascimento
-        if (agora.isBefore(dataNascimento)) { //Verifica se a data de agora é antes da data de nascimento
-            return false;
-        } else return !agora.isEqual(dataNascimento);
     }
 }

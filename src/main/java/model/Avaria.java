@@ -1,13 +1,13 @@
 package model;
 
-public class Avarias {
+public class Avaria {
     private int id;
     private String nome;
     private String descricao;
 
     // CONSTRUTOR
 
-    public Avarias(String nome, int id, String descricao) {
+    public Avaria(String nome, int id, String descricao) {
         this.nome = nome;
         this.id = id;
         this.descricao = descricao;

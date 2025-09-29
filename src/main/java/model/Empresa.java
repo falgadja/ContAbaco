@@ -1,31 +1,33 @@
 package model;
 
-import java.util.List;
-
 public class Empresa {
-    private long cpnj;
+    private int id;
+    private String cpnj;
     private String nome;
-    private Login login;
-    private int qtdFuncionarios;
-    private List<Funcionario> funcionarios;
-    private List<Integer> idsPagamentos;
-    private List<Integer> idsLogins;
+    private String email;
+    private String senha;
+    private int idPlano;
+    private int qntdFuncionarios;
 
     //CONSTRUTOR
 
-    public Empresa(long cpnj, List<Integer> idsLogins, List<Integer> idsPagamentos, List<Funcionario> funcionarios, int qtdFuncionarios, Login login, String nome) {
+    public Empresa(int id, String cpnj, String nome, String email, String senha, int idPlano, int qntdFuncionarios) {
+        this.id = id;
         this.cpnj = cpnj;
-        this.idsLogins = idsLogins;
-        this.idsPagamentos = idsPagamentos;
-        this.funcionarios = funcionarios;
-        this.qtdFuncionarios = qtdFuncionarios;
-        this.login = login;
         this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+        this.idPlano = idPlano;
+        this.qntdFuncionarios = qntdFuncionarios;
     }
 
     // GETTERS
 
-    public long getCpnj() {
+    public int getId() {
+        return id;
+    }
+
+    public String getCpnj() {
         return cpnj;
     }
 
@@ -33,53 +35,64 @@ public class Empresa {
         return nome;
     }
 
-    public Login getLogin() {
-        return login;
+    public String getEmail() {
+        return email;
     }
 
-    public List<Funcionario> getFuncionarios() {
-        return funcionarios;
+    public String getSenha() {
+        return senha;
     }
 
-    public int getQtdFuncionarios() {
-        return qtdFuncionarios;
+    public int getIdPlano() {
+        return idPlano;
     }
-    
+
+    public int getQntdFuncionarios() {
+        return qntdFuncionarios;
+    }
+
     // SETTERS
 
-    public void setCpnj(long cpnj) {
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setCpnj(String cpnj) {
         this.cpnj = cpnj;
-    }
-
-    public void setFuncionarios(List<Funcionario> funcionarios) {
-        this.funcionarios = funcionarios;
-    }
-
-    public void setQtdFuncionarios(int qtdFuncionarios) {
-        this.qtdFuncionarios = qtdFuncionarios;
-    }
-
-    public void setLogin(Login login) {
-        this.login = login;
     }
 
     public void setNome(String nome) {
         this.nome = nome;
     }
 
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setIdPlano(int idPlano) {
+        this.idPlano = idPlano;
+    }
+
+    public void setQntdFuncionarios(int qntdFuncionarios) {
+        this.qntdFuncionarios = qntdFuncionarios;
+    }
 
     // TO STRING
 
     @Override
     public String toString() {
         return "Empresa{" +
-                "cpnj=" + cpnj +
+                "id=" + id +
+                ", cpnj=" + cpnj +
                 ", nome='" + nome + '\'' +
-                ", login=" + login +
-                ", qtdFuncionarios=" + qtdFuncionarios +
-                ", funcionarios=" + funcionarios +
-                ", idsPagamentos=" + idsPagamentos +
-                ", idsLogins=" + idsLogins +
+                ", email='" + email + '\'' +
+                ", senha='" + senha + '\'' +
+                ", idPlano=" + idPlano +
+                ", qntdFuncionarios=" + qntdFuncionarios +
                 '}';
     }
 }
