@@ -4,51 +4,40 @@ public class Avaria {
     private int id;
     private String nome;
     private String descricao;
+    private int id;
 
     // CONSTRUTOR
 
     public Avaria(String nome, int id, String descricao) {
         this.nome = nome;
-        this.id = id;
         this.descricao = descricao;
     }
 
-    // GETTERS
-
+    //GETTERS
+    public String getNome() {
+        return nome;
+    }
+    public String getDescricao() {
+        return descricao;
+    }
     public int getId() {
         return id;
     }
 
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    // SETTERS
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
+    //SETTERS
     public void setNome(String nome) {
         this.nome = nome;
     }
-
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
 
-    // TO STRING
-
-    @Override
-    public String toString() {
-        return "Avarias{" +
-                "id=" + id +
-                ", nome='" + nome + '\'' +
-                ", descricao='" + descricao + '\'' +
-                '}';
+    //TO STRING
+    public String toString(){
+        return "-- Avaria--"+
+                "\nID: "+id+
+                "\nNOME: "+nome+
+                "\nDESCRIÇÃO: "+descricao;
     }
+
 }

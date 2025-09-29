@@ -1,150 +1,197 @@
 package dao;
 
-import conexao.Conexao;
-import model.Turno;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Time;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import conexao.Conexao;
+import model.Turno;
+
 public class TurnoDAO {
-    // CONEXÃO COM O BANCO
-    private Connection connection;
+    // CREATE - Inserir TURNO
 
-    public TurnoDAO(Connection connection) {
-        this.connection = connection;
-    }
-
-    // CREATE - Inserir Turno
     public int inserir(Turno turno) {
         Conexao conexao = new Conexao();
-        Connection con = conexao.conectar();
+        Connection conn = conexao.conectar();
+        Turno t = null;
         int retorno = 0;
 
         try {
-            PreparedStatement pst = con.prepareStatement(
-                    "INSERT INTO turno (id, qtd_funcionarios, tempo_duracao) VALUES (?, ?, ?)"
-            );
-            pst.setInt(1, turno.getId());
-            pst.setInt(2, turno.getQtdFuncionarios());
-            pst.setTimestamp(3, Timestamp.valueOf(turno.getTempoDuracao()));
+            String sql = "INSERT INTO turno (TEMPO_DURACAO, QTD_FUNCIONARIOS, DATA) VALUES (?, ?, ?)";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setTime(1, Time.valueOf(turno.getTempoDuracao()));
+            pstmt.setInt(2, turno.getQtdFuncionarios());
+            pstmt.setDate(3, Date.valueOf(turno.getData()));
 
-            int linhas = pst.executeUpdate();
+            int linhas = pstmt.executeUpdate();
             if (linhas > 0) {
                 retorno = 1;
-                return retorno;
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            retorno = -1;
         } finally {
-            conexao.desconectar(con);
+            conexao.desconectar(conn);
         }
-
         return retorno;
     }
 
     // READ - Buscar Turno por ID
-    public Turno buscarPorID(int id) {
+
+    public Turno buscarPorID(Turno turno) {
         Conexao conexao = new Conexao();
-        Connection con = conexao.conectar();
-        Turno turno = null;
+        Connection conn = conexao.conectar();
+        Turno t = null;
 
         try {
-            PreparedStatement pst = con.prepareStatement("SELECT * FROM turno WHERE id = ?");
-            pst.setInt(1, id);
-            ResultSet rs = pst.executeQuery();
+            String sql = "SELECT * FROM TURNO WHERE ID = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, turno.getId());
+            ResultSet rset = pstmt.executeQuery();
 
-            if (rs.next()) {
-                turno = new Turno(
-                        rs.getInt("id"),
-                        rs.getObject("tempo_duracao", java.time.LocalDateTime.class),
-                        rs.getInt("qtd_funcionarios")
+            while (rset.next()) {
+                t = new Turno(
+                        rset.getInt("ID"),
+                        rset.getObject("TEMPO_DURACAO", java.time.LocalTime.class),
+                        rset.getInt("QTD_FUNCIONARIOS"),
+                        rset.getObject("DATA", java.time.LocalDate.class)
                 );
             }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            conexao.desconectar(con);
+            conexao.desconectar(conn);
         }
 
-        return turno;
+        return t;
+    }
+
+    // READ - Buscar por DATA
+
+    public Turno buscarPorData(Turno turno, LocalDate dataExtra, String nomeEmpresa) {
+        Conexao conexao = new Conexao();
+        Connection conn = conexao.conectar();
+        Turno t = null;
+
+        try {
+            String sql = "SELECT T.*, F.NOME FROM TURNO T " +
+                    "JOIN FUNCIONARIO_TURNO FT ON T.ID = FT.ID_TURNO " +
+                    "JOIN FUNCIONARIO F ON FT.ID_FUNCIONARIO = F.ID " +
+                    "JOIN EMPRESA E ON F.ID_EMPRESA = E.ID " +
+                    "WHERE DATA BETWEEN ? AND ? " +
+                    "AND E.NOME = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setDate(1, Date.valueOf(turno.getData()));
+            pstmt.setDate(2, Date.valueOf(dataExtra));
+            pstmt.setString(3, nomeEmpresa);
+            ResultSet rset = pstmt.executeQuery();
+
+            while (rset.next()) {
+                t = new Turno(
+                        rset.getInt("ID"),
+                        rset.getObject("TEMPO_DURACAO", java.time.LocalTime.class),
+                        rset.getInt("QTD_FUNCIONARIOS"),
+                        rset.getObject("DATA", java.time.LocalDate.class)
+                );
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        } finally {
+            conexao.desconectar(conn);
+        }
+        return t;
     }
 
     // READ - Listar todos os Turnos
-    public List<Turno> listarTodos() {
+
+    public List<Turno> listarTodos(Turno turno) {
         Conexao conexao = new Conexao();
-        Connection con = conexao.conectar();
+        Connection conn = conexao.conectar();
         List<Turno> turnos = new ArrayList<>();
 
         try {
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM turno");
+            String sql = "SELECT T.*, F.NOME FROM TURNO T " +
+                    "JOIN FUNCIONARIO_TURNO FT ON T.ID = FT.ID_TURNO " +
+                    "JOIN FUNCIONARIO F ON FT.ID_FUNCIONARIO = F.ID " +
+                    "JOIN EMPRESA E ON F.ID_EMPRESA = E.ID " +
+                    "WHERE T.ID = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, turno.getId());
+            ResultSet rset = pstmt.executeQuery();
 
-            while (rs.next()) {
-                Turno turno = new Turno(
-                        rs.getInt("id"),
-                        rs.getObject("tempo_duracao", java.time.LocalDateTime.class),
-                        rs.getInt("qtd_funcionarios")
+            while (rset.next()) {
+                Turno t = new Turno(
+                        rset.getInt("ID"),
+                        rset.getObject("TEMPO_DURACAO", java.time.LocalTime.class),
+                        rset.getInt("QTD_FUNCIONARIOS"),
+                        rset.getObject("DATA", java.time.LocalDate.class)
                 );
-                turnos.add(turno);
+                turnos.add(t);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            conexao.desconectar(con);
+            conexao.desconectar(conn);
         }
-
         return turnos;
     }
 
-    // UPDATE - Alterar Turno
+    // UPDATE - Alterar TURNO
+
     public int atualizar(Turno turno) {
         Conexao conexao = new Conexao();
-        Connection con = conexao.conectar();
+        Connection conn = conexao.conectar();
         int retorno = 0;
 
         try {
-            PreparedStatement pst = con.prepareStatement(
-                    "UPDATE turno SET qtd_funcionarios = ?, tempo_duracao = ? WHERE id = ?"
-            );
-            pst.setInt(1, turno.getQtdFuncionarios());
-            pst.setTimestamp(2, Timestamp.valueOf(turno.getTempoDuracao()));
-            pst.setInt(3, turno.getId());
+            String sql = "UPDATE TURNO SET QTD_FUNICIONARIOS = ?, TEMPO_DURACAO = ?, DATA = ?  WHERE ID = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, turno.getQtdFuncionarios());
+            pstmt.setTime(2, Time.valueOf(turno.getTempoDuracao()));
+            pstmt.setDate(3,Date.valueOf(turno.getData()));
+            pstmt.setInt(4, turno.getId());
 
-            retorno = pst.executeUpdate();
-            if (retorno > 0) {
+            int linhas = pstmt.executeUpdate();
+            if (linhas > 0) {
                 retorno = 1;
-                return retorno;
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            retorno = -1;
         } finally {
-            conexao.desconectar(con);
+            conexao.desconectar(conn);
         }
-
         return retorno;
     }
 
-    // DELETE - Deletar Turno
-    public int deletar(int id) {
+    // DELETE - Deletar TURNO
+
+    public int deletar(Turno turno) {
         Conexao conexao = new Conexao();
-        Connection con = conexao.conectar();
-        int deletado = 0;
+        Connection conn = conexao.conectar();
+        int retorno = 0;
 
         try {
-            PreparedStatement pst = con.prepareStatement("DELETE FROM turno WHERE id = ?");
-            pst.setInt(1, id);
+            String sql = "DELETE FROM TURNO WHERE ID = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, turno.getId());
 
-            deletado = pst.executeUpdate();
-            if (deletado > 0) {
-                deletado = 1;
-                return deletado;
+            int linhas = pstmt.executeUpdate();
+            if (linhas > 0) {
+                retorno = 1;
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            retorno = -1;
         } finally {
-            conexao.desconectar(con);
+            conexao.desconectar(conn);
         }
-
-        return deletado;
+        return retorno;
     }
 }

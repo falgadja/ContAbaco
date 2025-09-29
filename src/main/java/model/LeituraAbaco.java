@@ -10,10 +10,14 @@ public class LeituraAbaco {
 
     // CONSTRUTOR
 
-    public LeituraAbaco(int id, byte[] imagem, LocalDateTime dataHora) {
-        this.id = id;
+    public LeituraAbaco( byte[] imagem, LocalDateTime dataHora) {
         this.imagem = imagem;
         this.dataHora = dataHora;
+    }
+    public LeituraAbaco(int id, LocalDateTime dataHora, byte[] imagem) {
+        this.id = id;
+        this.dataHora = dataHora;
+
     }
 
     // GETTERS
@@ -48,10 +52,9 @@ public class LeituraAbaco {
 
     @Override
     public String toString() {
-        return "LeituraAbaco{" +
-                "ID=" + id +
-                ", dataHora=" + dataHora +
-                ", imagem=" + Arrays.toString(imagem) +
-                '}';
+     return "-- LeituraAbaco --"+
+             "\nID: "+id+
+             "\nDATA E HORA: "+ dataHora+
+             "\nIMAGEM: "+imagem;
     }
 }
