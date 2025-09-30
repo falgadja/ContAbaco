@@ -18,12 +18,6 @@ public class Turno {
         this.data = data;
     }
 
-
-    public Turno(int id, LocalDateTime tempoDuracao, int qtdFuncionarios) {
-        this.id = id;
-        this.tempoDuracao = tempoDuracao;
-        this.qtdFuncionarios = qtdFuncionarios;
-    }
     // GETTERS
 
     public int getId() {

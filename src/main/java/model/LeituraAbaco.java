@@ -1,7 +1,6 @@
 package model;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 
 public class LeituraAbaco {
     private int id;
@@ -9,15 +8,11 @@ public class LeituraAbaco {
     private byte[] imagem;
 
     // CONSTRUTOR
-
-    public LeituraAbaco( byte[] imagem, LocalDateTime dataHora) {
-        this.imagem = imagem;
-        this.dataHora = dataHora;
-    }
+    
     public LeituraAbaco(int id, LocalDateTime dataHora, byte[] imagem) {
         this.id = id;
         this.dataHora = dataHora;
-
+        this.imagem = imagem;
     }
 
     // GETTERS
