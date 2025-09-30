@@ -4,13 +4,13 @@ public class Avaria {
     private int id;
     private String nome;
     private String descricao;
-    private int id;
 
     // CONSTRUTOR
 
-    public Avaria(String nome, int id, String descricao) {
+    public Avaria(String nome, String descricao, int id) {
         this.nome = nome;
         this.descricao = descricao;
+        this.id=id;
     }
 
     //GETTERS

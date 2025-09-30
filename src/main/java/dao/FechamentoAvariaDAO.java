@@ -2,7 +2,6 @@ package dao;
 
 import conexao.Conexao;
 import model.FechamentoAvaria;
-import model.Funcionario;
 
 import java.sql.*;
 import java.util.List;
@@ -116,6 +115,33 @@ public class FechamentoAvariaDAO {
             conexao.desconectar(conn);
         }
         return fechamentoAvarias;
+    }
+
+
+    // UPDATE - atualizar a tabela de ligação Fechamento Avaria
+    public int atualizar(FechamentoAvaria fechamentoAvaria) {
+        Conexao conexao = new Conexao();
+        Connection conn = conexao.conectar();
+        int retorno = 0;
+
+        try {
+            String sql = "UPDATE FECHAMENTO_AVARIA SET QUANTIDADE = ?, ID_AVARIA = ?, ID_FECHAMENTO = ?  WHERE ID = ?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setInt(1, fechamentoAvaria.getQuantidade());
+            pst.setInt(2, fechamentoAvaria.getIdAvaria());
+            pst.setInt(3, fechamentoAvaria.getIdFechamento());
+            pst.setInt(4, fechamentoAvaria.getId());
+            int linhas = pst.executeUpdate();
+            if (linhas > 0) {
+                retorno = 1;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            retorno = -1;
+        } finally {
+            conexao.desconectar(conn);
+        }
+        return retorno;
     }
 
     // DELETE - Deletar Funcionario

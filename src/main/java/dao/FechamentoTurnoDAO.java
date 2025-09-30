@@ -224,6 +224,34 @@ public class FechamentoTurnoDAO {
         return fechamentosTurnos;
     }
 
+    // UPDATE - atualizar o FECHAMENTO de TURNO
+    public int atualizar(FechamentoTurno fechamentoTurno) {
+        Conexao conexao = new Conexao();
+        Connection conn = conexao.conectar();
+        int retorno = 0;
+
+        try {
+            String sql = "UPDATE FECHAMENTO_TURNO SET ID_FUNCIONARIO = ?, LOTE = ? , DATA = ? , ID_LEITURA = ? WHERE ID = ?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setInt(1, fechamentoTurno.getIdFuncionario());
+            pst.setInt(2, fechamentoTurno.getLote());
+            pst.setTimestamp(3, Timestamp.valueOf(fechamentoTurno.getData().atStartOfDay()));
+            pst.setInt(4, fechamentoTurno.getIdLeitura());
+            pst.setInt(5, fechamentoTurno.getId());
+
+            int linhas = pst.executeUpdate();
+            if (linhas > 0) {
+                retorno = 1;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            retorno = -1;
+        } finally {
+            conexao.desconectar(conn);
+        }
+        return retorno;
+    }
+
     // DELETE - Deletar Fechamento Turno
     public int deletar(int id) {
         Conexao conexao = new Conexao();

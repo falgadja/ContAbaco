@@ -233,7 +233,7 @@ public class PagamentoDAO {
             PreparedStatement pst = con.prepareStatement(
                     "UPDATE pagamento SET tipo=?, total=?, data=? WHERE id=?"
             );
-            pst.setString(1, pagamento.getTipo());
+            pst.setString(1, pagamento.getTipoPagto());
             pst.setDouble(2, pagamento.getTotal());
             pst.setTimestamp(3, java.sql.Timestamp.valueOf(pagamento.getData().atStartOfDay()));
             pst.setInt(4, pagamento.getId());

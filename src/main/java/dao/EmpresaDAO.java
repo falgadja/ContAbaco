@@ -1,10 +1,13 @@
 package dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
 import conexao.Conexao;
 import model.Empresa;
-
-import java.sql.*;
-import java.util.List;
 
 public class EmpresaDAO {
 
@@ -151,7 +154,7 @@ public class EmpresaDAO {
                         rset.getString("email"),
                         rset.getString("senha"),
                         rset.getInt("id_plano"),
-                        rset.getInt("qntd_funcionarios"));
+                        rset.getInt("qntd_funcionarios")));
             }
         } catch (SQLException sqle) {
             sqle.printStackTrace();
@@ -159,6 +162,36 @@ public class EmpresaDAO {
             conexao.desconectar(conn);
         }
         return empresas;
+    }
+
+    // UPDATE - atualizar a EMPRESA
+    public int atualizar(Empresa empresa) {
+        Conexao conexao = new Conexao();
+        Connection conn = conexao.conectar();
+        int retorno = 0;
+
+        try {
+            String sql = "UPDATE EMPRESA SET CNPJ = ?, NOME = ?, EMAIL = ? , SENHA = ? , SENHA = ? , ID_PLANO = ? , QNTD_FUNCIONARIOS = ?  WHERE ID = ?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setString(1, empresa.getCpnj());
+            pst.setString(2, empresa.getNome());
+            pst.setString(3, empresa.getEmail());
+            pst.setString(4, empresa.getSenha());
+            pst.setInt(5, empresa.getIdPlano());
+            pst.setInt(6, empresa.getQntdFuncionarios());
+            pst.setInt(7, empresa.getId());
+
+            int linhas = pst.executeUpdate();
+            if (linhas > 0) {
+                retorno = 1;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            retorno = -1;
+        } finally {
+            conexao.desconectar(conn);
+        }
+        return retorno;
     }
 
     // DELETE - Deletar EMPRESA

@@ -20,11 +20,6 @@ public class Pagamento {
         this.comprovante = comprovante;
         this.idEmpresa = idEmpresa;
     }
-    public Pagamento(LocalDate data, double total, String tipo) {
-        this.data = data;
-        this.total = total;
-        this.tipo = tipo;
-    }
 
     // GETTERS
 
