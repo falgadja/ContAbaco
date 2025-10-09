@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import conexao.Conexao;
@@ -139,7 +140,7 @@ public class EmpresaDAO {
     public List<Empresa> listar() {
         Conexao conexao = new Conexao();
         Connection conn = conexao.conectar();
-        List<Empresa> empresas = null;
+        List<Empresa> empresas = new ArrayList<>();
 
         try {
             String sql = "SELECT * FROM EMPRESA";

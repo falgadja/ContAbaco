@@ -1,18 +1,116 @@
-body{
-    margin: 0;
-    padding: 0;
-    height: 725px;
-    background: linear-gradient(to top right, rgb(109, 109, 194), rgb(30, 141, 137));
-    background-repeat: no-repeat;
-}
+ * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
 
-.fundo-log{
-    background-color: rgb(255, 255, 255);
-    width: 400px;
-    height: 400px;
-    margin: 50px auto;
-    margin-top: 150px;
-    border-radius: 20px;
-    box-shadow: 0 0 15px 5px rgba(0,0,0,0.5);
-}
+        body, html {
+            height: 100%;
+        }
 
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+           background: linear-gradient( #3360a9, #040962);
+        }
+
+        .container {
+            display: flex;
+            width: 900px;
+            height: 500px;
+            background-color: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+        }
+        .formulario{
+            padding: 10px;
+            border-color: #0d049d;
+            border-radius: 10px;
+            font-size: 15px;
+
+        }
+
+        /* LADO ESQUERDO */
+        .lado-esquerdo {
+            background-color: #1a0dab;
+            color: white;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .lado-esquerdo img {
+            width: 80px;
+            margin-bottom: 20px;
+        }
+
+        .lado-esquerdo h2 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .lado-esquerdo .usuario {
+            margin-top: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: rgba(255,255,255,0.2);
+            padding: 5px 10px;
+            border-radius: 10px;
+        }
+
+        /* LADO DIREITO */
+        .lado-direito {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .lado-direito h2 {
+            color: #1a0dab;
+            margin-bottom: 30px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+    
+
+        button {
+            background-color: #1a0dab;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #0d049d;
+        }
+
+        .link {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .link a {
+            font-size: 14px;
+            color: #1a0dab;
+            text-decoration: none;
+        }
+
+        .link a:hover {
+            text-decoration: underline;
+        }
