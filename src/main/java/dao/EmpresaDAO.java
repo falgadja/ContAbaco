@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 import conexao.Conexao;
@@ -19,28 +21,32 @@ public class EmpresaDAO {
 
         try {
             PreparedStatement pst = con.prepareStatement(
-                    "INSERT INTO EMPRESA(id, cnpj, nome, email, senha, id_plano, qntd_funcionarios) VALUES (?, ?, ?, ?, ?, ?, ?)"
+                    "INSERT INTO EMPRESA(cnpj, nome, email, senha, id_plano, qntd_funcionarios) VALUES (?, ?, ?, ?, ?, ?)",
+                    Statement.RETURN_GENERATED_KEYS
             );
-            pst.setInt(1, empresa.getId());
-            pst.setString(2, empresa.getCpnj());
-            pst.setString(3, empresa.getNome());
-            pst.setString(4, empresa.getEmail());
-            pst.setString(5, empresa.getSenha());
-            pst.setInt(6, empresa.getIdPlano());
-            pst.setInt(7, empresa.getQntdFuncionarios());
+            pst.setString(1, empresa.getCpnj());
+            pst.setString(2, empresa.getNome());
+            pst.setString(3, empresa.getEmail());
+            pst.setString(4, empresa.getSenha());
+            pst.setInt(5, empresa.getIdPlano());
+            pst.setInt(6, empresa.getQntdFuncionarios());
             int linhas = pst.executeUpdate();
             if (linhas > 0) {
-                retorno = 1;
-                return retorno;
+                try (ResultSet rs = pst.getGeneratedKeys()){
+                if (rs.next()) {
+                    empresa.setId(rs.getInt("ID"));
+                }
             }
+            return empresa.getId();
+        }
         } catch (SQLException e) {
             e.printStackTrace();
-            return -1;
+            return empresa.getId();
         } finally {
             conexao.desconectar(con);
         }
 
-        return retorno;
+        return empresa.getId();
     }
 
     // READ - Buscar por ID
@@ -139,7 +145,7 @@ public class EmpresaDAO {
     public List<Empresa> listar() {
         Conexao conexao = new Conexao();
         Connection conn = conexao.conectar();
-        List<Empresa> empresas = null;
+        List<Empresa> empresas = new ArrayList<>();
 
         try {
             String sql = "SELECT * FROM EMPRESA";
