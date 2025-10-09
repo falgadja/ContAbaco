@@ -1,45 +1,55 @@
 package dao;
 
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
 import conexao.Conexao;
 import model.Funcionario;
-
-import java.sql.*;
-import java.util.List;
 
 public class FuncionarioDAO {
 
     // CREATE - Inserir FUNCIONARIO
-    public int inserir(Funcionario funcionario) {
-        Conexao conexao = new Conexao();
-        Connection con = conexao.conectar();
-        int retorno = 0;
+public int inserir(Funcionario funcionario) {
+    Conexao conexao = new Conexao();
+    Connection con = conexao.conectar();
+    int retorno = 0;
 
-        try {
-            PreparedStatement pst = con.prepareStatement(
-                    "INSERT INTO funcionario(id, data_nascimento, nome, senha, email, id_setor, id_empresa, sobrenome) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-            );
-            pst.setInt(1, funcionario.getId());
-            pst.setDate(2, Date.valueOf(funcionario.getDataNascimento()));
-            pst.setString(3, funcionario.getNome());
-            pst.setString(4, funcionario.getSenha());
-            pst.setString(5, funcionario.getEmail());
-            pst.setInt(6, funcionario.getIdSetor());
-            pst.setInt(7, funcionario.getIdEmpresa());
-            pst.setString(8, funcionario.getSobrenome());
-            int linhas = pst.executeUpdate();
-            if (linhas > 0) {
-                retorno = 1;
-                return retorno;
+    try {
+        PreparedStatement pst = con.prepareStatement(
+            "INSERT INTO funcionario(data_nascimento, nome, senha, email, id_setor, id_empresa, sobrenome) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            Statement.RETURN_GENERATED_KEYS
+        );
+        pst.setDate(1, Date.valueOf(funcionario.getDataNascimento()));
+        pst.setString(2, funcionario.getNome());
+        pst.setString(3, funcionario.getSenha());
+        pst.setString(4, funcionario.getEmail());
+        pst.setInt(5, funcionario.getIdSetor());
+        pst.setInt(6, funcionario.getIdEmpresa());
+        pst.setString(7, funcionario.getSobrenome());
+        int linhas = pst.executeUpdate();
+        if (linhas > 0) {
+            try (ResultSet rs = pst.getGeneratedKeys()) {
+                if (rs.next()) {
+                    funcionario.setId(rs.getInt(1));
+                }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return -1;
-        } finally {
-            conexao.desconectar(con);
+            return funcionario.getId();
         }
-
-        return retorno;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return funcionario.getId();
+    } finally {
+        conexao.desconectar(con);
     }
+
+    return funcionario.getId();
+}
 
     // READ - Buscar por ID
     public Funcionario buscarPorId(int id) {
@@ -170,7 +180,7 @@ public class FuncionarioDAO {
     public List<Funcionario> listar() {
         Conexao conexao = new Conexao();
         Connection conn = conexao.conectar();
-        List<Funcionario> funcionarios = null;
+        List<Funcionario> funcionarios = new ArrayList<>();
 
         try {
             String sql = "SELECT * FROM FUNCIONARIO";
