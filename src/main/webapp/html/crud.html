@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Área Restrita - CRUD</title>
+  <link rel="icon" href="imagens/logo azul bonito sem fundo.png">
+  <link rel="stylesheet" href="../css/crud.css">
+</head>
+<body>
+  <div class="esquerda">
+    <aside class="sidebar">
+      <div class="aplicativo">
+        <div class="logo"><img src="imagens/contAbaco cantinho.png" alt="logo ContÁbaco"></div>
+        <div>
+          <div class="titulo_app">ContÁbaco</div>
+          <div class="subtitulo_app">adm</div>
+        </div>
+      </div>
+      <div class="linha"></div>
+
+      <nav class="nav barra-lateral">
+        <button class="botao selecionado" onclick="mostrarPagina('adm', this)"><img src="imagens/adm_icone_azul.png" alt="" class="icone"> Adm</button>
+        <button class="botao" onclick="mostrarPagina('empresas', this)"><img src="imagens/empresa_icone_azul.png" alt="" class="icone"> Empresas</button>
+        <button class="botao" onclick="mostrarPagina('planos', this)"><img src="imagens/planos_icone_azul.png" alt="" class="icone"> Planos</button>
+        <button class="botao" onclick="mostrarPagina('pagamento', this)"><img src="imagens/pagamento_icone_azul.png" alt="" class="icone"> Pagamento</button>
+      </nav>
+
+      <div class="sair">
+        <button class="botao-sair"><img src="imagens/sair.png" alt="" class="icone"> Sair</button>
+      </div>
+    </aside>
+
+    <div class="separator"></div>
+
+    <section class="main">
+      <div class="titulos">
+        <div>
+          <h1 id="AR">Área Restrita</h1>
+          <div id="CRUD"><p>CRUD</p></div>
+        </div>
+
+        <div class="pesquisar">
+          <img src="imagens/lupa.png" alt="" id="lupa">
+          <input type="text" placeholder="Buscar por id, nome, email...">
+        </div>
+      </div>
+
+      <div class="adicionador">
+        <button class="botao-add"><img src="imagens/circulo_mais.png" alt="" class="icone-add"> Adicionar Novo</button>
+      </div>
+
+      <div class="tabela">
+
+        <!--ADM-->
+        <section id="adm" class="pagina">
+          <h2>ADM</h2>
+          <p>Conteúdo ADM</p>
+        </section>
+
+        <!-- EMPRESAS -->
+        <section id="empresas" class="pagina" style="display: none;">
+          <h2>Empresas</h2>
+          <p>Conteúdo Empresas</p>
+        </section>
+
+        <!-- PLANOS -->
+        <section id="planos" class="pagina" style="display: none;">
+          <h2>Planos</h2>
+          <p>Conteúdo Planos</p>
+        </section>
+
+        <!-- PAGAMENTO -->
+        <section id="pagamento" class="pagina" style="display: none;">
+          <h2>Pagamento</h2>
+          <p>Conteúdo Pagamento</p>
+        </section>
+      </div>
+
+    </section>
+  </div>
+
+  <script>
+    function mostrarPagina(id, botaoClicado) {
+      document.querySelectorAll('.pagina').forEach(sec => sec.style.display = 'none');
+
+      document.getElementById(id).style.display = 'block';
+
+      document.querySelectorAll('.barra-lateral .botao').forEach(btn => btn.classList.remove('selecionado'));
+      botaoClicado.classList.add('selecionado');
+    }
+  </script>
+</body>
+</html>
