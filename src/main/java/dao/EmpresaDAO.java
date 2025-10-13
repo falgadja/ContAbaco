@@ -81,7 +81,7 @@ public class EmpresaDAO {
     }
 
     // READ - Buscar por cnpj
-    public Empresa buscarPorCnpj(String cnpj) {
+    public Empresa buscarPorCnpj(int cnpj) {
         Conexao conexao = new Conexao();
         Connection conn = conexao.conectar();
         Empresa empresa = null;
@@ -89,7 +89,7 @@ public class EmpresaDAO {
         try {
             String sql = "SELECT * FROM EMPRESA WHERE CNPJ = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, cnpj);
+            pstmt.setInt(1, cnpj);
             ResultSet rset = pstmt.executeQuery();
 
             if (rset.next()) {

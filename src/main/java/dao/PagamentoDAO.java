@@ -14,7 +14,7 @@ public class PagamentoDAO {
     public int inserir(Pagamento pagamento) {
         Conexao conexao = new Conexao();
         Connection conn = conexao.conectar();
-        int idGerado = 0;
+        int retorno = 0;
 
         try {
             String sql = "INSERT INTO PAGAMENTO (TIPO_PAGTO, TOTAL, DATA_PAGTO, COMPROVANTE, ID_EMPRESA) VALUES (?, ?, ?, ?, ?)";
@@ -23,18 +23,14 @@ public class PagamentoDAO {
             pst.setDouble(2, pagamento.getTotal());
             pst.setDate(3, Date.valueOf(pagamento.getData()));
 
-            ResultSet rs = pst.executeQuery();
-            if (rs.next()) {
-                idGerado = rs.getInt("id");
-                pagamento.setId(idGerado); // Define o ID no objeto
-            }
+            retorno = pst.executeUpdate();
+            return retorno;
         } catch (SQLException e) {
             e.printStackTrace();
+            return retorno;
         } finally {
             conexao.desconectar(conn);
         }
-
-        return idGerado; // Retorna o ID gerado ou -1 se falhar
     }
 
     // READ - Buscar por ID

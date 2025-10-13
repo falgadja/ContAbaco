@@ -4,1034 +4,394 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Falgadia - ContÁbaco</title>
-<!--    <link rel="stylesheet" href="../css/style.css">-->
+    <link rel="stylesheet" href="../css/style.css">
 </head>
-<style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    html {
-        scroll-behavior: smooth;
-    }
-
-    body {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        line-height: 1.6;
-        color: #374151;
-        background-color: #ffffff;
-    }
-
-    .caixa {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 20px;
-    }
-
-    .texto-azul {
-        color: #00158C;
-    }
-
-    section {
-        padding: 80px 0;
-    }
-
-    .titulo-secao {
-        font-size: 3rem;
-        font-weight: 800;
-        margin-bottom: 40px;
-        text-align: center;
-        color: #1f2937;
-    }
-
-    .titulo-secao.esquerda {
-        text-align: left;
-        margin-bottom: 30px;
-    }
-
-    /* --- CABEÇALHO --- */
-    .cabecalho {
-        background: white;
-        border-bottom: 1px solid #e5e7eb;
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        backdrop-filter: blur(20px);
-        background-color: rgba(255, 255, 255, 0.8);
-    }
-
-    .navegacao-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        height: 70px;
-        width: 100%;
-        padding: 0 20px;
-    }
-
-    .marca {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-right: 0;
-    }
-    .marca img{
-        width: 200px;
-    }
-    .marca-icone {
-        width: 35px;
-        height: 35px;
-        background: #0a74e5;
-        color: white;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        font-size: 18px;
-    }
-
-    .marca-texto {
-        font-size: 24px;
-        font-weight: 700;
-        color: #00158C;
-    }
-
-    .menu {
-        display: flex;
-        gap: 30px;
-        justify-content: center;
-        flex: 1;
-    }
-
-    .menu-link {
-        text-decoration: none;
-        color: #6b7280;
-        font-weight: 500;
-        transition: color 0.3s ease;
-    }
-
-    .menu-link:hover {
-        color: #00158C;
-    }
-
-    .botoes-acesso {
-        display: flex;
-        gap: 15px;
-        align-items: center;
-        margin-left: 0;
-    }
-
-    /* --- BOTÕES --- */
-    .botao-principal {
-        background: #0327f5;
-        color: white;
-        padding: 12px 24px;
-        border-radius: 25px;
-        text-decoration: none;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        display: inline-block;
-        box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
-    }
-
-    .botao-principal:hover {
-        background: #00158C;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
-    }
-
-    .botao-principal.grande {
-        padding: 16px 32px;
-        font-size: 18px;
-    }
-
-    .botao-secundario {
-        color: #6b7280;
-        text-decoration: none;
-        padding: 12px 20px;
-        font-weight: 600;
-        transition: color 0.3s ease;
-    }
-
-    .botao-secundario:hover {
-        color: #0492ff;
-    }
-
-    .botao-contorno {
-        border: 2px solid #d1d5db;
-        color: #374151;
-        padding: 14px 30px;
-        border-radius: 30px;
-        text-decoration: none;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        display: inline-block;
-    }
-
-    .botao-contorno:hover {
-        border-color: #1c3eff;
-        color: #005eff;
-        background-color: #eff6ff;
-    }
-
-    .botao-contorno.grande {
-        padding: 16px 32px;
-        font-size: 18px;
-        background-color: rgb(91, 91, 91);
-        color: white;
-
-    }
-
-    /* --- SEÇÃO DESTAQUE --- */
-    .destaque {
-        background: white;
-    }
-
-    .destaque-conteudo {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 60px;
-        align-items: center;
-    }
-
-    .destaque-titulo {
-        font-size: 3.5rem;
-        font-weight: 800;
-        line-height: 1.1;
-        margin-bottom: 24px;
-        color: #1f2937;
-        margin-top: -300px;
-    }
-
-    .destaque-descricao {
-        font-size: 1.25rem;
-        color: #6b7280;
-        margin-bottom: 40px;
-        line-height: 1.7;
-        max-width: 500px;
-        white-space: pre-line;
-    }
-
-    .destaque-botoes {
-        display: flex;
-        gap: 50px;
-        flex-wrap: wrap;
-    }
-
-    .destaque-imagem {
-        display: flex;
-        justify-content: center;
-    }
-
-
-    .celular-conteudo {
-        text-align: center;
-        color: white;
-        margin-top: -100px;
-
-    }
-
-    .celular-conteudo img{
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 20px;
-    }
-
-    .app-icone {
-        font-size: 4rem;
-        opacity: 0.8;
-    }
-
-    .sobre, .beneficios, .planos, .valores {
-        background: #f3f4f6;
-    }
-
-    /* --- SEÇÃO SOBRE --- */
-    .sobre-conteudo {
-        max-width: 800px;
-        margin: 0 auto 60px;
-        text-align: center;
-    }
-
-    .sobre-texto {
-        font-size: 1.125rem;
-        margin-bottom: 20px;
-        line-height: 1.7;
-    }
-
-    .passos-processo {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 30px;
-        margin-top: 40px;
-    }
-
-    .passo {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .passo-numero {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        font-size: 18px;
-    }
-
-    .passo-numero.ativo {
-        background: #00158C;
-        color: white;
-    }
-
-    .passo-numero.inativo {
-        background: #e5e7eb;
-        color: #6b7280;
-    }
-
-    .passo-legenda {
-        font-size: 14px;
-        color: #6b7280;
-    }
-
-    .linha-passo {
-        width: 60px;
-        height: 2px;
-        background: #e5e7eb;
-    }
-
-    /* --- SEÇÃO COLABORADOR --- */
-    .colaborador-conteudo {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 60px;
-        align-items: center;
-    }
-
-    .colaborador-descricao {
-        font-size: 1.125rem;
-        line-height: 1.7;
-        margin-bottom: 40px;
-    }
-
-    .colaborador-imagem {
-        display: flex;
-        justify-content: center;
-    }
-
-    .scanner-exemplo {
-        width: 300px;
-        height: 300px;
-        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-        border-radius: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-    }
-
-    .scanner-area {
-        width: 150px;
-        height: 150px;
-        background: white;
-        border-radius: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    }
-
-    .grade-pontos {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
-    }
-
-    .ponto {
-        width: 15px;
-        height: 15px;
-        border-radius: 50%;
-        background: #e5e7eb;
-        transition: background 0.3s ease;
-    }
-
-    .ponto.ativo {
-        background: #00158C;
-    }
-    .beneficios {
-        background: #fff;
-        margin: 60px auto;
-        max-width: 1200px;
-        padding: 20px;
-    }
-
-    .beneficios .titulo-secao {
-        text-align: center;
-
-        font-weight: 700;
-        margin-bottom: 50px;
-        color: #000;
-    }
-
-    .beneficios .titulo-secao span {
-        color: #00158C; /* azul destaque */
-    }
-
-    .beneficios-grade {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-        gap: 30px;
-    }
-
-    .beneficio-card {
-        background: #fff;
-        padding: 30px 20px;
-        border-radius: 12px;
-        box-shadow: 0 6px 12px rgba(0,0,0,0.08);
-        text-align: center;
-        transition: transform 0.3s ease;
-    }
-
-    .beneficio-card:hover {
-        transform: translateY(-6px);
-    }
-
-    .beneficio-icone {
-        width: 70px;
-        height: 70px;
-        margin: 0 auto 15px;
-        border-radius: 50%;
-        background: #f3f4f6; /* círculo cinza */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .beneficio-icone svg {
-        width: 32px;
-        height: 32px;
-        fill: #00158C; /* ícone azul */
-    }
-
-    .beneficio-card h3 {
-        font-size: 1.1rem;
-        font-weight: 700;
-        margin-bottom: 10px;
-        color: #00158C;
-    }
-
-    .beneficio-card p {
-        font-size: 0.95rem;
-        line-height: 1.5;
-        color: #4b5563;
-    }
-
-    .beneficios-grade {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 30px;
-        margin-top: 60px;
-    }
-
-    .cartao-beneficio {
-        background: white;
-        padding: 40px 30px;
-        border-radius: 20px;
-        text-align: center;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-        transition: all 0.3s ease;
-        border: 2px solid #00158C;
-    }
-
-    .cartao-beneficio:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    }
-    .parte3{
-        padding-top: 100px;
-        padding-bottom: 60px;
-    }
-
-    .botoes-container input[type="radio"] {
-        display: none;
-    }
-
-    /* Estilo para as labels dos botões */
-    .botoes-container label {
-        border: 1px solid #7890e0;
-        color: #7890e0;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-    }
-
-    /* Estilo do botão selecionado (checked) */
-    .botoes-container input[type="radio"]:checked + label {
-        background-color: #4b65f7;
-        color: #fff;
-        border-color: #4b65f7;
-    }
-
-
-    .botoes-container {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        margin-bottom: 50px;
-        margin-right: 600px;
-        margin-top: 100px;
-    }
-
-
-    .texto-container .texto {
-        display: none;
-    }
-    .subtitulo{
-        width: 600px;
-    }
-
-    .texto-container{
-        margin-left: 500px;
-        margin-top: -210px;
-
-    }
-
-    .parte3:has(#colab:checked) #txt-colab {
-        display: block;
-    }
-
-    .parte3:has(#gestor:checked) #txt-gestor {
-        display: block;
-    }
-
-    .parte3:has(#web:checked) #txt-web {
-        display: block;
-    }
-
-
-
-
-    .titulo {
-        font-size: 60px;
-        color: #2b3a8a;
-        text-align: center;
-        margin-bottom: 20px;
-        font-weight: bold;
-    }
-
-    .subtitulo {
-        font-size: 20px;
-        line-height: 1.5;
-        text-align: center;
-        max-width: 800px;
-        margin: 0 auto;
-    }
-
-    .beneficio-icone {
-        font-size: 3rem;
-        margin-bottom: 25px;
-        background: #e0e7ff;
-        width: 80px;
-        height: 80px;
-        border-radius: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 25px;
-        transition: all 0.3s ease;
-    }
-
-    .cartao-beneficio:hover .beneficio-icone {
-        background: #00158C;
-        color: white;
-    }
-
-    .beneficio-titulo {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #1f2937;
-        margin-bottom: 15px;
-    }
-
-    .beneficio-descricao {
-        color: #6b7280;
-        line-height: 1.6;
-    }
-
-    /* --- SEÇÃO PLANOS --- */
-    .planos {
-        background: #fff;
-        text-align: center;
-    }
-
-    .planos-cards {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-        gap: 30px;
-        margin-top: 40px;
-        margin-bottom: 20px;
-    }
-
-    .plano-card {
-        background: white;
-        border-radius: 16px;
-        padding: 40px 30px;
-        border: 1px solid #d1d5db;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        position: relative;
-        transition: all 0.3s ease;
-    }
-
-    .plano-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 12px 25px rgba(0,0,0,0.1);
-    }
-
-    /* destaque azul */
-    .plano-card.destaque {
-        background: #00158C;
-        color: white;
-        border: none;
-    }
-
-    .plano-card.destaque .plano-preco {
-        color: white;
-    }
-
-    .plano-card.anual {
-        background: linear-gradient(135deg, #1e3a8a, #00158C);
-        color: white;
-        border: 3px solid #FFD700;
-        box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
-    }
-
-    .plano-card.anual .plano-preco {
-        color: #FFD700;
-    }
-    .titulo-valor{
-        color: blue;
-    }
-
-    .plano-titulo1 {
-        font-size: 1.5rem;
-        font-weight: 700;
-        margin-bottom: 8px;
-        color: #005eff;
-    }
-
-    @media (max-width: 480px) {
-        .hero-title {
-            font-size: 2rem;
-        }
-
-        .section-title {
-            font-size: 2rem;
-        }
-
-        .phone-mockup {
-            width: 200px;
-            height: 400px;
-        }
-    }
-
-</style>
 <body>
-<main>
-    <header class="cabecalho">
-        <div><img src="ch" alt=""></div>
-        <div class="caixa">
-            <div class="navegacao-container">
-                <div class="marca">
-                    <img src="Fotologo.png" alt="">
-                </div>
-
-                <nav class="menu">
-                    <a href="#" class="menu-link">Home</a>
-                    <a href="#" class="menu-link">Sobre Nós</a>
-                    <a href="#" class="menu-link">ContAbaco</a>
-                    <a href="#" class="menu-link">Soluções</a>
-                    <a href="#" class="menu-link">Fale Conosco</a>
-                </nav>
-
-                <div class="botoes-acesso">
-                    <a href="html/login.html" class="botao-secundario">Entrar</a>
-                    <a href="html/cadastroEmpresa.html" class="botao-principal">Cadastrar</a>
+    <main>
+        <header class="cabecalho">
+            <div><img src="ch" alt=""></div>
+            <div class="caixa">
+                <div class="navegacao-container">
+                    <div class="marca">
+                        <img src="Fotologo.png" alt="">
+                    </div>
+                    
+                    <nav class="menu">
+                        <a href="#" class="menu-link">Home</a>
+                        <a href="#" class="menu-link">Sobre Nós</a>
+                        <a href="#" class="menu-link">ContAbaco</a>
+                        <a href="#" class="menu-link">Soluções</a>
+                        <a href="#" class="menu-link">Fale Conosco</a>
+                    </nav>
+                    
+                    <div class="botoes-acesso">
+                        <a href="#" class="botao-secundario">Entrar</a>
+                        <a href="#" class="botao-principal">Cadastrar</a>
+                    </div>
                 </div>
             </div>
-        </div>
-    </header>
+        </header>
 
-    <!-- Destaque -->
-    <section class="destaque">
-        <div class="caixa">
-            <div class="destaque-conteudo">
-                <div class="destaque-texto">
-                    <h1 class="destaque-titulo">
-                        Contando <span class="texto-azul">Com você</span><br>
-                        e <span class="texto-azul">Para você</span>
-                    </h1>
-                    <p class="destaque-descricao">
-                        A solução digital que moderniza seu ábaco em processos industriais, mantendo a simplicidade e a familiaridade que os operadores já conhecem
+        <!-- Destaque -->
+        <section class="destaque">
+            <div class="caixa">
+                <div class="destaque-conteudo">
+                    <div class="destaque-texto">
+                        <h1 class="destaque-titulo">
+                            Contando <span class="texto-azul">Com você</span><br>
+                            e <span class="texto-azul">Para você</span>
+                        </h1>
+                        <p class="destaque-descricao">
+                            A solução digital que moderniza seu ábaco em processos industriais, mantendo a simplicidade e a familiaridade que os operadores já conhecem
+                        </p>
+                        <div class="destaque-botoes">
+                            <a href="#" class="botao-principal grande">Conheça o Produto →</a>
+                            <a href="#" class="botao-contorno grande">Ver planos</a>
+                        </div>
+                    </div>
+                                <div class="celular-conteudo">
+                                    <img src="Fotocel.png" alt="App no celular">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sobre -->
+        <section class="sobre">
+            <div class="caixa">
+                <h2 class="titulo-secao">
+                    Sobre o <span class="texto-azul">ContÁbaco</span>
+                </h2>
+                
+                <div class="sobre-conteudo">
+                    <p class="sobre-texto">
+                        Em muitos frigoríficos, as informações registradas no ábaco <strong>demoram</strong> a ser processadas, <strong>atrasando</strong> relatórios e <strong>dificultando</strong> decisões rápidas. Pensando nisso, criamos o <strong>ContÁbaco:</strong> um aplicativo inteligente que escaneia o ábaco no final do turno, transforma os dados em relatórios automáticos e entrega tudo em tempo real para gestores e colaboradores.
                     </p>
-                    <div class="destaque-botoes">
-                        <a href="#" class="botao-principal grande">Conheça o Produto →</a>
-                        <a href="#" class="botao-contorno grande">Ver planos</a>
+                </div>
+
+                <div class="passos-processo">
+                    <div class="passo">
+                        <div class="passo-numero inativo">1</div>
+                        <span class="passo-legenda">App no Celular</span>
                     </div>
-                </div>
-                <div class="celular-conteudo">
-                    <img src="Fotocel.png" alt="App no celular">
-                </div>
-            </div>
-        </div>
-        </div>
-        </div>
-        </div>
-    </section>
-
-    <!-- Sobre -->
-    <section class="sobre">
-        <div class="caixa">
-            <h2 class="titulo-secao">
-                Sobre o <span class="texto-azul">ContÁbaco</span>
-            </h2>
-
-            <div class="sobre-conteudo">
-                <p class="sobre-texto">
-                    Em muitos frigoríficos, as informações registradas no ábaco <strong>demoram</strong> a ser processadas, <strong>atrasando</strong> relatórios e <strong>dificultando</strong> decisões rápidas. Pensando nisso, criamos o <strong>ContÁbaco:</strong> um aplicativo inteligente que escaneia o ábaco no final do turno, transforma os dados em relatórios automáticos e entrega tudo em tempo real para gestores e colaboradores.
-                </p>
-            </div>
-
-            <div class="passos-processo">
-                <div class="passo">
-                    <div class="passo-numero inativo">1</div>
-                    <span class="passo-legenda">App no Celular</span>
-                </div>
-                <div class="linha-passo"></div>
-                <div class="passo">
-                    <div class="passo-numero ativo">2</div>
-                    <span class="passo-legenda">Escanear</span>
-                </div>
-                <div class="linha-passo"></div>
-                <div class="passo">
-                    <div class="passo-numero inativo">3</div>
-                    <span class="passo-legenda">Enviar & Compartilhar</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Colaborador -->
-    <div class="parte3">
-        <div class="botoes-container">
-            <input type="radio" id="colab" name="modo" checked>
-            <label class="botoes3" for="colab">Colaborador</label>
-
-            <input type="radio" id="gestor" name="modo">
-            <label class="botoes3" for="gestor">Gestor</label>
-
-            <input type="radio" id="web" name="modo">
-            <label class="botoes3" for="web">Web</label>
-        </div>
-
-        <div class="texto-container">
-            <div class="texto" id="txt-colab">
-                <div class="titulo-e-subtitulo-container">
-                    <div class="titulo">Modo Colaborador</div>
-                    <div class="subtitulo">
-                        <p>O modo colaborador do ContAbaço é onde o funcionário do frigorífico escaneia o ábaco no fim de cada turno. A inteligência artificial interpreta as marcações e envia os dados automaticamente para o sistema, reduzindo erros e economizando tempo.</p>
+                    <div class="linha-passo"></div>
+                    <div class="passo">
+                        <div class="passo-numero ativo">2</div>
+                        <span class="passo-legenda">Escanear</span>
+                    </div>
+                    <div class="linha-passo"></div>
+                    <div class="passo">
+                        <div class="passo-numero inativo">3</div>
+                        <span class="passo-legenda">Enviar & Compartilhar</span>
                     </div>
                 </div>
             </div>
+        </section>
 
-            <div class="texto" id="txt-gestor">
-                <div class="titulo-e-subtitulo-container">
-                    <div class="titulo">Modo Gestor</div>
-                    <div class="subtitulo">
-                        <p>O modo gestor do ContÁbaco apresenta as informações do ábaco de forma clara e resumida. Assim, o gestor acompanha a produção em tempo real, identifica gargalos e toma decisões rápidas com base em dados confiáveis.</p>
-                    </div>
-                </div>
+        <!-- Colaborador -->
+        <div class="parte3">
+            <div class="botoes-container">
+                <input type="radio" id="colab" name="modo" checked>
+                <label class="botoes3" for="colab">Colaborador</label>
+
+                <input type="radio" id="gestor" name="modo">
+                <label class="botoes3" for="gestor">Gestor</label>
+
+                <input type="radio" id="web" name="modo">
+                <label class="botoes3" for="web">Web</label>
             </div>
 
-            <div class="texto" id="txt-web">
-                <div class="titulo-e-subtitulo-container">
-                    <div class="titulo">Modo Web</div>
-                    <div class="subtitulo">
-                        <p>A versão web do ContÁbaco é a evolução do modo gestor. Nela, o usuário tem acesso a relatórios detalhados, dashboards dinâmicos e gráficos comparativos, o que facilita o planejamento estratégico e otimiza a gestão da produção.</p>
+            <div class="texto-container">
+                <div class="texto" id="txt-colab">
+                    <div class="titulo-e-subtitulo-container">
+                        <div class="titulo">Modo Colaborador</div>
+                        <div class="subtitulo">
+                            <p>O modo colaborador do ContAbaço é onde o funcionário do frigorífico escaneia o ábaco no fim de cada turno. A inteligência artificial interpreta as marcações e envia os dados automaticamente para o sistema, reduzindo erros e economizando tempo.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="texto" id="txt-gestor">
+                    <div class="titulo-e-subtitulo-container">
+                        <div class="titulo">Modo Gestor</div>
+                        <div class="subtitulo">
+                            <p>O modo gestor do ContÁbaco apresenta as informações do ábaco de forma clara e resumida. Assim, o gestor acompanha a produção em tempo real, identifica gargalos e toma decisões rápidas com base em dados confiáveis.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="texto" id="txt-web">
+                    <div class="titulo-e-subtitulo-container">
+                        <div class="titulo">Modo Web</div>
+                        <div class="subtitulo">
+                            <p>A versão web do ContÁbaco é a evolução do modo gestor. Nela, o usuário tem acesso a relatórios detalhados, dashboards dinâmicos e gráficos comparativos, o que facilita o planejamento estratégico e otimiza a gestão da produção.</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
     <!-- Benefícios -->
-    <section class="beneficios">
+        <section class="beneficios">
         <h2 class="titulo-secao">
-            <span>Benefícios</span> do nosso aplicativo
+        <span>Benefícios</span> do nosso aplicativo
         </h2>
-
+    
         <div class="beneficios-grade">
-            <!-- Card 1 -->
-            <div class="beneficio-card">
-                <div class="beneficio-icone">
-                    <!-- Relógio -->
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M12 1a11 11 0 1 0 11 11A11.013 11.013 0 0 0 12 1Zm0 20a9 9 0 1 1 9-9 9.01 9.01 0 0 1-9 9Zm.5-15h-1v7l6.25 3.72.5-.84-5.75-3.38Z"/>
-                    </svg>
-                </div>
-                <h3>Economia de Tempo</h3>
-                <p>Escaneie o ábaco em segundos e transforme as marcações em dados digitais de forma instantânea.</p>
+        <!-- Card 1 -->
+        <div class="beneficio-card">
+            <div class="beneficio-icone">
+            <!-- Relógio -->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M12 1a11 11 0 1 0 11 11A11.013 11.013 0 0 0 12 1Zm0 20a9 9 0 1 1 9-9 9.01 9.01 0 0 1-9 9Zm.5-15h-1v7l6.25 3.72.5-.84-5.75-3.38Z"/>
+            </svg>
             </div>
-
-            <!-- Card 2 -->
-            <div class="beneficio-card">
-                <div class="beneficio-icone">
-                    <!-- Gráfico -->
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M3 3h2v18H3Zm16 0h2v18h-2ZM9 8h2v13H9Zm8 5h2v8h-2Zm-4-3h2v11h-2Z"/>
-                    </svg>
-                </div>
-                <h3>Decisões Mais Inteligentes</h3>
-                <p>Tenha acesso a relatórios automáticos e dashboards claros para decisões rápidas e assertivas.</p>
+            <h3>Economia de Tempo</h3>
+            <p>Escaneie o ábaco em segundos e transforme as marcações em dados digitais de forma instantânea.</p>
+        </div>
+    
+        <!-- Card 2 -->
+        <div class="beneficio-card">
+            <div class="beneficio-icone">
+            <!-- Gráfico -->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M3 3h2v18H3Zm16 0h2v18h-2ZM9 8h2v13H9Zm8 5h2v8h-2Zm-4-3h2v11h-2Z"/>
+            </svg>
             </div>
-
-            <!-- Card 3 -->
-            <div class="beneficio-card">
-                <div class="beneficio-icone">
-                    <!-- Foguete -->
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M12 2C8 2 4 8 4 12c0 5 8 10 8 10s8-5 8-10c0-4-4-10-8-10Zm0 12a2 2 0 1 1 2-2 2 2 0 0 1-2 2Z"/>
-                    </svg>
-                </div>
-                <h3>Acesso Rápido aos Registros</h3>
-                <p>Visualize rapidamente todos os dados históricos e operações de cada ábaco, sem precisar procurar manualmente.</p>
+            <h3>Decisões Mais Inteligentes</h3>
+            <p>Tenha acesso a relatórios automáticos e dashboards claros para decisões rápidas e assertivas.</p>
+        </div>
+    
+        <!-- Card 3 -->
+        <div class="beneficio-card">
+            <div class="beneficio-icone">
+            <!-- Foguete -->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M12 2C8 2 4 8 4 12c0 5 8 10 8 10s8-5 8-10c0-4-4-10-8-10Zm0 12a2 2 0 1 1 2-2 2 2 0 0 1-2 2Z"/>
+            </svg>
             </div>
-
-            <!-- Card 4 -->
-            <div class="beneficio-card">
-                <div class="beneficio-icone">
-                    <!-- Engrenagem -->
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M19.43 12.98c.04-.32.07-.65.07-.98s-.03-.66-.07-.98l2.11-1.65a.5.5 0 0 0 .12-.64l-2-3.46a.5.5 0 0 0-.61-.21l-2.49 1a7.025 7.025 0 0 0-1.7-.98l-.38-2.65A.488.488 0 0 0 14 2h-4a.5.5 0 0 0-.5.42l-.38 2.65c-.63.24-1.2.56-1.7.98l-2.49-1a.5.5 0 0 0-.61.21l-2 3.46a.5.5 0 0 0 .12.64L4.57 11c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65a.5.5 0 0 0-.12.64l2 3.46c.14.24.42.33.67.21l2.49-1c.5.42 1.07.74 1.7.98l.38 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.38-2.65c.63-.24 1.2-.56 1.7-.98l2.49 1c.25.12.53.03.67-.21l2-3.46a.5.5 0 0 0-.12-.64l-2.11-1.65ZM12 15.5A3.5 3.5 0 1 1 15.5 12 3.5 3.5 0 0 1 12 15.5Z"/>
-                    </svg>
-                </div>
-                <h3>Eficiência Operacional</h3>
-                <p>Reduza erros manuais e aumente a produtividade com processos simplificados e organizados.</p>
+            <h3>Acesso Rápido aos Registros</h3>
+            <p>Visualize rapidamente todos os dados históricos e operações de cada ábaco, sem precisar procurar manualmente.</p>
+        </div>
+    
+        <!-- Card 4 -->
+        <div class="beneficio-card">
+            <div class="beneficio-icone">
+            <!-- Engrenagem -->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M19.43 12.98c.04-.32.07-.65.07-.98s-.03-.66-.07-.98l2.11-1.65a.5.5 0 0 0 .12-.64l-2-3.46a.5.5 0 0 0-.61-.21l-2.49 1a7.025 7.025 0 0 0-1.7-.98l-.38-2.65A.488.488 0 0 0 14 2h-4a.5.5 0 0 0-.5.42l-.38 2.65c-.63.24-1.2.56-1.7.98l-2.49-1a.5.5 0 0 0-.61.21l-2 3.46a.5.5 0 0 0 .12.64L4.57 11c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65a.5.5 0 0 0-.12.64l2 3.46c.14.24.42.33.67.21l2.49-1c.5.42 1.07.74 1.7.98l.38 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.38-2.65c.63-.24 1.2-.56 1.7-.98l2.49 1c.25.12.53.03.67-.21l2-3.46a.5.5 0 0 0-.12-.64l-2.11-1.65ZM12 15.5A3.5 3.5 0 1 1 15.5 12 3.5 3.5 0 0 1 12 15.5Z"/>
+            </svg>
             </div>
-
-            <!-- Card 5 -->
-            <div class="beneficio-card">
-                <div class="beneficio-icone">
-                    <!-- Cadeado -->
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M17 8h-1V6a4 4 0 0 0-8 0v2H7a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2Zm-5 9a2 2 0 1 1 2-2 2 2 0 0 1-2 2Zm3-9H9V6a3 3 0 0 1 6 0Z"/>
-                    </svg>
-                </div>
-                <h3>Segurança Garantida</h3>
-                <p>Seus dados sempre protegidos com tecnologia confiável e criptografia de ponta.</p>
+            <h3>Eficiência Operacional</h3>
+            <p>Reduza erros manuais e aumente a produtividade com processos simplificados e organizados.</p>
+        </div>
+    
+        <!-- Card 5 -->
+        <div class="beneficio-card">
+            <div class="beneficio-icone">
+            <!-- Cadeado -->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M17 8h-1V6a4 4 0 0 0-8 0v2H7a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2Zm-5 9a2 2 0 1 1 2-2 2 2 0 0 1-2 2Zm3-9H9V6a3 3 0 0 1 6 0Z"/>
+            </svg>
             </div>
-
-            <div class="beneficio-card">
-                <div class="beneficio-icone">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M17.62 5.84C15.93 4.15 13.61 3 11 3a9 9 0 0 0 0 18c5 0 9-4 9-9 0-2.61-1.15-4.93-2.84-6.62ZM11 19a7 7 0 1 1 7-7 7.008 7.008 0 0 1-7 7Zm-1-6h2v4h-2Zm0-6h2v4h-2Z"/>
-                    </svg>
-                </div>
-                <h3>Sustentabilidade</h3>
-                <p>Redução do uso de papel e processos manuais, contribuindo para um ambiente mais sustentável.</p>
+            <h3>Segurança Garantida</h3>
+            <p>Seus dados sempre protegidos com tecnologia confiável e criptografia de ponta.</p>
+        </div>
+    
+        <div class="beneficio-card">
+            <div class="beneficio-icone">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M17.62 5.84C15.93 4.15 13.61 3 11 3a9 9 0 0 0 0 18c5 0 9-4 9-9 0-2.61-1.15-4.93-2.84-6.62ZM11 19a7 7 0 1 1 7-7 7.008 7.008 0 0 1-7 7Zm-1-6h2v4h-2Zm0-6h2v4h-2Z"/>
+            </svg>
             </div>
+            <h3>Sustentabilidade</h3>
+            <p>Redução do uso de papel e processos manuais, contribuindo para um ambiente mais sustentável.</p>
+        </div>
         </div>
     </section>
     <!-- Planos -->
     <section class="planos" id="planos">
         <div class="caixa">
-            <h2 class="titulo-secao">Nossos <span class="texto-azul">Planos</span></h2>
-
-            <div class="planos-cards">
-                <!-- PLANO MENSAL -->
-                <div class="plano-card">
-
-                    <i class="mdi mdi-abacus" style="font-size:100px; color:#1565c0;"></i>
-                    <h3 class="plano-titulo1">Plano Mensal</h3>
-                    <p class="plano-info">Plano pago a cada mês</p>
-                    <p class="plano-preco">R$ 129,99</p>
-                </div>
-
-                <!-- PLANO TRIMESTRAL -->
-                <div class="plano-card destaque">
-                    <span class="plano-desconto">-5% ao mês</span>
-                    <i class="mdi mdi-abacus" style="font-size:100px;"></i>
-                    <div class="estrela1">
-                        <h3>⭐</h3>
-                    </div>
-                    <div class="estrela2">
-                        <h3>⭐</h3>
-                    </div>
-                    <h3 class="plano-titulo2">Plano Trimestral</h3>
-                    <p class="plano-info">Plano pago a cada três meses</p>
-                    <p class="plano-preco">R$ 369,99</p>
-                </div>
-
-                <!-- PLANO ANUAL -->
-                <div class="plano-card anual">
-                    <span class="plano-desconto">-15% ao mês</span>
-                    <i class="mdi mdi-abacus" style="font-size:100px;"></i>
-                    <div class="estrela3">
-                        <h3>⭐</h3>
-                    </div>
-                    <div class="estrela4">
-                        <h3>⭐</h3>
-                    </div>
-                    <h3 class="plano-titulo3">Plano Anual</h3>
-                    <p class="plano-info">Plano pago a cada doze meses</p>
-                    <p class="plano-preco">R$ 1.329,99</p>
-                </div>
+        <h2 class="titulo-secao">Nossos <span class="texto-azul">Planos</span></h2>
+    
+        <div class="planos-cards">
+            <!-- PLANO MENSAL -->
+            <div class="plano-card">
+            
+            <i class="mdi mdi-abacus" style="font-size:100px; color:#1565c0;"></i>
+            <h3 class="plano-titulo1">Plano Mensal</h3>
+            <p class="plano-info">Plano pago a cada mês</p>
+            <p class="plano-preco">R$ 129,99</p>
             </div>
-
-            <p class="planos-legenda">
-                * Ao contratar um plano, será aplicada apenas uma taxa de adesão inicial, proporcional à quantidade de funcionários da sua empresa.
-            </p>
+    
+            <!-- PLANO TRIMESTRAL -->
+            <div class="plano-card destaque">
+            <span class="plano-desconto">-5% ao mês</span>
+            <i class="mdi mdi-abacus" style="font-size:100px;"></i>
+            <div class="estrela1">
+                <h3>⭐</h3>
+            </div>
+            <div class="estrela2">
+                <h3>⭐</h3>
+            </div>
+            <h3 class="plano-titulo2">Plano Trimestral</h3>
+            <p class="plano-info">Plano pago a cada três meses</p>
+            <p class="plano-preco">R$ 369,99</p>
+            </div>
+    
+            <!-- PLANO ANUAL -->
+            <div class="plano-card anual">
+            <span class="plano-desconto">-15% ao mês</span>
+            <i class="mdi mdi-abacus" style="font-size:100px;"></i>
+            <div class="estrela3">
+                <h3>⭐</h3>
+            </div>
+            <div class="estrela4">
+                <h3>⭐</h3>
+            </div>
+            <h3 class="plano-titulo3">Plano Anual</h3>
+            <p class="plano-info">Plano pago a cada doze meses</p>
+            <p class="plano-preco">R$ 1.329,99</p>
+            </div>
+        </div>
+    
+        <p class="planos-legenda">
+            * Ao contratar um plano, será aplicada apenas uma taxa de adesão inicial, proporcional à quantidade de funcionários da sua empresa.
+        </p>
         </div>
     </section>
-
-
-    <!-- Quem Somos -->
-    <section class="quem-somos">
-        <div class="caixa">
-            <h2 class="titulo-secao">Somos <span class="texto-azul">Falgadja</span></h2>
-
-            <p class="quem-somos-texto">
-                O grupo <span class="texto-azul">Falgadja</span> nasceu em 2025, idealizado por estudantes da
-                <span class="texto-azul">Germinare Tech</span> apaixonados por tecnologia e inovação.
-                Unidos por um propósito comum, formamos uma equipe de desenvolvedores comprometidos em transformar
-                o ambiente de trabalho nas indústrias frigoríficas.
-            </p>
-
-            <p class="quem-somos-texto">
-                Nosso objetivo é <span class="texto-azul">facilitar o trânsito de informações</span> e tornar a
-                <span class="texto-azul">tomada de decisões mais ágil e precisa</span>.
-            </p>
-
-            <p class="quem-somos-texto">
-                Foi assim que criamos o <span class="texto-azul">ContÁbaco</span>, um aplicativo inteligente que conecta
-                colaboradores e gestores, trazendo <span class="texto-azul">eficiência, transparência e modernidade</span>
-                ao processo de registro e análise de dados produtivos.
-            </p>
-        </div>
-    </section>
-
-
-    <!-- Valores -->
-    <section class="valores">
-        <div class="caixa">
-            <h2 class="titulo-secao">No que <span class="texto-azul">Acreditamos</span></h2>
-            <div class="valores-grid">
-                <div class="valor">
-                    <h3 class="titulo-valor">Compromisso com a Excelência</h3>
-                    <p>Buscamos sempre entregar o nosso melhor em cada projeto, com dedicação, cuidado e atenção aos detalhes. Acreditamos que a excelência é construída com esforço contínuo e paixão pelo que fazemos.</p>
+    
+        
+            <!-- Quem Somos -->
+            <section class="quem-somos">
+                <div class="caixa">
+                    <h2 class="titulo-secao">Somos <span class="texto-azul">Falgadja</span></h2>
+                    
+                    <p class="quem-somos-texto">
+                        O grupo <span class="texto-azul">Falgadja</span> nasceu em 2025, idealizado por estudantes da 
+                        <span class="texto-azul">Germinare Tech</span> apaixonados por tecnologia e inovação. 
+                        Unidos por um propósito comum, formamos uma equipe de desenvolvedores comprometidos em transformar 
+                        o ambiente de trabalho nas indústrias frigoríficas.
+                    </p>
+                    
+                    <p class="quem-somos-texto">
+                        Nosso objetivo é <span class="texto-azul">facilitar o trânsito de informações</span> e tornar a 
+                        <span class="texto-azul">tomada de decisões mais ágil e precisa</span>. 
+                    </p>
+                    
+                    <p class="quem-somos-texto">
+                        Foi assim que criamos o <span class="texto-azul">ContÁbaco</span>, um aplicativo inteligente que conecta 
+                        colaboradores e gestores, trazendo <span class="texto-azul">eficiência, transparência e modernidade</span> 
+                        ao processo de registro e análise de dados produtivos.
+                    </p>
                 </div>
-                <div class="valor">
-                    <h3 class="titulo-valor">Trabalho em Equipe</h3>
-                    <p>Valorizamos a união, a colaboração e o respeito entre todos os membros. Sabemos que juntos somos mais fortes e que cada contribuição é essencial para alcançar nossos objetivos.</p>
-                </div>
-                <div class="valor">
-                    <h3 class="titulo-valor">Responsabilidade e Ética</h3>
-                    <p>Agimos com transparência, respeito e honestidade em todas as situações. Sabemos que nossos resultados só têm valor quando são construídos de forma íntegra.</p>
-                </div>
-            </div>
-            <div class="valores-grid2">
-                <div class="valor">
-                    <h3 class="titulo-valor">Inovação constante</h3>
-                    <p>Estamos sempre abertos a novas ideias, explorando soluções criativas e adaptando-nos às mudanças. Acreditamos que inovar é o caminho para crescer e fazer a diferença..</p>
-                </div>
-                <div class="valor">
-                    <h3 class="titulo-valor">Paixão pelo conhecimento</h3>
-                    <p>Acreditamos que aprender é um processo contínuo. Buscamos sempre evoluir, compartilhar conhecimento e aplicar o que aprendemos para gerar impacto positivo.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FAQ -->
-    <section class="faq">
-        <div class="caixa">
-            <h2 class="titulo-secao">Perguntas <span class="texto-azul">Frequentes</span></h2>
-            <div class="cx-perg">
-                <div class="mexa">
-                    <input type="checkbox" id="pergunta1" class="perg-input">
-                    <label for="pergunta1" class="perg-label">
-                        O ContÁbaco substitui totalmente o uso do ábaco físico?
-                        <span class="seta">▶</span>
-                    </label>
-                    <div class="resposta">
-                        <p>Não. O ábaco físico continua sendo utilizado pelos colaboradores para marcação no dia a dia. O ContÁbaco atua como um facilitador digital, garantindo que os dados registrados sejam automaticamente digitalizados, armazenados e analisados com mais rapidez e precisão.</p>
+            </section>
+            
+        
+            <!-- Valores -->
+            <section class="valores">
+                <div class="caixa">
+                    <h2 class="titulo-secao">No que <span class="texto-azul">Acreditamos</span></h2>
+                    <div class="valores-grid">
+                        <div class="valor">
+                            <h3 class="titulo-valor">Compromisso com a Excelência</h3>
+                            <p>Buscamos sempre entregar o nosso melhor em cada projeto, com dedicação, cuidado e atenção aos detalhes. Acreditamos que a excelência é construída com esforço contínuo e paixão pelo que fazemos.</p>
+                        </div>
+                        <div class="valor">
+                            <h3 class="titulo-valor">Trabalho em Equipe</h3>
+                            <p>Valorizamos a união, a colaboração e o respeito entre todos os membros. Sabemos que juntos somos mais fortes e que cada contribuição é essencial para alcançar nossos objetivos.</p>
+                        </div>
+                        <div class="valor">
+                            <h3 class="titulo-valor">Responsabilidade e Ética</h3>
+                            <p>Agimos com transparência, respeito e honestidade em todas as situações. Sabemos que nossos resultados só têm valor quando são construídos de forma íntegra.</p>
+                        </div>
+                    </div>
+                    <div class="valores-grid2">
+                        <div class="valor">
+                            <h3 class="titulo-valor">Inovação constante</h3>
+                            <p>Estamos sempre abertos a novas ideias, explorando soluções criativas e adaptando-nos às mudanças. Acreditamos que inovar é o caminho para crescer e fazer a diferença..</p>
+                        </div>
+                        <div class="valor">
+                            <h3 class="titulo-valor">Paixão pelo conhecimento</h3>
+                            <p>Acreditamos que aprender é um processo contínuo. Buscamos sempre evoluir, compartilhar conhecimento e aplicar o que aprendemos para gerar impacto positivo.</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="cx-perg">
-                <div class="mexa">
-                    <input type="checkbox" id="pergunta2" class="perg-input">
-                    <label for="pergunta2" class="perg-label">
-                        Preciso de equipamentos especiais para usar o aplicativo?
-                        <span class="seta">▶</span>
-                    </label>
-                    <div class="resposta">
-                        <p>Não. O aplicativo funciona em smartphones e computadores comuns. Basta ter acesso à câmera para escanear o ábaco e conexão com a internet para sincronização dos dados.</p>
+            </section>
+        
+            <!-- FAQ -->
+            <section class="faq">
+                <div class="caixa">
+                    <h2 class="titulo-secao">Perguntas <span class="texto-azul">Frequentes</span></h2>
+                    <div class="cx-perg">
+                        <div class="mexa">
+                            <input type="checkbox" id="pergunta1" class="perg-input">
+                            <label for="pergunta1" class="perg-label">
+                                O ContÁbaco substitui totalmente o uso do ábaco físico?
+                                <span class="seta">▶</span>
+                            </label>
+                            <div class="resposta">
+                                <p>Não. O ábaco físico continua sendo utilizado pelos colaboradores para marcação no dia a dia. O ContÁbaco atua como um facilitador digital, garantindo que os dados registrados sejam automaticamente digitalizados, armazenados e analisados com mais rapidez e precisão.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cx-perg">
+                        <div class="mexa">
+                            <input type="checkbox" id="pergunta2" class="perg-input">
+                            <label for="pergunta2" class="perg-label">
+                                Preciso de equipamentos especiais para usar o aplicativo?
+                                <span class="seta">▶</span>
+                            </label>
+                            <div class="resposta">
+                                <p>Não. O aplicativo funciona em smartphones e computadores comuns. Basta ter acesso à câmera para escanear o ábaco e conexão com a internet para sincronização dos dados.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cx-perg">
+                        <div class="mexa">
+                            <input type="checkbox" id="pergunta3" class="perg-input">
+                            <label for="pergunta3" class="perg-label">
+                                O aplicativo garante segurança dos dados?
+                                <span class="seta">▶</span>
+                            </label>
+                            <div class="resposta">
+                                <p>Sim. Todos os dados são armazenados em ambiente seguro, com criptografia e políticas de proteção de informações, garantindo confidencialidade e confiabilidade para a sua empresa.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cx-perg">
+                        <div class="mexa">
+                            <input type="checkbox" id="pergunta4" class="perg-input">
+                            <label for="pergunta4" class="perg-label">
+                                Como o aplicativo lida com leituras incorretas ou incompletas do ábaco?
+                                <span class="seta">▶</span>
+                            </label>
+                            <div class="resposta">
+                                <p>O ContÁbaco possui um sistema de validação que sinaliza leituras com baixa confiabilidade da IA, permitindo que o gestor revise ou confirme manualmente, garantindo precisão e controle.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cx-perg">
+                        <div class="mexa">
+                            <input type="checkbox" id="pergunta5" class="perg-input">
+                            <label for="pergunta5" class="perg-label">
+                                É possível exportar os dados gerados?
+                                <span class="seta">▶</span>
+                            </label>
+                            <div class="resposta">
+                                <p>Sim. Todas as leituras e relatórios podem ser exportados em formatos como CSV, PDF ou XLS, facilitando análises externas ou integração com outros sistemas.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="cx-perg">
-                <div class="mexa">
-                    <input type="checkbox" id="pergunta3" class="perg-input">
-                    <label for="pergunta3" class="perg-label">
-                        O aplicativo garante segurança dos dados?
-                        <span class="seta">▶</span>
-                    </label>
-                    <div class="resposta">
-                        <p>Sim. Todos os dados são armazenados em ambiente seguro, com criptografia e políticas de proteção de informações, garantindo confidencialidade e confiabilidade para a sua empresa.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="cx-perg">
-                <div class="mexa">
-                    <input type="checkbox" id="pergunta4" class="perg-input">
-                    <label for="pergunta4" class="perg-label">
-                        Como o aplicativo lida com leituras incorretas ou incompletas do ábaco?
-                        <span class="seta">▶</span>
-                    </label>
-                    <div class="resposta">
-                        <p>O ContÁbaco possui um sistema de validação que sinaliza leituras com baixa confiabilidade da IA, permitindo que o gestor revise ou confirme manualmente, garantindo precisão e controle.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="cx-perg">
-                <div class="mexa">
-                    <input type="checkbox" id="pergunta5" class="perg-input">
-                    <label for="pergunta5" class="perg-label">
-                        É possível exportar os dados gerados?
-                        <span class="seta">▶</span>
-                    </label>
-                    <div class="resposta">
-                        <p>Sim. Todas as leituras e relatórios podem ser exportados em formatos como CSV, PDF ou XLS, facilitando análises externas ou integração com outros sistemas.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-</main>
+    </main>
 
-<footer class="rodape-falgadja">
-    <div class="container-rodape">
-        <div class="coluna-rodape-1">
+            <footer class="rodape-falgadja">
+            <div class="container-rodape">
+            <div class="coluna-rodape-1">
             <div class="logo-rodape">
                 <img src="ChatGPT Image 10 de set. de 2025, 10_34_09.png" alt="Logo Falgadja">
                 <p>Falgadja</p>
@@ -1087,9 +447,9 @@
             <a href="#">Cookies</a>
         </div>
     </div>
-</footer>
+    </footer>
 
-</body>
-</html>
+    </body>
+    </html>
 </body>
 </html>
