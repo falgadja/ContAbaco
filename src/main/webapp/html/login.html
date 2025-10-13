@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - ContÁbaco</title>
+    <link rel="stylesheet" href="../css/login.css">
+</head>
+<body>
+<div class="login-container">
+    <div class="login-card">
+        <div class="icon">
+            <img src="https://cdn-icons-png.flaticon.com/512/565/565547.png" alt="Ábaco" width="50">
+        </div>
+
+        <h2>Faça seu login!</h2>
+
+        <form action="LoginServlet" method="post">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" required>
+
+            <label for="senha">Senha</label>
+            <input type="password" name="senha" id="senha" required>
+
+            <a href="esqueciSenha.html" class="esqueci">Esqueci minha senha</a>
+
+            <button type="submit">Entrar</button>
+        </form>
+
+        <a href="#" class="cadastro">Ainda não tenho cadastro</a>
+    </div>
+</div>
+</body>
+</html>
