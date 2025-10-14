@@ -12,30 +12,32 @@ public class FechamentoAvariaDAO {
     public int inserir(FechamentoAvaria fechamentoAvaria) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
-        int retorno = 0;
+        int idGerado = -1;
 
-        try {
-            PreparedStatement pst = con.prepareStatement(
-                    "INSERT INTO FECHAMENTO_AVARIA(id, id_fechamento, id_avaria, quantidade) VALUES (?, ?, ?, ?)"
-            );
-            pst.setInt(1, fechamentoAvaria.getId());
-            pst.setInt(2, fechamentoAvaria.getIdFechamento());
-            pst.setInt(3, fechamentoAvaria.getIdAvaria());
-            pst.setInt(4, fechamentoAvaria.getQuantidade());
-            int linhas = pst.executeUpdate();
-            if (linhas > 0) {
-                retorno = 1;
-                return retorno;
+        String sql = "INSERT INTO fechamento_avaria (id_fechamento, id_avaria, quantidade) " +
+                "VALUES (?, ?, ?) RETURNING id";
+
+        try (PreparedStatement pst = con.prepareStatement(sql)) {
+            pst.setInt(1, fechamentoAvaria.getIdFechamento());
+            pst.setInt(2, fechamentoAvaria.getIdAvaria());
+            pst.setInt(3, fechamentoAvaria.getQuantidade());
+
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    idGerado = rs.getInt("id");
+                    fechamentoAvaria.setId(idGerado); // atualiza o objeto com o ID gerado
+                }
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
-            return -1;
         } finally {
             conexao.desconectar(con);
         }
 
-        return retorno;
+        return idGerado; // retorna o ID gerado ou -1 se falhar
     }
+
 
     // READ - Buscar por ID
     public FechamentoAvaria buscarPorId(int id) {

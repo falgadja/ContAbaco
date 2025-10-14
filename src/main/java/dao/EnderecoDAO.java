@@ -13,8 +13,10 @@ public class EnderecoDAO {
     public int inserirEndereco(Endereco endereco) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
-        int retorno = 0;
-        String sql = "INSERT INTO endereco (pais,estado,cidade,bairro,rua,numero,cep,id_empresa) VALUES (?,?,?,?,?,?,?,?)";
+        int idGerado = -1;
+
+        String sql = "INSERT INTO endereco (pais, estado, cidade, bairro, rua, numero, cep, id_empresa) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING id";
 
         try (PreparedStatement pst = con.prepareStatement(sql)) {
             pst.setString(1, endereco.getPais());
@@ -26,17 +28,22 @@ public class EnderecoDAO {
             pst.setString(7, endereco.getCep());
             pst.setInt(8, endereco.getIdEmpresa());
 
-            int linhas = pst.executeUpdate();
-            if (linhas > 0) retorno = 1;
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    idGerado = rs.getInt("id");
+                    endereco.setId(idGerado); // Atualiza o objeto com o ID do endereço
+                }
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
-            retorno = -1;
         } finally {
             conexao.desconectar(con);
         }
-        return retorno;
+
+        return idGerado; // retorna o ID gerado ou -1 se falhar
     }
+
 
     // BUSCAR POR ID
     public Endereco buscarPorId(int id) {

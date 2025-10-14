@@ -55,6 +55,9 @@ public class Endereco {
     }
 
     //SETTERS
+    public void setId(int id) {
+        this.id = id;
+    }
     public  void setPais(String pais) {
         this.pais = pais;
     }
