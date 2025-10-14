@@ -2,7 +2,7 @@ package model;
 
 public class Empresa {
     private int id;
-    private String cpnj;
+    private String cnpj;
     private String nome;
     private String email;
     private String senha;
@@ -11,9 +11,9 @@ public class Empresa {
 
     //CONSTRUTOR
 
-    public Empresa(int id, String cpnj, String nome, String email, String senha, int idPlano, int qntdFuncionarios) {
+    public Empresa(int id, String cnpj, String nome, String email, String senha, int idPlano, int qntdFuncionarios) {
         this.id = id;
-        this.cpnj = cpnj;
+        this.cnpj = cnpj;
         this.nome = nome;
         this.email = email;
         this.senha = senha;
@@ -27,8 +27,8 @@ public class Empresa {
         return id;
     }
 
-    public String getCpnj() {
-        return cpnj;
+    public String getCnpj() {
+        return cnpj;
     }
 
     public String getNome() {
@@ -57,8 +57,8 @@ public class Empresa {
         this.id = id;
     }
 
-    public void setCpnj(String cpnj) {
-        this.cpnj = cpnj;
+    public void setCnpj(String cnpj) {
+        this.cnpj = cnpj;
     }
 
     public void setNome(String nome) {
@@ -87,7 +87,7 @@ public class Empresa {
     public String toString() {
         return "Empresa{" +
                 "id=" + id +
-                ", cpnj=" + cpnj +
+                ", cnpj=" + cnpj +
                 ", nome='" + nome + '\'' +
                 ", email='" + email + '\'' +
                 ", senha='" + senha + '\'' +

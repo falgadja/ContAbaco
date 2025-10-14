@@ -118,7 +118,7 @@ public int inserir(Funcionario funcionario) {
     public List<Funcionario> buscarPorIdEmpresa(int idEmpresa) {
         Conexao conexao = new Conexao();
         Connection conn = conexao.conectar();
-        List<Funcionario> funcionarios = null;
+        List<Funcionario> funcionarios = new ArrayList<>();
 
         try {
             String sql = "SELECT F.* FROM FUNCIONARIO F JOIN EMPRESA E ON E.ID=F.ID_EMPRESA WHERE ID_EMPRESA = ?";

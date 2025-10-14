@@ -17,14 +17,13 @@ public class EmpresaDAO {
     public int inserir(Empresa empresa) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
-        int retorno = 0;
 
         try {
             PreparedStatement pst = con.prepareStatement(
                     "INSERT INTO EMPRESA(cnpj, nome, email, senha, id_plano, qntd_funcionarios) VALUES (?, ?, ?, ?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS
             );
-            pst.setString(1, empresa.getCpnj());
+            pst.setString(1, empresa.getCnpj());
             pst.setString(2, empresa.getNome());
             pst.setString(3, empresa.getEmail());
             pst.setString(4, empresa.getSenha());
@@ -41,7 +40,7 @@ public class EmpresaDAO {
         }
         } catch (SQLException e) {
             e.printStackTrace();
-            return empresa.getId();
+            return -1;
         } finally {
             conexao.desconectar(con);
         }
@@ -81,7 +80,7 @@ public class EmpresaDAO {
     }
 
     // READ - Buscar por cnpj
-    public Empresa buscarPorCnpj(int cnpj) {
+    public Empresa buscarPorCnpj(String cnpj) {
         Conexao conexao = new Conexao();
         Connection conn = conexao.conectar();
         Empresa empresa = null;
@@ -89,7 +88,7 @@ public class EmpresaDAO {
         try {
             String sql = "SELECT * FROM EMPRESA WHERE CNPJ = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, cnpj);
+            pstmt.setString(1, cnpj);
             ResultSet rset = pstmt.executeQuery();
 
             if (rset.next()) {
@@ -177,9 +176,9 @@ public class EmpresaDAO {
         int retorno = 0;
 
         try {
-            String sql = "UPDATE EMPRESA SET CNPJ = ?, NOME = ?, EMAIL = ? , SENHA = ? , SENHA = ? , ID_PLANO = ? , QNTD_FUNCIONARIOS = ?  WHERE ID = ?";
+            String sql = "UPDATE EMPRESA SET CNPJ = ?, NOME = ?, EMAIL = ? ,SENHA = ? , ID_PLANO = ? , QNTD_FUNCIONARIOS = ?  WHERE ID = ?";
             PreparedStatement pst = conn.prepareStatement(sql);
-            pst.setString(1, empresa.getCpnj());
+            pst.setString(1, empresa.getCnpj());
             pst.setString(2, empresa.getNome());
             pst.setString(3, empresa.getEmail());
             pst.setString(4, empresa.getSenha());
@@ -212,7 +211,6 @@ public class EmpresaDAO {
 
             deletado = pst.executeUpdate();
             if (deletado > 0) {
-                deletado = 1;
                 return deletado;
             }
         } catch (SQLException e) {
