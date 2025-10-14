@@ -1,116 +1,85 @@
- * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #0000ff, #000066);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
 
-        body, html {
-            height: 100%;
-        }
+.login-card {
+    background-color: white;
+    padding: 50px 60px;
+    border-radius: 40px;
+    box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.2);
+    width: 350px;
+    text-align: center;
+}
 
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-           background: linear-gradient( #3360a9, #040962);
-        }
+/* Ícone */
+.icon img {
+    margin-bottom: 10px;
+}
 
-        .container {
-            display: flex;
-            width: 900px;
-            height: 500px;
-            background-color: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 0 20px rgba(0,0,0,0.2);
-        }
-        .formulario{
-            padding: 10px;
-            border-color: #0d049d;
-            border-radius: 10px;
-            font-size: 15px;
+/* Título */
+h2 {
+    color: #0000cc;
+    margin-bottom: 20px;
+}
 
-        }
+label {
+    display: block;
+    text-align: left;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+}
 
-        /* LADO ESQUERDO */
-        .lado-esquerdo {
-            background-color: #1a0dab;
-            color: white;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 20px;
-        }
+input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1.5px solid #0000cc;
+    border-radius: 10px;
+    outline: none;
+    transition: 0.2s;
+}
 
-        .lado-esquerdo img {
-            width: 80px;
-            margin-bottom: 20px;
-        }
+input:focus {
+    border-color: #0000ff;
+}
 
-        .lado-esquerdo h2 {
-            font-size: 24px;
-            font-weight: 600;
-        }
+/* Botão */
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #0000cc;
+    border: none;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+}
 
-        .lado-esquerdo .usuario {
-            margin-top: 30px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background-color: rgba(255,255,255,0.2);
-            padding: 5px 10px;
-            border-radius: 10px;
-        }
+button:hover {
+    background-color: #000099;
+}
 
-        /* LADO DIREITO */
-        .lado-direito {
-            flex: 1;
-            padding: 40px;
-        }
+/* Links */
+a {
+    color: #0000cc;
+    text-decoration: none;
+    font-size: 0.9em;
+}
 
-        .lado-direito h2 {
-            color: #1a0dab;
-            margin-bottom: 30px;
-        }
+a.esqueci {
+    float: right;
+    margin-bottom: 20px;
+}
 
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-    
-
-        button {
-            background-color: #1a0dab;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 10px;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        button:hover {
-            background-color: #0d049d;
-        }
-
-        .link {
-            text-align: center;
-            margin-top: 10px;
-        }
-
-        .link a {
-            font-size: 14px;
-            color: #1a0dab;
-            text-decoration: none;
-        }
-
-        .link a:hover {
-            text-decoration: underline;
-        }
+a.cadastro {
+    display: block;
+    margin-top: 15px;
+}
