@@ -1,17 +1,14 @@
 package dao;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import conexao.Conexao;
 import model.FechamentoTurno;
 
-public class FechamentoTurnoDAO {
+public class Fecham
+        entoTurnoDAO {
 
     // CREATE - Inserir FECHAMENTO de TURNO
     public int inserir(FechamentoTurno fechamentoTurno) {
@@ -21,26 +18,29 @@ public class FechamentoTurnoDAO {
 
         try {
             PreparedStatement pst = con.prepareStatement(
-                    "INSERT INTO turno(id, lote, id_funcionario, data, id_leitura) VALUES (?, ?, ?, ?, ?)"
+                    "INSERT INTO turno(lote, id_funcionario, data, id_leitura) VALUES (?, ?, ?, ?, ?)",
+                    Statement.RETURN_GENERATED_KEYS
             );
-            pst.setInt(1, fechamentoTurno.getId());
-            pst.setInt(2, fechamentoTurno.getIdFuncionario());
-            pst.setInt(3, fechamentoTurno.getLote());
-            pst.setTimestamp(4, Timestamp.valueOf(fechamentoTurno.getData().atStartOfDay()));
-            pst.setInt(5, fechamentoTurno.getIdLeitura());
+            pst.setInt(2, fechamentoTurno.getLote());
+            pst.setInt(1, fechamentoTurno.getIdFuncionario());
+            pst.setTimestamp(3, Timestamp.valueOf(fechamentoTurno.getData().atStartOfDay()));
+            pst.setInt(4, fechamentoTurno.getIdLeitura());
             int linhas = pst.executeUpdate();
             if (linhas > 0) {
-                retorno = 1;
-                return retorno;
+                try (ResultSet rs = pst.getGeneratedKeys()){
+                    if (rs.next()) {
+                        fechamentoTurno.setId(rs.getInt("ID"));
+                    }
+                }
+                return fechamentoTurno.getId();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return -1;
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return -1;
         } finally {
             conexao.desconectar(con);
         }
-
-        return retorno;
+        return fechamentoTurno.getId();
     }
 
     // READ - Buscar por ID
@@ -77,7 +77,7 @@ public class FechamentoTurnoDAO {
     public List<FechamentoTurno> buscarPorNome(Date dataInicio, Date dataFim, int idEmpresa) {
         Conexao conexao = new Conexao();
         Connection conn = conexao.conectar();
-        List<FechamentoTurno> fechamentosTurnos = null;
+        List<FechamentoTurno> fechamentosTurnos = new ArrayList<>();
 
         try {
             String sql = "SELECT * FROM FECHAMENTO_TURNO ft join funcionario f on f.id=ft.id_funcionario join empresa e on e.id=f.id_empresa WHERE ft.DATA BETWEEN ? AND ? AND e.id= ?";
@@ -109,7 +109,7 @@ public class FechamentoTurnoDAO {
     public List<FechamentoTurno> buscarPorIdFuncionario(int idFuncionario) {
         Conexao conexao = new Conexao();
         Connection conn = conexao.conectar();
-        List<FechamentoTurno> fechamentosTurnos = null;
+        List<FechamentoTurno> fechamentosTurnos = new ArrayList<>();
 
         try {
             String sql = "SELECT * FROM FECHAMENTO_TURNO WHERE ID_FUNCIONARIO = ?";
@@ -199,7 +199,7 @@ public class FechamentoTurnoDAO {
     public List<FechamentoTurno> listar() {
         Conexao conexao = new Conexao();
         Connection conn = conexao.conectar();
-        List<FechamentoTurno> fechamentosTurnos = null;
+        List<FechamentoTurno> fechamentosTurnos = new ArrayList<>();
 
         try {
             String sql = "SELECT * FROM FECHAMENTO_TURNO";

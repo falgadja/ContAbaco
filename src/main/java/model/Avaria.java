@@ -31,6 +31,9 @@ public class Avaria {
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
+    public void setId(int id) {
+        this.id = id;
+    }
 
     //TO STRING
     public String toString(){
@@ -39,5 +42,6 @@ public class Avaria {
                 "\nNOME: "+nome+
                 "\nDESCRIÇÃO: "+descricao;
     }
+
 
 }

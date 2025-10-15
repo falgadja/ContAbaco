@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 import conexao.Conexao;
@@ -15,24 +17,27 @@ public class EmpresaDAO {
     public int inserir(Empresa empresa) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
-        int retorno = 0;
 
         try {
             PreparedStatement pst = con.prepareStatement(
-                    "INSERT INTO EMPRESA(id, cnpj, nome, email, senha, id_plano, qntd_funcionarios) VALUES (?, ?, ?, ?, ?, ?, ?)"
+                    "INSERT INTO EMPRESA(cnpj, nome, email, senha, id_plano, qntd_funcionarios) VALUES (?, ?, ?, ?, ?, ?)",
+                    Statement.RETURN_GENERATED_KEYS
             );
-            pst.setInt(1, empresa.getId());
-            pst.setString(2, empresa.getCpnj());
-            pst.setString(3, empresa.getNome());
-            pst.setString(4, empresa.getEmail());
-            pst.setString(5, empresa.getSenha());
-            pst.setInt(6, empresa.getIdPlano());
-            pst.setInt(7, empresa.getQntdFuncionarios());
+            pst.setString(1, empresa.getCnpj());
+            pst.setString(2, empresa.getNome());
+            pst.setString(3, empresa.getEmail());
+            pst.setString(4, empresa.getSenha());
+            pst.setInt(5, empresa.getIdPlano());
+            pst.setInt(6, empresa.getQntdFuncionarios());
             int linhas = pst.executeUpdate();
             if (linhas > 0) {
-                retorno = 1;
-                return retorno;
+                try (ResultSet rs = pst.getGeneratedKeys()){
+                if (rs.next()) {
+                    empresa.setId(rs.getInt("ID"));
+                }
             }
+            return empresa.getId();
+        }
         } catch (SQLException e) {
             e.printStackTrace();
             return -1;
@@ -40,7 +45,7 @@ public class EmpresaDAO {
             conexao.desconectar(con);
         }
 
-        return retorno;
+        return empresa.getId();
     }
 
     // READ - Buscar por ID
@@ -75,7 +80,7 @@ public class EmpresaDAO {
     }
 
     // READ - Buscar por cnpj
-    public Empresa buscarPorCnpj(int cnpj) {
+    public Empresa buscarPorCnpj(String cnpj) {
         Conexao conexao = new Conexao();
         Connection conn = conexao.conectar();
         Empresa empresa = null;
@@ -83,7 +88,7 @@ public class EmpresaDAO {
         try {
             String sql = "SELECT * FROM EMPRESA WHERE CNPJ = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, cnpj);
+            pstmt.setString(1, cnpj);
             ResultSet rset = pstmt.executeQuery();
 
             if (rset.next()) {
@@ -139,7 +144,7 @@ public class EmpresaDAO {
     public List<Empresa> listar() {
         Conexao conexao = new Conexao();
         Connection conn = conexao.conectar();
-        List<Empresa> empresas = null;
+        List<Empresa> empresas = new ArrayList<>();
 
         try {
             String sql = "SELECT * FROM EMPRESA";
@@ -171,9 +176,9 @@ public class EmpresaDAO {
         int retorno = 0;
 
         try {
-            String sql = "UPDATE EMPRESA SET CNPJ = ?, NOME = ?, EMAIL = ? , SENHA = ? , SENHA = ? , ID_PLANO = ? , QNTD_FUNCIONARIOS = ?  WHERE ID = ?";
+            String sql = "UPDATE EMPRESA SET CNPJ = ?, NOME = ?, EMAIL = ? ,SENHA = ? , ID_PLANO = ? , QNTD_FUNCIONARIOS = ?  WHERE ID = ?";
             PreparedStatement pst = conn.prepareStatement(sql);
-            pst.setString(1, empresa.getCpnj());
+            pst.setString(1, empresa.getCnpj());
             pst.setString(2, empresa.getNome());
             pst.setString(3, empresa.getEmail());
             pst.setString(4, empresa.getSenha());
@@ -206,7 +211,6 @@ public class EmpresaDAO {
 
             deletado = pst.executeUpdate();
             if (deletado > 0) {
-                deletado = 1;
                 return deletado;
             }
         } catch (SQLException e) {

@@ -1,4 +1,4 @@
-package org.example;
+package teste;
 
 import conexao.Conexao;
 import dao.*;
@@ -8,7 +8,7 @@ import java.sql.Connection;
 import java.time.LocalDate;
 import java.util.List;
 
-public class Main {
+public class  TesteDAO{
     public static void main(String[] args) {
 
         // CONECTAR COM O BANCO

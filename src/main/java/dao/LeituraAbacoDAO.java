@@ -16,7 +16,7 @@ public class LeituraAbacoDAO {
     public int inserirLeituraAbaco(LeituraAbaco leituraAbaco) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
-        int retorno = 0;
+        int idGerado = 0;
         String sql = "INSERT INTO leitura_abaco(imagem, data_hora) VALUES(?, ?)";
 
         try (PreparedStatement pst = con.prepareStatement(sql)) {
@@ -24,17 +24,18 @@ public class LeituraAbacoDAO {
             pst.setTimestamp(2, java.sql.Timestamp.valueOf(leituraAbaco.getDataHora())); //Converte o localDateTime para o tipo aceito pelo JDBC
 
 
-            int linhas = pst.executeUpdate();
-            if (linhas > 0) {
-                retorno = 1;
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                idGerado = rs.getInt("id");
+                leituraAbaco.setId(idGerado); // Define o ID no objeto
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             conexao.desconectar(con);
         }
 
-        return retorno;
+        return idGerado; // Retorna o ID gerado ou -1 se falhar
     }
     //ATUALIZAR
     public int atualizar(int id, LeituraAbaco leituraAbaco) {
