@@ -24,12 +24,12 @@ public class TurnoDAO {
 
         try {
             String sql = "INSERT INTO turno (TEMPO_DURACAO, QTD_FUNCIONARIOS, DATA) VALUES (?, ?, ?)";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setTime(1, Time.valueOf(turno.getTempoDuracao()));
-            pstmt.setInt(2, turno.getQtdFuncionarios());
-            pstmt.setDate(3, Date.valueOf(turno.getData()));
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setTime(1, Time.valueOf(turno.getTempoDuracao()));
+            pst.setInt(2, turno.getQtdFuncionarios());
+            pst.setDate(3, Date.valueOf(turno.getData()));
 
-            int linhas = pstmt.executeUpdate();
+            int linhas = pst.executeUpdate();
             if (linhas > 0) {
                 retorno = 1;
             }
@@ -51,16 +51,16 @@ public class TurnoDAO {
 
         try {
             String sql = "SELECT * FROM TURNO WHERE ID = ?";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, turno.getId());
-            ResultSet rset = pstmt.executeQuery();
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setInt(1, turno.getId());
+            ResultSet rs = pst.executeQuery();
 
-            while (rset.next()) {
+            while (rs.next()) {
                 t = new Turno(
-                        rset.getInt("ID"),
-                        rset.getObject("TEMPO_DURACAO", java.time.LocalTime.class),
-                        rset.getInt("QTD_FUNCIONARIOS"),
-                        rset.getObject("DATA", java.time.LocalDate.class)
+                        rs.getInt("ID"),
+                        rs.getObject("TEMPO_DURACAO", java.time.LocalTime.class),
+                        rs.getInt("QTD_FUNCIONARIOS"),
+                        rs.getObject("DATA", java.time.LocalDate.class)
                 );
             }
         } catch (SQLException e) {
@@ -86,18 +86,18 @@ public class TurnoDAO {
                     "JOIN EMPRESA E ON F.ID_EMPRESA = E.ID " +
                     "WHERE DATA BETWEEN ? AND ? " +
                     "AND E.NOME = ?";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setDate(1, Date.valueOf(turno.getData()));
-            pstmt.setDate(2, Date.valueOf(dataExtra));
-            pstmt.setString(3, nomeEmpresa);
-            ResultSet rset = pstmt.executeQuery();
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setDate(1, Date.valueOf(turno.getData()));
+            pst.setDate(2, Date.valueOf(dataExtra));
+            pst.setString(3, nomeEmpresa);
+            ResultSet rs = pst.executeQuery();
 
-            while (rset.next()) {
+            while (rs.next()) {
                 t = new Turno(
-                        rset.getInt("ID"),
-                        rset.getObject("TEMPO_DURACAO", java.time.LocalTime.class),
-                        rset.getInt("QTD_FUNCIONARIOS"),
-                        rset.getObject("DATA", java.time.LocalDate.class)
+                        rs.getInt("ID"),
+                        rs.getObject("TEMPO_DURACAO", java.time.LocalTime.class),
+                        rs.getInt("QTD_FUNCIONARIOS"),
+                        rs.getObject("DATA", java.time.LocalDate.class)
                 );
             }
         } catch (SQLException sqle) {
@@ -121,16 +121,16 @@ public class TurnoDAO {
                     "JOIN FUNCIONARIO F ON FT.ID_FUNCIONARIO = F.ID " +
                     "JOIN EMPRESA E ON F.ID_EMPRESA = E.ID " +
                     "WHERE T.ID = ?";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, turno.getId());
-            ResultSet rset = pstmt.executeQuery();
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setInt(1, turno.getId());
+            ResultSet rs = pst.executeQuery();
 
-            while (rset.next()) {
+            while (rs.next()) {
                 Turno t = new Turno(
-                        rset.getInt("ID"),
-                        rset.getObject("TEMPO_DURACAO", java.time.LocalTime.class),
-                        rset.getInt("QTD_FUNCIONARIOS"),
-                        rset.getObject("DATA", java.time.LocalDate.class)
+                        rs.getInt("ID"),
+                        rs.getObject("TEMPO_DURACAO", java.time.LocalTime.class),
+                        rs.getInt("QTD_FUNCIONARIOS"),
+                        rs.getObject("DATA", java.time.LocalDate.class)
                 );
                 turnos.add(t);
             }
@@ -151,13 +151,13 @@ public class TurnoDAO {
 
         try {
             String sql = "UPDATE TURNO SET QTD_FUNICIONARIOS = ?, TEMPO_DURACAO = ?, DATA = ?  WHERE ID = ?";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, turno.getQtdFuncionarios());
-            pstmt.setTime(2, Time.valueOf(turno.getTempoDuracao()));
-            pstmt.setDate(3,Date.valueOf(turno.getData()));
-            pstmt.setInt(4, turno.getId());
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setInt(1, turno.getQtdFuncionarios());
+            pst.setTime(2, Time.valueOf(turno.getTempoDuracao()));
+            pst.setDate(3,Date.valueOf(turno.getData()));
+            pst.setInt(4, turno.getId());
 
-            int linhas = pstmt.executeUpdate();
+            int linhas = pst.executeUpdate();
             if (linhas > 0) {
                 retorno = 1;
             }
@@ -179,10 +179,10 @@ public class TurnoDAO {
 
         try {
             String sql = "DELETE FROM TURNO WHERE ID = ?";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, turno.getId());
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setInt(1, turno.getId());
 
-            int linhas = pstmt.executeUpdate();
+            int linhas = pst.executeUpdate();
             if (linhas > 0) {
                 retorno = 1;
             }

@@ -3,6 +3,7 @@ package dao;
 import conexao.Conexao;
 import model.Plano;
 import model.Setor;
+import model.Turno;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -18,15 +19,15 @@ public class PlanoDAO {
 
         try {
             String sql = "SELECT * FROM PLANO WHERE ID = ?";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, plano.getId());
-            ResultSet rset = pstmt.executeQuery();
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setInt(1, plano.getId());
+            ResultSet rs = pst.executeQuery();
 
-            while (rset.next()) {
+            while (rs.next()) {
                 p = new Plano(
-                        rset.getInt("ID"),
-                        rset.getString("NOME"),
-                        rset.getDouble("PRECO")
+                        rs.getInt("ID"),
+                        rs.getString("NOME"),
+                        rs.getDouble("PRECO")
                 );
             }
         } catch (SQLException sqle) {
@@ -46,15 +47,15 @@ public class PlanoDAO {
 
         try {
             String sql = "SELECT * FROM PLANO WHERE NOME = ?";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, plano.getNome());
-            ResultSet rset = pstmt.executeQuery();
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setString(1, plano.getNome());
+            ResultSet rs = pst.executeQuery();
 
-            while (rset.next()) {
+            while (rs.next()) {
                 p = new Plano(
-                        rset.getInt("ID"),
-                        rset.getString("NOME"),
-                        rset.getDouble("PRECO")
+                        rs.getInt("ID"),
+                        rs.getString("NOME"),
+                        rs.getDouble("PRECO")
                 );
             }
         } catch (SQLException sqle) {
@@ -74,15 +75,15 @@ public class PlanoDAO {
 
         try {
             String sql = "SELECT * FROM PLANO WHERE PRECO = ?";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setDouble(1, plano.getPreco());
-            ResultSet rset = pstmt.executeQuery();
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setDouble(1, plano.getPreco());
+            ResultSet rs = pst.executeQuery();
 
-            while (rset.next()) {
+            while (rs.next()) {
                 p = new Plano(
-                        rset.getInt("ID"),
-                        rset.getString("NOME"),
-                        rset.getDouble("PRECO")
+                        rs.getInt("ID"),
+                        rs.getString("NOME"),
+                        rs.getDouble("PRECO")
                 );
             }
         } catch (SQLException sqle) {
@@ -103,13 +104,13 @@ public class PlanoDAO {
         try {
             String sql = "SELECT * FROM PLANO ";
             Statement stmt = conn.createStatement();
-            ResultSet rset = stmt.executeQuery(sql);
+            ResultSet rs = stmt.executeQuery(sql);
 
-            while (rset.next()) {
+            while (rs.next()) {
                 Plano p = new Plano(
-                        rset.getInt("ID"),
-                        rset.getString("NOME"),
-                        rset.getDouble("PRECO")
+                        rs.getInt("ID"),
+                        rs.getString("NOME"),
+                        rs.getDouble("PRECO")
                 );
                 planos.add(p);
             }
@@ -119,5 +120,57 @@ public class PlanoDAO {
             conexao.desconectar(conn);
         }
         return planos;
+    }
+
+    // UPDATE - Atualizar PLANO
+
+    public int atualizar(Plano plano) {
+        Conexao conexao = new Conexao();
+        Connection con = conexao.conectar();
+        int retorno = 0;
+
+        try {
+            String sql = "UPDATE PLANO SET NOME=?, PRECO=? WHERE ID=?";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, plano.getNome());
+            pst.setDouble(2, plano.getPreco());
+
+            int linhas = pst.executeUpdate();
+            if (linhas > 0) {
+                retorno = 1;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            retorno = -1;
+        } finally {
+            conexao.desconectar(con);
+        }
+
+        return retorno;
+    }
+
+    // DELETE - Apagar PLANO
+
+    public int deletar(Plano plano) {
+        Conexao conexao = new Conexao();
+        Connection conn = conexao.conectar();
+        int retorno = 0;
+
+        try {
+            String sql = "DELETE FROM PLANO WHERE ID = ?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setInt(1, plano.getId());
+
+            int linhas = pst.executeUpdate();
+            if (linhas > 0) {
+                retorno = 1;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            retorno = -1;
+        } finally {
+            conexao.desconectar(conn);
+        }
+        return retorno;
     }
 }

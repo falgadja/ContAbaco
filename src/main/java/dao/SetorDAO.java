@@ -20,10 +20,10 @@ public class SetorDAO {
 
         try {
             String sql = "INSERT INTO SETOR (NOME) VALUES (?)";
-            PreparedStatement pstmt = con.prepareStatement(sql);
-            pstmt.setString(1, setor.getNome());
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, setor.getNome());
 
-            int linhas = pstmt.executeUpdate();
+            int linhas = pst.executeUpdate();
             if (linhas > 0) {
                 retorno = 1;
             }
@@ -45,14 +45,14 @@ public class SetorDAO {
 
         try {
             String sql = "SELECT * FROM SETOR WHERE ID = ?";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, setor.getId());
-            ResultSet rset = pstmt.executeQuery();
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setInt(1, setor.getId());
+            ResultSet rs = pst.executeQuery();
 
-            while (rset.next()) {
+            while (rs.next()) {
                 s = new Setor(
-                        rset.getInt("ID"),
-                        rset.getString("NOME")
+                        rs.getInt("ID"),
+                        rs.getString("NOME")
                 );
             }
         } catch (SQLException e) {
@@ -76,15 +76,15 @@ public class SetorDAO {
                      "JOIN FUNCIONARIO F ON S.ID = F.ID_SETOR " +
                      "JOIN EMPRESA E ON F.ID_EMPRESA = E.ID " +
                      "WHERE S.NOME = ? AND E.NOME = ?";
-             PreparedStatement pstmt = conn.prepareStatement(sql);
-             pstmt.setString(1, setor.getNome());
-             pstmt.setString(2,nomeEmpresa);
-             ResultSet rset = pstmt.executeQuery();
+             PreparedStatement pst = conn.prepareStatement(sql);
+             pst.setString(1, setor.getNome());
+             pst.setString(2,nomeEmpresa);
+             ResultSet rs = pst.executeQuery();
 
-             while (rset.next()) {
+             while (rs.next()) {
                  s = new Setor(
-                         rset.getInt("ID"),
-                         rset.getString("NOME")
+                         rs.getInt("ID"),
+                         rs.getString("NOME")
                  );
              }
         } catch (SQLException sqle) {
@@ -107,14 +107,14 @@ public class SetorDAO {
                     "JOIN FUNCIONARIO F ON S.ID = F.ID_SETOR " +
                     "JOIN EMPRESA E ON F.ID_EMPRESA = E.ID " +
                     "WHERE S.ID = ?";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, setor.getId());
-            ResultSet rset = pstmt.executeQuery(sql);
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setInt(1, setor.getId());
+            ResultSet rs = pst.executeQuery(sql);
 
-            while (rset.next()) {
+            while (rs.next()) {
                 Setor s = new Setor(
-                        rset.getInt("ID"),
-                        rset.getString("NOME")
+                        rs.getInt("ID"),
+                        rs.getString("NOME")
                 );
                 setores.add(s);
             }
@@ -135,11 +135,11 @@ public class SetorDAO {
 
         try {
             String sql = "UPDATE SETOR SET NOME = ? WHERE ID = ?";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, nomeSetor);
-            pstmt.setInt(2, setor.getId());
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setString(1, nomeSetor);
+            pst.setInt(2, setor.getId());
 
-            int linhas = pstmt.executeUpdate();
+            int linhas = pst.executeUpdate();
             if (linhas > 0) {
                 retorno = 1;
             }
