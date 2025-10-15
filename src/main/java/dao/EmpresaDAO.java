@@ -140,6 +140,67 @@ public class EmpresaDAO {
         return empresa;
     }
 
+    // READ - Buscar por EMAIL
+    public Empresa buscarPorEmail(String email) {
+        Conexao conexao = new Conexao();
+        Connection conn = conexao.conectar();
+        Empresa empresa = null;
+
+        try {
+            String sql = "SELECT * FROM EMPRESA WHERE EMAIL = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, email);
+            ResultSet rset = pstmt.executeQuery();
+
+            if (rset.next()) {
+                empresa = new Empresa(
+                        rset.getInt("ID"),
+                        rset.getString("cnpj"),
+                        rset.getString("nome"),
+                        rset.getString("email"),
+                        rset.getString("senha"),
+                        rset.getInt("id_plano"),
+                        rset.getInt("qntd_funcionarios"));
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        } finally {
+            conexao.desconectar(conn);
+        }
+        return empresa;
+    }
+
+    // READ - Buscar por SENHA e EMAIL
+    public Empresa buscarPorSenhaEEemail(String email, String senha) {
+        Conexao conexao = new Conexao();
+        Connection conn = conexao.conectar();
+        Empresa empresa = null;
+
+        try {
+            String sql = "SELECT * FROM EMPRESA WHERE EMAIL= ? and SENHA = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, email);
+            pstmt.setString(2, senha);
+            ResultSet rset = pstmt.executeQuery();
+
+            if (rset.next()) {
+                empresa = new Empresa(
+                        rset.getInt("ID"),
+                        rset.getString("cnpj"),
+                        rset.getString("nome"),
+                        rset.getString("email"),
+                        rset.getString("senha"),
+                        rset.getInt("id_plano"),
+                        rset.getInt("qntd_funcionarios"));
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        } finally {
+            conexao.desconectar(conn);
+        }
+        return empresa;
+    }
+
     // READ - Listar EMPRESA
     public List<Empresa> listar() {
         Conexao conexao = new Conexao();
