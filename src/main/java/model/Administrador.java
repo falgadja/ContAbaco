@@ -23,7 +23,9 @@ public class Administrador {
         return senha;
     }
     //SET
-
+    public void setId(int id) {
+        this.id = id;
+    }
     public void setEmail(String email) {
         this.email = email;
     }

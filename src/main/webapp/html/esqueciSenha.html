@@ -1,31 +1,36 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Redefinir Senha - ContÁbaco</title>
-    <link rel="stylesheet" href="../css/esqueciSenha.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Recuperar senha</title>
+  <link rel="stylesheet" href="../css/esqueciSenha.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-<div class="login-container">
-    <h2>Redefinir Senha</h2>
-    <p>Digite seu e-mail e defina uma nova senha.</p>
+  <div id = "fundo">
+    <div class="branca">
+      <div class="fotos">
+        <img src="gif-abaco-unscreen.gif" alt="" id = "gif">
+        <img src="logo azul bonito sem fundo.png" alt="ícone topo 2" id = "logo_falgadja">
+      </div>
 
-    <form action="../RedefinirSenhaServlet" method="post">
-        <label for="email">E-mail</label>
-        <input type="email" id="email" name="email" placeholder="exemplo@empresa.com" required>
+      <h1 id = "titulo">Recupere sua senha!</h1>
 
-        <label for="novaSenha">Nova senha</label>
-        <input type="password" id="novaSenha" name="novaSenha" required>
+      <p class="paragrafo">
+        Informe o email cadastrado que nós enviaremos um link<br>
+        para a alteração da senha.
+      </p>
 
-        <label for="confirmarSenha">Confirmar senha</label>
-        <input type="password" id="confirmarSenha" name="confirmarSenha" required>
+      <label for="email" class="label">Email</label>
+      <input id="email" type="email" class="input" placeholder="">
 
-        <button type="submit">Redefinir</button>
-    </form>
+      <div class="botoes">
+        <button id="enviar">Enviar</button>
+        <a href="login.html" id ="cancelar">Cancelar</a>
+      </div>
 
-    <div class="links">
-        <a href="login.html">Voltar ao login</a>
     </div>
-</div>
+  </div>
 </body>
 </html>

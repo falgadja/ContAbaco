@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Login - ContÁbaco</title>
     <link rel="stylesheet" href="../css/login.css">
+
 </head>
 <body>
 <div class="login-container">
@@ -14,7 +15,10 @@
 
         <h2>Faça seu login!</h2>
 
-        <form action="LoginServlet" method="post">
+        <!-- Mensagem de erro -->
+        <div id="mensagemErro" class="erro"></div>
+
+        <form action="loginEmpresaServlet" method="post">
             <label for="email">Email</label>
             <input type="email" name="email" id="email" required>
 
@@ -26,8 +30,26 @@
             <button type="submit">Entrar</button>
         </form>
 
-        <a href="#" class="cadastro">Ainda não tenho cadastro</a>
+        <a href="cadastroPessoa.html    " class="cadastro">Ainda não tenho cadastro</a>
     </div>
 </div>
+
+<script>
+    // Função para obter parâmetro da URL usando javascript
+    function getParametroURL(nome) {
+        const params = new URLSearchParams(window.location.search);
+        return params.get(nome);
+    }
+
+    // Verificar se existe erro na URL
+    const erro = getParametroURL('erro');
+    const mensagemErro = document.getElementById('mensagemErro');
+
+    if (erro === '1') {
+        mensagemErro.textContent = "Email ou senha inválidos!";
+    } else if (erro === '2') {
+        mensagemErro.textContent = "Ocorreu um erro no sistema. Tente novamente mais tarde.";
+    }
+</script>
 </body>
 </html>
