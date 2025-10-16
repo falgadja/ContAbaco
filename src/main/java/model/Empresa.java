@@ -20,6 +20,10 @@ public class Empresa {
         this.idPlano = idPlano;
         this.qntdFuncionarios = qntdFuncionarios;
     }
+    public Empresa() {
+
+    }
+
 
     // GETTERS
 
