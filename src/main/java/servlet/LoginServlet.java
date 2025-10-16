@@ -1,5 +1,7 @@
 package servlet;
 
+import java.io.IOException;
+
 import dao.AdmDAO;
 import dao.EmpresaDAO;
 import dao.FuncionarioDAO;
@@ -8,8 +10,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
 
 @WebServlet(name="loginEmpresaServlet")
 public class LoginServlet extends HttpServlet {
@@ -22,7 +22,7 @@ public class LoginServlet extends HttpServlet {
         EmpresaDAO empresaDAO = new EmpresaDAO();
         FuncionarioDAO funcionarioDAO = new FuncionarioDAO();
         AdmDAO admDAO = new AdmDAO();
-        if (empresaDAO.buscarPorSenhaEEemail(email, senha) != null) {
+        if (empresaDAO.buscarPorSenhaEemail(email, senha) != null) {
             request.getRequestDispatcher("WEB-INF/crudEmpresa.jsp").forward(request, response);
         } else if (funcionarioDAO.buscarPorEmailESenha(email, senha) != null) {
             request.getRequestDispatcher("WEB-INF/crudFuncionario.jsp").forward(request, response);
