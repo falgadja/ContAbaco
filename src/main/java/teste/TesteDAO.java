@@ -29,7 +29,7 @@ public class  TesteDAO{
         System.out.println("\nLISTA DE TODAS AS EMPRESAS:");
         if (listaEmpresas != null) {
             for (Empresa e : listaEmpresas) {
-                System.out.println(e.getId() + " - " + e.getNome() + " | CNPJ: " + e.getCpnj());
+                System.out.println(e.getId() + " - " + e.getNome() + " | CNPJ: " + e.getCnpj());
             }
         }
 

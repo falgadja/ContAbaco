@@ -171,7 +171,7 @@ public class EmpresaDAO {
     }
 
     // READ - Buscar por SENHA e EMAIL
-    public Empresa buscarPorSenhaEEemail(String email, String senha) {
+    public Empresa buscarPorSenhaEemail(String email, String senha) {
         Conexao conexao = new Conexao();
         Connection conn = conexao.conectar();
         Empresa empresa = null;
@@ -283,4 +283,7 @@ public class EmpresaDAO {
 
         return deletado;
     }
+
+
+
 }
