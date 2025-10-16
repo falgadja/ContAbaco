@@ -1,8 +1,8 @@
-package teste;
-
-import conexao.Conexao;
+package org.example;
 
 import java.sql.Connection;
+
+import conexao.Conexao;
 
 public class TesteBanco {
     public static void main(String[] args) {
