@@ -7,8 +7,7 @@ import java.util.List;
 import conexao.Conexao;
 import model.FechamentoTurno;
 
-public class Fecham
-        entoTurnoDAO {
+public class FechamentoTurnoDAO {
 
     // CREATE - Inserir FECHAMENTO de TURNO
     public int inserir(FechamentoTurno fechamentoTurno) {

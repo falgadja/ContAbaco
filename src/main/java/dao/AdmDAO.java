@@ -12,7 +12,7 @@ public class AdmDAO {
     public int inserirAdm(Administrador adm) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
-        String sql = "INSERT INTO ADM(EMAIL,SENHA) VALUES (?, ?)RETURNING id)";
+        String sql = "INSERT INTO ADM(EMAIL,SENHA) VALUES (?, ?)RETURNING id";
         int idGerado = -1;
 
         try{
@@ -85,8 +85,8 @@ public class AdmDAO {
 
         try{
             PreparedStatement pst= con.prepareStatement(sql);
-            pst.setString(1, adm.getEmail());
-            pst.setString(2,adm.getSenha());
+            pst.setString(1, email);
+            pst.setString(2,senha);
 
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {

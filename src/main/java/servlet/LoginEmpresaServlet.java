@@ -11,7 +11,7 @@ import model.Empresa;
 
 import java.io.IOException;
 
-@WebServlet(name="loginEmpresaServlet", urlPatterns={"/loginEmpresa"})
+@WebServlet(name="loginEmpresaServlet")
 public class LoginEmpresaServlet extends HttpServlet {
 
     @Override
@@ -27,7 +27,7 @@ public class LoginEmpresaServlet extends HttpServlet {
 
         // Criar objeto DAO e buscar empresa
         EmpresaDAO empresaDAO = new EmpresaDAO();
-        Empresa empresa = empresaDAO.buscarPorEmailSenha(email, senha);
+        Empresa empresa = empresaDAO.buscarPorSenhaEEemail(email, senha);
 
         if (empresa != null) {
             //  Criar sessão
