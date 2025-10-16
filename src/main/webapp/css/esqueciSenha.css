@@ -109,13 +109,13 @@ form {
 /* --- Links --- */
 .link-sm {
     font-size: 0.85rem;
-    text-decoration: underline; /* MODIFICADO: O sublinhado agora é padrão */
+    text-decoration: none;
     color: #304FFE;
     transition: all 0.3s ease;
 }
 
 .link-sm:hover {
-    color: #0019CB; /* O sublinhado já é padrão, então mudamos a cor no hover */
+    text-decoration: underline;
 }
 
 .link-forgot {
