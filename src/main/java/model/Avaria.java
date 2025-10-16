@@ -1,54 +1,47 @@
 package model;
 
-public class Avarias {
+public class Avaria {
     private int id;
     private String nome;
     private String descricao;
 
     // CONSTRUTOR
 
-    public Avarias(String nome, int id, String descricao) {
+    public Avaria(String nome, String descricao, int id) {
         this.nome = nome;
-        this.id = id;
         this.descricao = descricao;
+        this.id=id;
     }
 
-    // GETTERS
-
+    //GETTERS
+    public String getNome() {
+        return nome;
+    }
+    public String getDescricao() {
+        return descricao;
+    }
     public int getId() {
         return id;
     }
 
-    public String getDescricao() {
-        return descricao;
+    //SETTERS
+    public void setNome(String nome) {
+        this.nome = nome;
     }
-
-    public String getNome() {
-        return nome;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
-
-    // SETTERS
-
     public void setId(int id) {
         this.id = id;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    //TO STRING
+    public String toString(){
+        return "-- Avaria--"+
+                "\nID: "+id+
+                "\nNOME: "+nome+
+                "\nDESCRIÇÃO: "+descricao;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
 
-    // TO STRING
-
-    @Override
-    public String toString() {
-        return "Avarias{" +
-                "id=" + id +
-                ", nome='" + nome + '\'' +
-                ", descricao='" + descricao + '\'' +
-                '}';
-    }
 }

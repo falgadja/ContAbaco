@@ -3,148 +3,200 @@ package dao;
 import conexao.Conexao;
 import model.Pagamento;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PagamentoDAO {
+    // CREATE - Inserir PAGAMENTO
 
-    public PagamentoDAO() {
-    }
-
-    // CREATE - Inserir pagamento
     public int inserir(Pagamento pagamento) {
         Conexao conexao = new Conexao();
-        Connection con = conexao.conectar();
+        Connection conn = conexao.conectar();
         int retorno = 0;
 
         try {
-            PreparedStatement pst = con.prepareStatement(
-                    "INSERT INTO pagamento (tipo, total, data) VALUES (?, ?, ?)"
-            );
-            pst.setString(1, pagamento.getTipo());
+            String sql = "INSERT INTO PAGAMENTO (TIPO_PAGTO, TOTAL, DATA_PAGTO, COMPROVANTE, ID_EMPRESA) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setString(1, pagamento.getTipoPagto());
             pst.setDouble(2, pagamento.getTotal());
-            pst.setTimestamp(3, java.sql.Timestamp.valueOf(pagamento.getData().atStartOfDay()));
+            pst.setDate(3, Date.valueOf(pagamento.getData()));
 
-            int linhas = pst.executeUpdate();
-            if (linhas > 0) {
-                retorno = 1;
-            }
+            retorno = pst.executeUpdate();
+            return retorno;
         } catch (SQLException e) {
             e.printStackTrace();
-            retorno = 0;
+            return retorno;
         } finally {
-            conexao.desconectar(con);
+            conexao.desconectar(conn);
         }
-
-        return retorno;
     }
 
     // READ - Buscar por ID
-    public int buscarPorId(int id) {
+
+    public Pagamento buscarPorId(Pagamento pagamento) {
         Conexao conexao = new Conexao();
-        Connection con = conexao.conectar();
-        int retorno = 0;
+        Connection conn = conexao.conectar();
+        Pagamento p = null;
 
         try {
-            PreparedStatement pst = con.prepareStatement(
-                    "SELECT * FROM pagamento WHERE id = ?"
-            );
-            pst.setInt(1, id);
+            String sql = "SELECT * FROM PAGAMENTO WHERE ID = ?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setInt(1, pagamento.getId());
             ResultSet rs = pst.executeQuery();
 
-            if (rs.next()) {
-                retorno = 1; // encontrado
+            while (rs.next()) {
+                p = new Pagamento(rs.getInt("ID"),
+                        rs.getString("TIPO_PAGTO"),
+                        rs.getDouble("TOTAL"),
+                        rs.getObject("DATA", java.time.LocalDate.class),
+                        rs.getBytes("COMPROVANTE"),
+                        rs.getInt("ID_EMPRESA"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            retorno = 0;
         } finally {
-            conexao.desconectar(con);
+            conexao.desconectar(conn);
         }
-
-        return retorno;
+        return p;
     }
 
-    // READ - Buscar por Data
-    public int buscarPorData(Pagamento pagamento) {
+    // READ - Buscar por TIPO PAGAMENTO
+
+    public List<Pagamento> buscarPorTipo(Pagamento pagamento, String nomeEmpresa) {
         Conexao conexao = new Conexao();
-        Connection con = conexao.conectar();
-        int retorno = 0;
+        Connection conn = conexao.conectar();
+        List<Pagamento> lista = new ArrayList<>();
 
         try {
-            PreparedStatement pst = con.prepareStatement(
-                    "SELECT * FROM pagamento WHERE data = ?"
-            );
-            pst.setTimestamp(1, java.sql.Timestamp.valueOf(pagamento.getData().atStartOfDay()));
-
+            String sql = "SELECT P.* FROM PAGAMENTO P " +
+                    "JOIN EMPRESA E ON P.ID_EMPRESA = E.NOME " +
+                    "WHERE TIPO_PAGTO = ? AND E.ID = ?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setString(1, pagamento.getTipoPagto());
+            pst.setString(2, nomeEmpresa);
             ResultSet rs = pst.executeQuery();
-            if (rs.next()) {
-                retorno = 1; // encontrado
+
+            while (rs.next()) {
+                Pagamento p = new Pagamento(
+                        rs.getInt("ID"),
+                        rs.getString("TIPO_PAGTO"),
+                        rs.getDouble("TOTAL"),
+                        rs.getObject("DATA", java.time.LocalDate.class),
+                        rs.getBytes("COMPROVANTE"),
+                        rs.getInt("ID_EMPRESA")
+                );
+                lista.add(p);
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            retorno = 0;
         } finally {
-            conexao.desconectar(con);
+            conexao.desconectar(conn);
         }
-
-        return retorno;
+        return lista;
     }
 
-    // DELETE - Excluir por ID
-    public int deletar(int id) {
+    // READ - Buscar por DATA
+
+    public List<Pagamento> buscarPorData(Pagamento pagamento, LocalDate data, String nomeEmpresa) {
         Conexao conexao = new Conexao();
-        Connection con = conexao.conectar();
-        int retorno = 0;
+        Connection conn = conexao.conectar();
+        List<Pagamento> lista = new ArrayList<>();
 
         try {
-            PreparedStatement pst = con.prepareStatement(
-                    "DELETE FROM pagamento WHERE id = ?"
-            );
-            pst.setInt(1, id);
-            int linhas = pst.executeUpdate();
+            String sql = "SELECT * FROM PAGAMENTO P " +
+                    "JOIN EMPRESA E ON P.ID_EMPRESA = E.ID " +
+                    "WHERE DATA BETWEEN ? AND ? " +
+                    "AND E.NOME = ?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setObject(1, pagamento.getData());
+            pst.setDate(2, Date.valueOf(data));
+            pst.setString(3, nomeEmpresa);
+            ResultSet rs = pst.executeQuery();
 
-            if (linhas > 0) {
-                retorno = 1;
+            while (rs.next()) {
+                Pagamento p = new Pagamento(
+                        rs.getInt("ID"),
+                        rs.getString("TIPO_PAGTO"),
+                        rs.getDouble("TOTAL"),
+                        rs.getObject("DATA", java.time.LocalDate.class),
+                        rs.getBytes("COMPROVANTE"),
+                        rs.getInt("ID_EMPRESA")
+                );
+                lista.add(p);
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            retorno = 0;
         } finally {
-            conexao.desconectar(con);
+            conexao.desconectar(conn);
         }
 
-        return retorno;
+        return lista;
     }
 
-    // UPDATE - Atualizar tipo e valor
-    public int atualizar(Pagamento pagamento) {
+    // READ - Buscar por ID EMPRESA
+
+    public Pagamento buscarPorEmpresa(Pagamento pagamento) {
         Conexao conexao = new Conexao();
-        Connection con = conexao.conectar();
-        int retorno = 0;
+        Connection conn = conexao.conectar();
+        Pagamento p = null;
 
         try {
-            PreparedStatement pst = con.prepareStatement(
-                    "UPDATE pagamento SET tipo=?, total=?, data=? WHERE id=?"
-            );
-            pst.setString(1, pagamento.getTipo());
-            pst.setDouble(2, pagamento.getTotal());
-            pst.setTimestamp(3, java.sql.Timestamp.valueOf(pagamento.getData().atStartOfDay()));
-            pst.setInt(4, pagamento.getId());
+            String sql = "SELECT * FROM PAGAMENTO WHERE ID_EMPRESA = ?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setInt(1, pagamento.getIdEmpresa());
+            ResultSet rs = pst.executeQuery();
 
-            int linhas = pst.executeUpdate();
-            if (linhas > 0) {
-                retorno = 1;
+            if (rs.next()) { // só retorna o primeiro que encontrar
+                p = new Pagamento(
+                        rs.getInt("ID"),
+                        rs.getString("TIPO_PAGTO"),
+                        rs.getDouble("TOTAL"),
+                        rs.getObject("DATA", java.time.LocalDate.class),
+                        rs.getBytes("COMPROVANTE"),
+                        rs.getInt("ID_EMPRESA")
+                );
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            retorno = 0;
         } finally {
-            conexao.desconectar(con);
+            conexao.desconectar(conn);
         }
 
-        return retorno;
+        return p;
+    }
+
+
+    // READ - Listar todos os Pagamentos
+
+    public List<Pagamento> listarTodos(Pagamento pagamento) {
+        Conexao conexao = new Conexao();
+        Connection conn = conexao.conectar();
+        List<Pagamento> lista = new ArrayList<>();
+
+        try {
+            String sql = "SELECT * FROM PAGAMENTO WHERE ID_EMPRESA = ?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setInt(1,pagamento.getIdEmpresa());
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                Pagamento p = new Pagamento(
+                        rs.getInt("ID"),
+                        rs.getString("TIPO_PAGTO"),
+                        rs.getDouble("TOTAL"),
+                        rs.getObject("DATA", java.time.LocalDate.class),
+                        rs.getBytes("COMPROVANTE"),
+                        rs.getInt("ID_EMPRESA")
+                );
+                lista.add(p);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            conexao.desconectar(conn);
+        }
+        return lista;
     }
 }
