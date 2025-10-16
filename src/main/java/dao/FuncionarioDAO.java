@@ -176,6 +176,38 @@ public int inserir(Funcionario funcionario) {
         return funcionario;
     }
 
+    // READ - Buscar por EMAIL e SENHA
+    public Funcionario buscarPorEmailESenha(String email, String senha) {
+        Conexao conexao = new Conexao();
+        Connection conn = conexao.conectar();
+        Funcionario funcionario = null;
+
+        try {
+            String sql = "SELECT * FROM FUNCIONARIO WHERE EMAIL = ? AND senha = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, email);
+            pstmt.setString(2, senha);
+            ResultSet rset = pstmt.executeQuery();
+
+            if (rset.next()) {
+                funcionario = new Funcionario(
+                        rset.getInt("ID"),
+                        rset.getString("nome"),
+                        rset.getString("sobrenome"),
+                        rset.getTimestamp("DATA_NASCIMENTO").toLocalDateTime().toLocalDate(),
+                        rset.getString("email"),
+                        rset.getString("senha"),
+                        rset.getInt("id_empresa"),
+                        rset.getInt("id_setor"));
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        } finally {
+            conexao.desconectar(conn);
+        }
+        return funcionario;
+    }
+
     // READ - Listar FUNCIONARIOS
     public List<Funcionario> listar() {
         Conexao conexao = new Conexao();
