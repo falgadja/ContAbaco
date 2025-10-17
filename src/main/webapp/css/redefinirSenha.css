@@ -16,7 +16,7 @@ body {
 
 .login-container {
     width: 100%;
-    max-width: 700px; 
+    max-width: 700px;
     padding: 50px 40px;
     border-radius: 40px;
     background-color: #ffffff;
@@ -104,13 +104,13 @@ form {
 
 .link-sm {
     font-size: 0.85rem;
-    text-decoration: underline; 
+    text-decoration: none;
     color: #304FFE;
     transition: all 0.3s ease;
 }
 
 .link-sm:hover {
-    color: #0019CB; 
+    text-decoration: underline;
 }
 
 .link-forgot {
