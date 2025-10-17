@@ -61,7 +61,7 @@ public class  TesteDAO{
         EnderecoDAO enderecoDAO = new EnderecoDAO();
 
         // 1 - INSERIR ENDEREÇO
-        Endereco enderecoTeste = new Endereco(0, "Brasil", "São Paulo", "São Paulo", "Centro", "Rua A", 123, "01000-000", 1);
+        Endereco enderecoTeste = new Endereco(1, "Brasil", "São Paulo", "São Paulo", "Centro", "Rua A", 123, "01000-000", 1);
         int enderecoInserido = enderecoDAO.inserirEndereco(enderecoTeste);
         if (enderecoInserido == 1) System.out.println("\nENDEREÇO INSERIDO COM SUCESSO!");
         else System.out.println("\nERRO AO INSERIR ENDEREÇO.");

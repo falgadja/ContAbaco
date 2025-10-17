@@ -13,8 +13,7 @@ public class Endereco {
     private int idEmpresa;
 
     //CONSTRUTOR
-    public  Endereco(int id, String pais, String estado, String cidade, String bairro, String rua, int numero, String cep, int idEmpresa) {
-        this.id = id;
+    public  Endereco( int id,String pais, String estado, String cidade, String bairro, String rua, int numero, String cep, int idEmpresa) {
         this.pais = pais;
         this.estado = estado;
         this.cidade = cidade;
@@ -24,6 +23,9 @@ public class Endereco {
         this.cep = cep;
         this.idEmpresa = idEmpresa;
     }
+    public Endereco() {
+    }
+
 
     //GETTERS
     public int getId() {
