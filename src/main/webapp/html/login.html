@@ -32,26 +32,6 @@
             <a href="pessoa.html" class="link-sm link-register">Ainda não tenho cadastro</a>
         </div>
 
-        <h2>Faça seu login!</h2>
-
-        <!-- Mensagem de erro -->
-        <div id="mensagemErro" class="erro"></div>
-
-        <form action="loginEmpresaServlet" method="post">
-            <label for="email">Email</label>
-            <input type="email" name="email" id="email" required>
-
-            <label for="senha">Senha</label>
-            <input type="password" name="senha" id="senha" required>
-
-            <a href="esqueciSenha.html" class="esqueci">Esqueci minha senha</a>
-
-            <button type="submit">Entrar</button>
-        </form>
-
-        <a href="cadastroPessoa.html" class="cadastro">Ainda não tenho cadastro</a>
-    </div>
-</div>
 
 <script>
     // Função para obter parâmetro da URL usando javascript
@@ -59,7 +39,7 @@
         const params = new URLSearchParams(window.location.search);
         return params.get(nome);
     }
-
+    
     // Verificar se existe erro na URL
     const erro = getParametroURL('erro');
     const mensagemErro = document.getElementById('mensagemErro');
