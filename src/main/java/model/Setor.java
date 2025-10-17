@@ -36,9 +36,8 @@ public class Setor {
 
     @Override
     public String toString() {
-        return "Setor{" +
-                "id=" + id +
-                ", nome='" + nome + '\'' +
-                '}';
+        return " -- Setor -- " +
+                "\nID: " + id +
+                "\nNome: " + nome;
     }
 }
