@@ -267,10 +267,10 @@
         <div class="linha"></div>
 
         <nav class="nav barra-lateral">
-            <button class="botao selecionado" onclick="mostrarPagina('adm', this)"><img src="imagens/adm_icone_azul.png" alt="" class="icone"> Adm</button>
-            <button class="botao" onclick="mostrarPagina('empresas', this)"><img src="imagens/empresa_icone_azul.png" alt="" class="icone"> Empresas</button>
-            <a href=""><button class="botao" onclick="mostrarPagina('planos', this)"><img src="imagens/planos_icone_azul.png" alt="" class="icone"> Planos</button></a>
-            <button class="botao" onclick="mostrarPagina('pagamento', this)"><img src="imagens/pagamento_icone_azul.png" alt="" class="icone"> Pagamento</button>
+            <button class="botao selecionado" onclick="mostrarPagina('adm', this)"><img src="../img/coroaAdm.png" alt="" class="icone"> Adm</button>
+            <button class="botao" onclick="mostrarPagina('empresas', this)"><img src="../img/simboloEmpresa.png" alt="" class="icone"> Empresas</button>
+            <a href=""><button class="botao" onclick="mostrarPagina('planos', this)"><img src="../img/cardenetaPlanos.png" alt="" class="icone"> Planos</button></a>
+            <button class="botao" onclick="mostrarPagina('pagamento', this)"><img src="../img/maoPagamento.png" alt="" class="icone"> Pagamento</button>
         </nav>
 
         <div class="sair">

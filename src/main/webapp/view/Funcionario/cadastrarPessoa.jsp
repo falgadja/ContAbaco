@@ -270,29 +270,60 @@
     </div>
   </div>
 
+
+  <% String erro = (String) request.getAttribute("erro"); %>
+  <% if (erro != null) { %>
+  <div style="color:red; font-weight:bold;">
+    <%= erro %>
+  </div>
+  <% } %>
+
+
   <div class="panel right-panel">
     <img src="../../img/abaco%20login%201%202%20(1).png" alt="Ícone Ábaco" class="icon-abaco">
 
     <div class="content">
       <h1>Faça seu cadastro!</h1>
-      <form action="cadastrarPessoa.jsp" method="post" >
+      <form action="${pageContext.request.contextPath}/cadastrarPessoa" method="post">
+        <div class="form-group">
+          <label for="nome">Nome</label>
+          <input type="text" id="nome" name="nome" placeholder="Digite seu nome">
+        </div>
+
+        <div class="form-group">
+          <label for="sobrenome">Sobrenome</label>
+          <input type="text" id="sobrenome" name="sobrenome" placeholder="Digite seu sobrenome">
+        </div>
+
+        <div class="form-group">
+          <label for="data-nascimento">Data de Nascimento</label>
+          <input type="date" id="data-nascimento" name="data-nascimento">
+        </div>
+
         <div class="form-group">
           <label for="email">Email</label>
           <input type="email" id="email" name="email" placeholder="seuemail@exemplo.com">
         </div>
+
         <div class="form-group">
           <label for="senha">Senha</label>
           <input type="password" id="senha" name="senha" placeholder="Crie uma senha forte">
         </div>
+
         <div class="form-group">
           <label for="confirme-senha">Confirme sua senha</label>
           <input type="password" id="confirme-senha" name="confirme-senha" placeholder="Repita a senha">
         </div>
+
         <button type="submit" class="btn btn-solid">Cadastrar</button>
       </form>
+
       <a href="../Empresa/cadastrarEmpresa.jsp" class="link-sm">Cadastrar como Empresa</a>
     </div>
   </div>
 </div>
 </body>
 </html>
+
+
+

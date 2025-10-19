@@ -258,6 +258,12 @@
             /* A decoração de texto já é 'underline'. Você pode adicionar outros efeitos aqui, como uma mudança de cor */
             color: #0019CB;
         }
+        .erro-msg {
+            color: red;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-align: center;
+        }
 
 
     </style>
@@ -266,22 +272,29 @@
 <div class="main-container">
     <div class="panel left-panel">
         <div class="content">
-            <img src="../../img/logo%20azul%20bonito%20sem%20fundo%202%20(1).png" alt="Logo da Empresa" class="logo">
+            <img src="../../img/FalgadjaLogo.png" alt="Logo da Empresa" class="logo">
             <h1>Bem-vindo de volta!</h1>
             <p>Acesse a sua conta agora mesmo.</p>
             <a href="../Login/login.jsp"><button class="btn btn-outline">Entrar</button></a>
         </div>
     </div>
-
     <div class="panel right-panel">
-        <img src="../../img/abaco%20login%201%202%20(1).png" alt="Ícone Ábaco" class="icon-abaco">
+        <img src="../../img/abacoLogin.png" alt="Ícone Ábaco" class="icon-abaco">
 
         <div class="content">
             <h1>Faça o cadastro da sua empresa!</h1>
-            <form action="cadastrarEmpresa" method="post">
+            <%
+                String erro = (String) request.getAttribute("erro");
+                if (erro != null) {
+            %>
+            <div class="erro-msg"><%= erro %></div>
+            <%
+                }
+            %>
+            <form action="${pageContext.request.contextPath}/cadastrarEmpresa" method="post">
                 <div class="form-group">
                     <label for="empresa">Nome da Empresa</label>
-                    <input type="text" id="empresa" name="empresa" placeholder="Digite o nome da sua empresa" required>
+                    <input type="text" id="empresa" name="nomeEmpresa" placeholder="Digite o nome da sua empresa" required>
                 </div>
                 <div class="form-group">
                     <label for="cnpj">CNPJ</label>
@@ -290,17 +303,17 @@
                 </div>
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder="seuemail@exemplo.com" required>
+                    <input type="email" id="email" name="emailEmpresa" placeholder="seuemail@exemplo.com" required>
                 </div>
                 <div class="form-group">
                     <label for="senha">Senha</label>
                     <input type="password" id="senha" name="senha" placeholder="Crie uma senha forte" required>
                 </div>
                 <div class="form-group">
-                    <label for="confirme-senha">Confirme a sua senha</label>
-                    <input type="password" id="confirme-senha" name="confirme-senha" placeholder="Repita a senha" required>
+                    <label for="confirmarSenha">Confirme a sua senha</label>
+                    <input type="password" id="confirmarSenha" name="confirmarSenha" placeholder="Repita a senha" required>
                 </div>
-                <a href="../Endereco/cadastrarEndereco.jsp" class="btn btn-solid">Próximo</a>
+                <button type="submit">Finalizar</button>
 
             </form>
             <a href="../Funcionario/cadastrarPessoa.jsp" class="link-sm">Cadastrar como pessoa</a>
@@ -309,25 +322,6 @@
 </div>
 </body>
 </html>
-<script>
-    //Mascara- coloca os caracteres em seu devido lugar
-    const cnpjInput = document.getElementById("cnpj");
 
-    cnpjInput.addEventListener("input", function() { //o elementoHtml.método(nomeAcao,funcao,opcional(fica vazio as vezes ))
-        let v = cnpjInput.value.replace(/\D/g, ''); // remove tudo que não é número
-
-        // aplica a máscara passo a passo
-        if(v.length > 2) v = v.slice(0,2) + '.' + v.slice(2);
-        if(v.length > 6) v = v.slice(0,6) + '.' + v.slice(6);
-        if(v.length > 10) v = v.slice(0,10) + '/' + v.slice(10);
-        if(v.length > 15) v = v.slice(0,15) + '-' + v.slice(15,17);
-
-        cnpjInput.value = v;
-    });
-</script>
-
-<%
-
-%>
 
 
