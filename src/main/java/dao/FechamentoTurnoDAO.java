@@ -5,7 +5,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,270 +14,266 @@ import model.FechamentoTurno;
 
 public class FechamentoTurnoDAO {
 
-    // CREATE - Inserir FECHAMENTO de TURNO
+    // CREATE - INSERIR FECHAMENTO DE TURNO
     public int inserir(FechamentoTurno fechamentoTurno) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
-        int retorno = 0;
+        int idGerado = -1;
+        String sql = "INSERT INTO FECHAMENTO_TURNO(lote, id_funcionario, data, id_leitura) " +
+                "VALUES (?, ?, ?, ?) RETURNING id";
 
         try {
-            PreparedStatement pst = con.prepareStatement(
-                    "INSERT INTO turno(lote, id_funcionario, data, id_leitura) VALUES (?, ?, ?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS
-            );
-            pst.setInt(2, fechamentoTurno.getLote());
-            pst.setInt(1, fechamentoTurno.getIdFuncionario());
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setInt(1, fechamentoTurno.getLote());
+            pst.setInt(2, fechamentoTurno.getIdFuncionario());
             pst.setTimestamp(3, Timestamp.valueOf(fechamentoTurno.getData().atStartOfDay()));
             pst.setInt(4, fechamentoTurno.getIdLeitura());
-            int linhas = pst.executeUpdate();
-            if (linhas > 0) {
-                try (ResultSet rs = pst.getGeneratedKeys()){
-                    if (rs.next()) {
-                        fechamentoTurno.setId(rs.getInt("ID"));
-                    }
-                }
-                return fechamentoTurno.getId();
+
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                idGerado = rs.getInt("id");
+                fechamentoTurno.setId(idGerado);
             }
-            } catch (SQLException e) {
-                e.printStackTrace();
-                return -1;
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
         } finally {
             conexao.desconectar(con);
         }
-        return fechamentoTurno.getId();
+
+        return idGerado; // Retorna ID gerado ou -1 se falhar
     }
 
-    // READ - Buscar por ID
-    public FechamentoTurno buscarPorId(int id) {
+    // READ - SELECIONAR FECHAMENTO DE TURNO PELO ID
+    public FechamentoTurno selecionarPorId(int id) {
         Conexao conexao = new Conexao();
-        Connection conn = conexao.conectar();
+        Connection con = conexao.conectar();
         FechamentoTurno fechamentoTurno = null;
+        String sql = "SELECT * FROM FECHAMENTO_TURNO WHERE id = ?";
 
         try {
-            String sql = "SELECT * FROM FECHAMENTO_TURNO WHERE ID = ?";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, id);
-            ResultSet rset = pstmt.executeQuery();
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setInt(1, id);
+            ResultSet rs = pst.executeQuery();
 
-            if (rset.next()) {
+            if (rs.next()) {
                 fechamentoTurno = new FechamentoTurno(
-                        rset.getInt("ID"),
-                        rset.getInt("ID_LEITURA"),
-                        rset.getTimestamp("DATA").toLocalDateTime().toLocalDate(),
-                        rset.getInt("LOTE"),
-                        rset.getInt("ID_FUNCIONARIO")
-
+                        rs.getInt("id"),
+                        rs.getInt("id_leitura"),
+                        rs.getTimestamp("data").toLocalDateTime().toLocalDate(),
+                        rs.getInt("lote"),
+                        rs.getInt("id_funcionario")
                 );
             }
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         } finally {
-            conexao.desconectar(conn);
+            conexao.desconectar(con);
         }
+
         return fechamentoTurno;
     }
 
-    // READ - Buscar por DATA
-    public List<FechamentoTurno> buscarPorNome(Date dataInicio, Date dataFim, int idEmpresa) {
+    // READ - SELECIONAR FECHAMENTOS DE TURNO POR PERÍODO E EMPRESA
+    public List<FechamentoTurno> selecionarPorPeriodoEempresa(Date dataInicio, Date dataFim, int idEmpresa) {
         Conexao conexao = new Conexao();
-        Connection conn = conexao.conectar();
+        Connection con = conexao.conectar();
         List<FechamentoTurno> fechamentosTurnos = new ArrayList<>();
+        String sql = "SELECT ft.* FROM FECHAMENTO_TURNO ft " +
+                "JOIN funcionario f ON f.id = ft.id_funcionario " +
+                "JOIN empresa e ON e.id = f.id_empresa " +
+                "WHERE ft.data BETWEEN ? AND ? AND e.id = ?";
 
         try {
-            String sql = "SELECT * FROM FECHAMENTO_TURNO ft join funcionario f on f.id=ft.id_funcionario join empresa e on e.id=f.id_empresa WHERE ft.DATA BETWEEN ? AND ? AND e.id= ?";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setDate(1, dataInicio);
-            pstmt.setDate(2, dataFim);
-            pstmt.setInt(3, idEmpresa);
-            ResultSet rset = pstmt.executeQuery();
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setDate(1, dataInicio);
+            pst.setDate(2, dataFim);
+            pst.setInt(3, idEmpresa);
+            ResultSet rs = pst.executeQuery();
 
-            while (rset.next()) {
+            while (rs.next()) {
                 fechamentosTurnos.add(new FechamentoTurno(
-                        rset.getInt("ID"),
-                        rset.getInt("ID_LEITURA"),
-                        rset.getTimestamp("DATA").toLocalDateTime().toLocalDate(),
-                        rset.getInt("LOTE"),
-                        rset.getInt("ID_FUNCIONARIO")
-
+                        rs.getInt("id"),
+                        rs.getInt("id_leitura"),
+                        rs.getTimestamp("data").toLocalDateTime().toLocalDate(),
+                        rs.getInt("lote"),
+                        rs.getInt("id_funcionario")
                 ));
             }
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         } finally {
-            conexao.desconectar(conn);
+            conexao.desconectar(con);
         }
+
         return fechamentosTurnos;
     }
 
-    // READ - Buscar por ID do FUNCIONARIO
-    public List<FechamentoTurno> buscarPorIdFuncionario(int idFuncionario) {
+    // READ - SELECIONAR FECHAMENTOS DE TURNO PELO ID DO FUNCIONARIO
+    public List<FechamentoTurno> selecionarPorIdFuncionario(int idFuncionario) {
         Conexao conexao = new Conexao();
-        Connection conn = conexao.conectar();
+        Connection con = conexao.conectar();
         List<FechamentoTurno> fechamentosTurnos = new ArrayList<>();
+        String sql = "SELECT * FROM FECHAMENTO_TURNO WHERE id_funcionario = ?";
 
         try {
-            String sql = "SELECT * FROM FECHAMENTO_TURNO WHERE ID_FUNCIONARIO = ?";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, idFuncionario);
-            ResultSet rset = pstmt.executeQuery();
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setInt(1, idFuncionario);
+            ResultSet rs = pst.executeQuery();
 
-            while (rset.next()) {
+            while (rs.next()) {
                 fechamentosTurnos.add(new FechamentoTurno(
-                        rset.getInt("ID"),
-                        rset.getInt("ID_LEITURA"),
-                        rset.getTimestamp("DATA").toLocalDateTime().toLocalDate(),
-                        rset.getInt("LOTE"),
-                        rset.getInt("ID_FUNCIONARIO")
-
+                        rs.getInt("id"),
+                        rs.getInt("id_leitura"),
+                        rs.getTimestamp("data").toLocalDateTime().toLocalDate(),
+                        rs.getInt("lote"),
+                        rs.getInt("id_funcionario")
                 ));
             }
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         } finally {
-            conexao.desconectar(conn);
+            conexao.desconectar(con);
         }
+
         return fechamentosTurnos;
     }
 
-    // READ - Buscar por LOTE
-    public FechamentoTurno buscarPorLote(int lote) {
+    // READ - SELECIONAR FECHAMENTO DE TURNO PELO LOTE
+    public FechamentoTurno selecionarPorLote(int lote) {
         Conexao conexao = new Conexao();
-        Connection conn = conexao.conectar();
+        Connection con = conexao.conectar();
         FechamentoTurno fechamentoTurno = null;
+        String sql = "SELECT * FROM FECHAMENTO_TURNO WHERE lote = ?";
 
         try {
-            String sql = "SELECT * FROM FECHAMENTO_TURNO WHERE lote = ?";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, lote);
-            ResultSet rset = pstmt.executeQuery();
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setInt(1, lote);
+            ResultSet rs = pst.executeQuery();
 
-            if (rset.next()) {
+            if (rs.next()) {
                 fechamentoTurno = new FechamentoTurno(
-                        rset.getInt("ID"),
-                        rset.getInt("ID_LEITURA"),
-                        rset.getTimestamp("DATA").toLocalDateTime().toLocalDate(),
-                        rset.getInt("LOTE"),
-                        rset.getInt("ID_FUNCIONARIO")
-
+                        rs.getInt("id"),
+                        rs.getInt("id_leitura"),
+                        rs.getTimestamp("data").toLocalDateTime().toLocalDate(),
+                        rs.getInt("lote"),
+                        rs.getInt("id_funcionario")
                 );
             }
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         } finally {
-            conexao.desconectar(conn);
+            conexao.desconectar(con);
         }
+
         return fechamentoTurno;
     }
 
-    // READ - Buscar por empresa
-    public List<FechamentoTurno> buscarPorEmpresa(int idEmpresa) {
+    // READ - SELECIONAR FECHAMENTOS DE TURNO POR EMPRESA
+    public List<FechamentoTurno> selecionarPorEmpresa(int idEmpresa) {
         Conexao conexao = new Conexao();
-        Connection conn = conexao.conectar();
-        List<FechamentoTurno> fechamentosTurnos = null;
+        Connection con = conexao.conectar();
+        List<FechamentoTurno> fechamentosTurnos = new ArrayList<>();
+        String sql = "SELECT ft.* FROM FECHAMENTO_TURNO ft " +
+                "JOIN funcionario f ON f.id = ft.id_funcionario " +
+                "JOIN empresa e ON e.id = f.id_empresa " +
+                "WHERE e.id = ?";
 
         try {
-            String sql = "SELECT * FROM FECHAMENTO_TURNO ft join funcionario f on f.id=ft.id_funcionario join empresa e on e.id=f.id_empresa WHERE e.id= ?";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, idEmpresa);
-            ResultSet rset = pstmt.executeQuery();
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setInt(1, idEmpresa);
+            ResultSet rs = pst.executeQuery();
 
-            while (rset.next()) {
+            while (rs.next()) {
                 fechamentosTurnos.add(new FechamentoTurno(
-                        rset.getInt("ID"),
-                        rset.getInt("ID_LEITURA"),
-                        rset.getTimestamp("DATA").toLocalDateTime().toLocalDate(),
-                        rset.getInt("LOTE"),
-                        rset.getInt("ID_FUNCIONARIO")
-
+                        rs.getInt("id"),
+                        rs.getInt("id_leitura"),
+                        rs.getTimestamp("data").toLocalDateTime().toLocalDate(),
+                        rs.getInt("lote"),
+                        rs.getInt("id_funcionario")
                 ));
             }
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         } finally {
-            conexao.desconectar(conn);
+            conexao.desconectar(con);
         }
+
         return fechamentosTurnos;
     }
 
-    // READ - Listar FECHAMENTOS de TURNO
+    // READ - LISTAR TODOS FECHAMENTOS DE TURNO
     public List<FechamentoTurno> listar() {
         Conexao conexao = new Conexao();
-        Connection conn = conexao.conectar();
+        Connection con = conexao.conectar();
         List<FechamentoTurno> fechamentosTurnos = new ArrayList<>();
+        String sql = "SELECT * FROM FECHAMENTO_TURNO";
 
         try {
-            String sql = "SELECT * FROM FECHAMENTO_TURNO";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            ResultSet rset = pstmt.executeQuery();
+            PreparedStatement pst = con.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery();
 
-            while (rset.next()) {
+            while (rs.next()) {
                 fechamentosTurnos.add(new FechamentoTurno(
-                        rset.getInt("ID"),
-                        rset.getInt("ID_LEITURA"),
-                        rset.getTimestamp("DATA").toLocalDateTime().toLocalDate(),
-                        rset.getInt("LOTE"),
-                        rset.getInt("ID_FUNCIONARIO")
-
+                        rs.getInt("id"),
+                        rs.getInt("id_leitura"),
+                        rs.getTimestamp("data").toLocalDateTime().toLocalDate(),
+                        rs.getInt("lote"),
+                        rs.getInt("id_funcionario")
                 ));
             }
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         } finally {
-            conexao.desconectar(conn);
+            conexao.desconectar(con);
         }
+
         return fechamentosTurnos;
     }
 
-    // UPDATE - atualizar o FECHAMENTO de TURNO
+    // UPDATE - ATUALIZAR FECHAMENTO DE TURNO
     public int atualizar(FechamentoTurno fechamentoTurno) {
         Conexao conexao = new Conexao();
-        Connection conn = conexao.conectar();
+        Connection con = conexao.conectar();
         int retorno = 0;
+        String sql = "UPDATE FECHAMENTO_TURNO SET id_funcionario = ?, lote = ?, data = ?, id_leitura = ? WHERE id = ?";
 
         try {
-            String sql = "UPDATE FECHAMENTO_TURNO SET ID_FUNCIONARIO = ?, LOTE = ? , DATA = ? , ID_LEITURA = ? WHERE ID = ?";
-            PreparedStatement pst = conn.prepareStatement(sql);
+            PreparedStatement pst = con.prepareStatement(sql);
             pst.setInt(1, fechamentoTurno.getIdFuncionario());
             pst.setInt(2, fechamentoTurno.getLote());
             pst.setTimestamp(3, Timestamp.valueOf(fechamentoTurno.getData().atStartOfDay()));
             pst.setInt(4, fechamentoTurno.getIdLeitura());
             pst.setInt(5, fechamentoTurno.getId());
 
-            int linhas = pst.executeUpdate();
-            if (linhas > 0) {
-                retorno = 1;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            retorno = pst.executeUpdate();
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
             retorno = -1;
-        } finally {
-            conexao.desconectar(conn);
-        }
-        return retorno;
-    }
-
-    // DELETE - Deletar Fechamento Turno
-    public int deletar(int id) {
-        Conexao conexao = new Conexao();
-        Connection con = conexao.conectar();
-        int deletado = 0;
-
-        try {
-            PreparedStatement pst = con.prepareStatement("DELETE FROM FECHAMENTO_TURNO WHERE id = ?");
-            pst.setInt(1, id);
-
-            deletado = pst.executeUpdate();
-            if (deletado > 0) {
-                deletado = 1;
-                return deletado;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return -1;
         } finally {
             conexao.desconectar(con);
         }
 
-        return deletado;
+        return retorno;
+    }
+
+    // DELETE - DELETAR FECHAMENTO DE TURNO
+    public int deletar(int id) {
+        Conexao conexao = new Conexao();
+        Connection con = conexao.conectar();
+        int retorno = 0;
+        String sql = "DELETE FROM FECHAMENTO_TURNO WHERE id = ?";
+
+        try {
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setInt(1, id);
+            retorno = pst.executeUpdate();
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+            retorno = -1;
+        } finally {
+            conexao.desconectar(con);
+        }
+
+        return retorno;
     }
 }

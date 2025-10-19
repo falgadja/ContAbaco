@@ -1,12 +1,22 @@
 package model;
 
 public class Plano {
+
+    // ATRIBUTOS
     private int id;
     private String nome;
     private double preco;
 
-    //CONSTRUTOR
+    // CONSTRUTOR VAZIO
+    public Plano() {}
 
+    // CONSTRUTOR SEM ID (para novos registros)
+    public Plano(String nome, double preco) {
+        this.nome = nome;
+        this.preco = preco;
+    }
+
+    // CONSTRUTOR COMPLETO (quando for carregar do BD)
     public Plano(int id, String nome, double preco) {
         this.id = id;
         this.nome = nome;
@@ -14,22 +24,19 @@ public class Plano {
     }
 
     // GETTERS
-
-
     public int getId() {
         return id;
-    }
-
-    public double getPreco() {
-        return preco;
     }
 
     public String getNome() {
         return nome;
     }
 
-    // SETTERS
+    public double getPreco() {
+        return preco;
+    }
 
+    // SETTERS
     public void setId(int id) {
         this.id = id;
     }
@@ -43,10 +50,9 @@ public class Plano {
     }
 
     // TO STRING
-
     @Override
     public String toString() {
-        return " -- Plano -- " +
+        return "-- Plano --" +
                 "\nID: " + id +
                 "\nNome: " + nome +
                 "\nPreço: " + preco;

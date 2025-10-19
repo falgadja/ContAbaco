@@ -1,15 +1,25 @@
 package model;
 
-public class FechamentoAvaria{
+public class FechamentoAvaria {
+
+    // ATRIBUTOS
     private int id;
     private int idAvaria;
     private int idFechamento;
     private int quantidade;
 
-    // CONSTRUTOR
+    // CONSTRUTOR VAZIO
+    public FechamentoAvaria() {}
 
+    // CONSTRUTOR SEM ID (para novos registros)
+    public FechamentoAvaria(int idAvaria, int idFechamento, int quantidade) {
+        this.idAvaria = idAvaria;
+        this.idFechamento = idFechamento;
+        this.quantidade = quantidade;
+    }
 
-    public FechamentoAvaria( int id,int idAvaria, int idFechamento, int quantidade) {
+    // CONSTRUTOR COMPLETO (quando for carregar do BD)
+    public FechamentoAvaria(int id, int idAvaria, int idFechamento, int quantidade) {
         this.id = id;
         this.idAvaria = idAvaria;
         this.idFechamento = idFechamento;
@@ -17,7 +27,6 @@ public class FechamentoAvaria{
     }
 
     // GETTERS
-
     public int getId() {
         return id;
     }
@@ -35,25 +44,23 @@ public class FechamentoAvaria{
     }
 
     // SETTERS
-
     public void setId(int id) {
         this.id = id;
-    }
-
-    public void setQuantidade(int quantidade) {
-        this.quantidade = quantidade;
-    }
-
-    public void setIdFechamento(int idFechamento) {
-        this.idFechamento = idFechamento;
     }
 
     public void setIdAvaria(int idAvaria) {
         this.idAvaria = idAvaria;
     }
 
-    // TO STRING
+    public void setIdFechamento(int idFechamento) {
+        this.idFechamento = idFechamento;
+    }
 
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
+    }
+
+    // TO STRING
     @Override
     public String toString() {
         return "FechamentoAvaria{" +

@@ -1,11 +1,22 @@
 package model;
 
 public class FuncionarioTurno {
+
+    // ATRIBUTOS
     private int id;
     private int idFuncionario;
     private int idTurno;
 
-    // CONSTRUTOR
+    // CONSTRUTOR VAZIO
+    public FuncionarioTurno() {}
+
+    // CONSTRUTOR SEM ID (para novos registros)
+    public FuncionarioTurno(int idFuncionario, int idTurno) {
+        this.idFuncionario = idFuncionario;
+        this.idTurno = idTurno;
+    }
+
+    // CONSTRUTOR COMPLETO (quando for carregar do BD)
     public FuncionarioTurno(int id, int idFuncionario, int idTurno) {
         this.id = id;
         this.idFuncionario = idFuncionario;
@@ -41,7 +52,7 @@ public class FuncionarioTurno {
     // TO STRING
     @Override
     public String toString() {
-        return " -- FuncionarioTurno -- " +
+        return "-- FuncionarioTurno --" +
                 "\nID: " + id +
                 "\nID do Funcionário: " + idFuncionario +
                 "\nID do Turno: " + idTurno;

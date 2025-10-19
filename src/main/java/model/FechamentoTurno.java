@@ -3,16 +3,26 @@ package model;
 import java.time.LocalDate;
 
 public class FechamentoTurno {
+
+    // ATRIBUTOS
     private int id;
     private int idFuncionario;
     private LocalDate data;
     private int lote;
     private int idLeitura;
 
+    // CONSTRUTOR VAZIO
     public FechamentoTurno() {}
 
-    // CONSTRUTOR
+    // CONSTRUTOR SEM ID (para novos registros)
+    public FechamentoTurno(int idFuncionario, LocalDate data, int lote, int idLeitura) {
+        this.idFuncionario = idFuncionario;
+        this.data = data;
+        this.lote = lote;
+        this.idLeitura = idLeitura;
+    }
 
+    // CONSTRUTOR COMPLETO (quando for carregar do BD)
     public FechamentoTurno(int id, int idFuncionario, LocalDate data, int lote, int idLeitura) {
         this.id = id;
         this.idFuncionario = idFuncionario;
@@ -22,7 +32,6 @@ public class FechamentoTurno {
     }
 
     // GETTERS
-
     public int getId() {
         return id;
     }
@@ -44,29 +53,27 @@ public class FechamentoTurno {
     }
 
     // SETTERS
-
     public void setId(int id) {
         this.id = id;
-    }
-
-    public void setData(LocalDate data) {
-        this.data = data;
     }
 
     public void setIdFuncionario(int idFuncionario) {
         this.idFuncionario = idFuncionario;
     }
 
-    public void setIdLeitura(int idLeitura) {
-        this.idLeitura = idLeitura;
+    public void setData(LocalDate data) {
+        this.data = data;
     }
 
     public void setLote(int lote) {
         this.lote = lote;
     }
 
-    // TO STRING
+    public void setIdLeitura(int idLeitura) {
+        this.idLeitura = idLeitura;
+    }
 
+    // TO STRING
     @Override
     public String toString() {
         return "FechamentoTurno{" +

@@ -1,6 +1,8 @@
 package model;
 
 public class Empresa {
+
+    // ATRIBUTOS
     private int id;
     private String cnpj;
     private String nome;
@@ -9,8 +11,20 @@ public class Empresa {
     private int idPlano;
     private int qntdFuncionarios;
 
-    //CONSTRUTOR
+    // CONSTRUTOR VAZIO
+    public Empresa() {}
 
+    // CONSTRUTOR SEM ID (para novos registros)
+    public Empresa(String cnpj, String nome, String email, String senha, int idPlano, int qntdFuncionarios) {
+        this.cnpj = cnpj;
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+        this.idPlano = idPlano;
+        this.qntdFuncionarios = qntdFuncionarios;
+    }
+
+    // CONSTRUTOR COMPLETO (quando for carregar do BD)
     public Empresa(int id, String cnpj, String nome, String email, String senha, int idPlano, int qntdFuncionarios) {
         this.id = id;
         this.cnpj = cnpj;
@@ -20,13 +34,8 @@ public class Empresa {
         this.idPlano = idPlano;
         this.qntdFuncionarios = qntdFuncionarios;
     }
-    public Empresa() {
-
-    }
-
 
     // GETTERS
-
     public int getId() {
         return id;
     }
@@ -56,7 +65,6 @@ public class Empresa {
     }
 
     // SETTERS
-
     public void setId(int id) {
         this.id = id;
     }
@@ -69,12 +77,12 @@ public class Empresa {
         this.nome = nome;
     }
 
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 
     public void setIdPlano(int idPlano) {
@@ -86,7 +94,6 @@ public class Empresa {
     }
 
     // TO STRING
-
     @Override
     public String toString() {
         return "Empresa{" +

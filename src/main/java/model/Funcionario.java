@@ -3,6 +3,8 @@ package model;
 import java.time.LocalDate;
 
 public class Funcionario {
+
+    // ATRIBUTOS
     private int id;
     private String nome;
     private String sobrenome;
@@ -12,57 +14,66 @@ public class Funcionario {
     private int idSetor;
     private int idEmpresa;
 
+    // CONSTRUTOR VAZIO
     public Funcionario() {}
 
-    // CONSTRUTOR
+    // CONSTRUTOR SEM ID (para novos registros)
+    public Funcionario(String nome, String sobrenome, LocalDate dataNascimento, String email, String senha, int idSetor, int idEmpresa) {
+        this.nome = nome;
+        this.sobrenome = sobrenome;
+        this.dataNascimento = dataNascimento;
+        this.email = email;
+        this.senha = senha;
+        this.idSetor = idSetor;
+        this.idEmpresa = idEmpresa;
+    }
 
-    public Funcionario(int id, String nome, String sobrenome, LocalDate dataNascimento, String email, String senha, int idEmpresa, int idSetor) {
+    // CONSTRUTOR COMPLETO (quando for carregar do BD)
+    public Funcionario(int id, String nome, String sobrenome, LocalDate dataNascimento, String email, String senha, int idSetor, int idEmpresa) {
         this.id = id;
         this.nome = nome;
         this.sobrenome = sobrenome;
         this.dataNascimento = dataNascimento;
         this.email = email;
         this.senha = senha;
-        this.idEmpresa = idEmpresa;
         this.idSetor = idSetor;
+        this.idEmpresa = idEmpresa;
     }
 
     // GETTERS
-
     public int getId() {
         return id;
-    }
-
-    public String getSobrenome() {
-        return sobrenome;
     }
 
     public String getNome() {
         return nome;
     }
 
-    public String getEmail() {
-        return email;
+    public String getSobrenome() {
+        return sobrenome;
     }
 
     public LocalDate getDataNascimento() {
         return dataNascimento;
     }
 
-    public String getSenha() {
-        return senha;
+    public String getEmail() {
+        return email;
     }
 
-    public int getIdEmpresa() {
-        return idEmpresa;
+    public String getSenha() {
+        return senha;
     }
 
     public int getIdSetor() {
         return idSetor;
     }
 
-    // SETTERS
+    public int getIdEmpresa() {
+        return idEmpresa;
+    }
 
+    // SETTERS
     public void setId(int id) {
         this.id = id;
     }
@@ -83,12 +94,12 @@ public class Funcionario {
         this.email = email;
     }
 
-    public void setIdSetor(int idSetor) {
-        this.idSetor = idSetor;
-    }
-
     public void setSenha(String senha) {
         this.senha = senha;
+    }
+
+    public void setIdSetor(int idSetor) {
+        this.idSetor = idSetor;
     }
 
     public void setIdEmpresa(int idEmpresa) {
@@ -96,7 +107,6 @@ public class Funcionario {
     }
 
     // TO STRING
-
     @Override
     public String toString() {
         return "Funcionario{" +

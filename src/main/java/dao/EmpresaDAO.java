@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,232 +12,238 @@ import model.Empresa;
 
 public class EmpresaDAO {
 
-    // CREATE - Inserir EMPRESA
+    // CREATE - INSERIR EMPRESA
     public int inserir(Empresa empresa) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
+        int idGerado = -1;
+        String sql = "INSERT INTO EMPRESA(cnpj, nome, email, senha, id_plano, qntd_funcionarios) " +
+                "VALUES (?, ?, ?, ?, ?, ?) RETURNING id";
 
         try {
-            PreparedStatement pst = con.prepareStatement(
-                    "INSERT INTO EMPRESA(cnpj, nome, email, senha, id_plano, qntd_funcionarios) VALUES (?, ?, ?, ?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS
-            );
+            PreparedStatement pst = con.prepareStatement(sql);
             pst.setString(1, empresa.getCnpj());
             pst.setString(2, empresa.getNome());
             pst.setString(3, empresa.getEmail());
             pst.setString(4, empresa.getSenha());
             pst.setInt(5, empresa.getIdPlano());
             pst.setInt(6, empresa.getQntdFuncionarios());
-            int linhas = pst.executeUpdate();
-            if (linhas > 0) {
-                try (ResultSet rs = pst.getGeneratedKeys()){
-                if (rs.next()) {
-                    empresa.setId(rs.getInt("ID"));
-                }
+
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                idGerado = rs.getInt("id");
+                empresa.setId(idGerado);
             }
-            return empresa.getId();
-        }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return -1;
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
         } finally {
             conexao.desconectar(con);
         }
 
-        return empresa.getId();
+        return idGerado; // Retorna o ID gerado, -1 se falhar
     }
 
-    // READ - Buscar por ID
+    // READ - BUSCAR EMPRESA PELO ID
     public Empresa buscarPorId(int id) {
         Conexao conexao = new Conexao();
-        Connection conn = conexao.conectar();
+        Connection con = conexao.conectar();
         Empresa empresa = null;
+        String sql = "SELECT * FROM EMPRESA WHERE id = ?";
 
         try {
-            String sql = "SELECT * FROM EMPRESA WHERE ID = ?";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, id);
-            ResultSet rset = pstmt.executeQuery();
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setInt(1, id);
+            ResultSet rs = pst.executeQuery();
 
-            if (rset.next()) {
+            if (rs.next()) {
                 empresa = new Empresa(
-                        rset.getInt("ID"),
-                        rset.getString("cnpj"),
-                        rset.getString("nome"),
-                        rset.getString("email"),
-                        rset.getString("senha"),
-                        rset.getInt("id_plano"),
-                        rset.getInt("qntd_funcionarios")
+                        rs.getInt("id"),
+                        rs.getString("cnpj"),
+                        rs.getString("nome"),
+                        rs.getString("email"),
+                        rs.getString("senha"),
+                        rs.getInt("id_plano"),
+                        rs.getInt("qntd_funcionarios")
                 );
             }
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         } finally {
-            conexao.desconectar(conn);
+            conexao.desconectar(con);
         }
-        return empresa;
+
+        return empresa; // retorna null se não encontrar
     }
 
-    // READ - Buscar por cnpj
+    // READ - BUSCAR EMPRESA PELO CNPJ
     public Empresa buscarPorCnpj(String cnpj) {
         Conexao conexao = new Conexao();
-        Connection conn = conexao.conectar();
+        Connection con = conexao.conectar();
         Empresa empresa = null;
+        String sql = "SELECT * FROM EMPRESA WHERE cnpj = ?";
 
         try {
-            String sql = "SELECT * FROM EMPRESA WHERE CNPJ = ?";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, cnpj);
-            ResultSet rset = pstmt.executeQuery();
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, cnpj);
+            ResultSet rs = pst.executeQuery();
 
-            if (rset.next()) {
+            if (rs.next()) {
                 empresa = new Empresa(
-                        rset.getInt("ID"),
-                        rset.getString("cnpj"),
-                        rset.getString("nome"),
-                        rset.getString("email"),
-                        rset.getString("senha"),
-                        rset.getInt("id_plano"),
-                        rset.getInt("qntd_funcionarios")
+                        rs.getInt("id"),
+                        rs.getString("cnpj"),
+                        rs.getString("nome"),
+                        rs.getString("email"),
+                        rs.getString("senha"),
+                        rs.getInt("id_plano"),
+                        rs.getInt("qntd_funcionarios")
                 );
             }
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         } finally {
-            conexao.desconectar(conn);
+            conexao.desconectar(con);
         }
+
         return empresa;
     }
 
-    // READ - Buscar por NOME
+    // READ - BUSCAR EMPRESA PELO NOME
     public Empresa buscarPorNome(String nome) {
         Conexao conexao = new Conexao();
-        Connection conn = conexao.conectar();
+        Connection con = conexao.conectar();
         Empresa empresa = null;
+        String sql = "SELECT * FROM EMPRESA WHERE nome = ?";
 
         try {
-            String sql = "SELECT * FROM EMPRESA WHERE NOME = ?";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, nome);
-            ResultSet rset = pstmt.executeQuery();
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, nome);
+            ResultSet rs = pst.executeQuery();
 
-            if (rset.next()) {
+            if (rs.next()) {
                 empresa = new Empresa(
-                        rset.getInt("ID"),
-                        rset.getString("cnpj"),
-                        rset.getString("nome"),
-                        rset.getString("email"),
-                        rset.getString("senha"),
-                        rset.getInt("id_plano"),
-                        rset.getInt("qntd_funcionarios"));
+                        rs.getInt("id"),
+                        rs.getString("cnpj"),
+                        rs.getString("nome"),
+                        rs.getString("email"),
+                        rs.getString("senha"),
+                        rs.getInt("id_plano"),
+                        rs.getInt("qntd_funcionarios")
+                );
             }
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         } finally {
-            conexao.desconectar(conn);
+            conexao.desconectar(con);
         }
+
         return empresa;
     }
 
-    // READ - Buscar por EMAIL
+    // READ - BUSCAR EMPRESA PELO EMAIL
     public Empresa buscarPorEmail(String email) {
         Conexao conexao = new Conexao();
-        Connection conn = conexao.conectar();
+        Connection con = conexao.conectar();
         Empresa empresa = null;
+        String sql = "SELECT * FROM EMPRESA WHERE email = ?";
 
         try {
-            String sql = "SELECT * FROM EMPRESA WHERE EMAIL = ?";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, email);
-            ResultSet rset = pstmt.executeQuery();
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, email);
+            ResultSet rs = pst.executeQuery();
 
-            if (rset.next()) {
+            if (rs.next()) {
                 empresa = new Empresa(
-                        rset.getInt("ID"),
-                        rset.getString("cnpj"),
-                        rset.getString("nome"),
-                        rset.getString("email"),
-                        rset.getString("senha"),
-                        rset.getInt("id_plano"),
-                        rset.getInt("qntd_funcionarios"));
+                        rs.getInt("id"),
+                        rs.getString("cnpj"),
+                        rs.getString("nome"),
+                        rs.getString("email"),
+                        rs.getString("senha"),
+                        rs.getInt("id_plano"),
+                        rs.getInt("qntd_funcionarios")
+                );
             }
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         } finally {
-            conexao.desconectar(conn);
+            conexao.desconectar(con);
         }
+
         return empresa;
     }
 
-    // READ - Buscar por SENHA e EMAIL
-    public Empresa buscarPorSenhaEemail(String email, String senha) {
+    // READ - BUSCAR EMPRESA PELO EMAIL E SENHA
+    public Empresa buscarPorEmailESenha(String email, String senha) {
         Conexao conexao = new Conexao();
-        Connection conn = conexao.conectar();
+        Connection con = conexao.conectar();
         Empresa empresa = null;
+        String sql = "SELECT * FROM EMPRESA WHERE email = ? AND senha = ?";
 
         try {
-            String sql = "SELECT * FROM EMPRESA WHERE EMAIL= ? and SENHA = ?";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, email);
-            pstmt.setString(2, senha);
-            ResultSet rset = pstmt.executeQuery();
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, email);
+            pst.setString(2, senha);
+            ResultSet rs = pst.executeQuery();
 
-            if (rset.next()) {
+            if (rs.next()) {
                 empresa = new Empresa(
-                        rset.getInt("ID"),
-                        rset.getString("cnpj"),
-                        rset.getString("nome"),
-                        rset.getString("email"),
-                        rset.getString("senha"),
-                        rset.getInt("id_plano"),
-                        rset.getInt("qntd_funcionarios"));
+                        rs.getInt("id"),
+                        rs.getString("cnpj"),
+                        rs.getString("nome"),
+                        rs.getString("email"),
+                        rs.getString("senha"),
+                        rs.getInt("id_plano"),
+                        rs.getInt("qntd_funcionarios")
+                );
             }
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         } finally {
-            conexao.desconectar(conn);
+            conexao.desconectar(con);
         }
+
         return empresa;
     }
 
-    // READ - Listar EMPRESA
+    // READ - LISTAR TODAS AS EMPRESAS
     public List<Empresa> listar() {
         Conexao conexao = new Conexao();
-        Connection conn = conexao.conectar();
+        Connection con = conexao.conectar();
         List<Empresa> empresas = new ArrayList<>();
+        String sql = "SELECT * FROM EMPRESA";
 
         try {
-            String sql = "SELECT * FROM EMPRESA";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            ResultSet rset = pstmt.executeQuery();
+            PreparedStatement pst = con.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery();
 
-            while (rset.next()) {
+            while (rs.next()) {
                 empresas.add(new Empresa(
-                        rset.getInt("ID"),
-                        rset.getString("cnpj"),
-                        rset.getString("nome"),
-                        rset.getString("email"),
-                        rset.getString("senha"),
-                        rset.getInt("id_plano"),
-                        rset.getInt("qntd_funcionarios")));
+                        rs.getInt("id"),
+                        rs.getString("cnpj"),
+                        rs.getString("nome"),
+                        rs.getString("email"),
+                        rs.getString("senha"),
+                        rs.getInt("id_plano"),
+                        rs.getInt("qntd_funcionarios")
+                ));
             }
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         } finally {
-            conexao.desconectar(conn);
+            conexao.desconectar(con);
         }
+
         return empresas;
     }
 
-    // UPDATE - atualizar a EMPRESA
+    // UPDATE - ATUALIZAR EMPRESA
     public int atualizar(Empresa empresa) {
         Conexao conexao = new Conexao();
-        Connection conn = conexao.conectar();
+        Connection con = conexao.conectar();
         int retorno = 0;
+        String sql = "UPDATE EMPRESA SET cnpj = ?, nome = ?, email = ?, senha = ?, id_plano = ?, qntd_funcionarios = ? WHERE id = ?";
 
         try {
-            String sql = "UPDATE EMPRESA SET CNPJ = ?, NOME = ?, EMAIL = ? ,SENHA = ? , ID_PLANO = ? , QNTD_FUNCIONARIOS = ?  WHERE ID = ?";
-            PreparedStatement pst = conn.prepareStatement(sql);
+            PreparedStatement pst = con.prepareStatement(sql);
             pst.setString(1, empresa.getCnpj());
             pst.setString(2, empresa.getNome());
             pst.setString(3, empresa.getEmail());
@@ -247,43 +252,35 @@ public class EmpresaDAO {
             pst.setInt(6, empresa.getQntdFuncionarios());
             pst.setInt(7, empresa.getId());
 
-            int linhas = pst.executeUpdate();
-            if (linhas > 0) {
-                retorno = 1;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            retorno = pst.executeUpdate();
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
             retorno = -1;
-        } finally {
-            conexao.desconectar(conn);
-        }
-        return retorno;
-    }
-
-    // DELETE - Deletar EMPRESA
-    public int deletar(int id) {
-        Conexao conexao = new Conexao();
-        Connection con = conexao.conectar();
-        int deletado = 0;
-
-        try {
-            PreparedStatement pst = con.prepareStatement("DELETE FROM EMPRESA WHERE id = ?");
-            pst.setInt(1, id);
-
-            deletado = pst.executeUpdate();
-            if (deletado > 0) {
-                return deletado;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return -1;
         } finally {
             conexao.desconectar(con);
         }
 
-        return deletado;
+        return retorno; // retorna número de linhas alteradas ou -1 em caso de erro
     }
 
+    // DELETE - DELETAR EMPRESA
+    public int deletar(int id) {
+        Conexao conexao = new Conexao();
+        Connection con = conexao.conectar();
+        int retorno = 0;
+        String sql = "DELETE FROM EMPRESA WHERE id = ?";
 
+        try {
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setInt(1, id);
+            retorno = pst.executeUpdate();
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+            retorno = -1;
+        } finally {
+            conexao.desconectar(con);
+        }
 
+        return retorno; // retorna número de linhas deletadas ou -1 em caso de erro
+    }
 }

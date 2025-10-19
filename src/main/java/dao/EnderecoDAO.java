@@ -9,8 +9,8 @@ import java.util.List;
 
 public class EnderecoDAO {
 
-    // INSERIR ENDEREÇO
-    public int inserirEndereco(Endereco endereco) {
+    // CREATE - Inserir Endereço
+    public int inserir(Endereco endereco) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
         int idGerado = -1;
@@ -31,7 +31,7 @@ public class EnderecoDAO {
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     idGerado = rs.getInt("id");
-                    endereco.setId(idGerado); // Atualiza o objeto com o ID do endereço
+                    endereco.setId(idGerado);
                 }
             }
 
@@ -41,20 +41,21 @@ public class EnderecoDAO {
             conexao.desconectar(con);
         }
 
-        return idGerado; // retorna o ID gerado ou -1 se falhar
+        return idGerado;
     }
 
-
-    // BUSCAR POR ID
+    // READ - Buscar por ID
     public Endereco buscarPorId(int id) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
         Endereco endereco = null;
+
         String sql = "SELECT * FROM endereco WHERE id = ?";
 
         try (PreparedStatement pst = con.prepareStatement(sql)) {
             pst.setInt(1, id);
             ResultSet rs = pst.executeQuery();
+
             if (rs.next()) {
                 endereco = new Endereco(
                         rs.getInt("id"),
@@ -68,18 +69,22 @@ public class EnderecoDAO {
                         rs.getInt("id_empresa")
                 );
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             conexao.desconectar(con);
         }
+
         return endereco;
     }
-    // BUSCAR POR PAÍS
+
+    // READ - Buscar por país
     public List<Endereco> buscarPorPais(String pais) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
         List<Endereco> lista = new ArrayList<>();
+
         String sql = "SELECT * FROM endereco WHERE pais = ?";
 
         try (PreparedStatement pst = con.prepareStatement(sql)) {
@@ -109,11 +114,12 @@ public class EnderecoDAO {
         return lista;
     }
 
-    // BUSCAR POR ESTADO
+    // READ - Buscar por estado
     public List<Endereco> buscarPorEstado(String estado) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
         List<Endereco> lista = new ArrayList<>();
+
         String sql = "SELECT * FROM endereco WHERE estado = ?";
 
         try (PreparedStatement pst = con.prepareStatement(sql)) {
@@ -143,11 +149,12 @@ public class EnderecoDAO {
         return lista;
     }
 
-    // BUSCAR POR CEP
+    // READ - Buscar por CEP
     public List<Endereco> buscarPorCep(String cep) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
         List<Endereco> lista = new ArrayList<>();
+
         String sql = "SELECT * FROM endereco WHERE cep = ?";
 
         try (PreparedStatement pst = con.prepareStatement(sql)) {
@@ -177,12 +184,12 @@ public class EnderecoDAO {
         return lista;
     }
 
-
-    // LISTAR TODOS ENDEREÇOS
+    // READ - Listar todos
     public List<Endereco> listarTodos() {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
         List<Endereco> lista = new ArrayList<>();
+
         String sql = "SELECT * FROM endereco";
 
         try (Statement stm = con.createStatement();
@@ -207,14 +214,16 @@ public class EnderecoDAO {
         } finally {
             conexao.desconectar(con);
         }
+
         return lista;
     }
 
-    // ATUALIZAR ENDEREÇO
-    public int atualizarEndereco(Endereco endereco) {
+    // UPDATE - Atualizar endereço
+    public int atualizar(Endereco endereco) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
         int retorno = 0;
+
         String sql = "UPDATE endereco SET pais=?, estado=?, cidade=?, bairro=?, rua=?, numero=?, cep=?, id_empresa=? WHERE id=?";
 
         try (PreparedStatement pst = con.prepareStatement(sql)) {
@@ -237,14 +246,16 @@ public class EnderecoDAO {
         } finally {
             conexao.desconectar(con);
         }
+
         return retorno;
     }
 
-    // DELETAR ENDEREÇO
-    public int deletarEndereco(int id) {
+    // DELETE - Deletar endereço
+    public int deletar(int id) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
         int retorno = 0;
+
         String sql = "DELETE FROM endereco WHERE id=?";
 
         try (PreparedStatement pst = con.prepareStatement(sql)) {
@@ -257,7 +268,7 @@ public class EnderecoDAO {
         } finally {
             conexao.desconectar(con);
         }
+
         return retorno;
     }
-
 }

@@ -3,6 +3,8 @@ package model;
 import java.time.LocalDate;
 
 public class Pagamento {
+
+    // ATRIBUTOS
     private int id;
     private String tipoPagto;
     private double total;
@@ -10,8 +12,19 @@ public class Pagamento {
     private byte[] comprovante;
     private int idEmpresa;
 
-    // CONSTRUTOR
+    // CONSTRUTOR VAZIO
+    public Pagamento() {}
 
+    // CONSTRUTOR SEM ID (para novos registros)
+    public Pagamento(String tipoPagto, double total, LocalDate data, byte[] comprovante, int idEmpresa) {
+        this.tipoPagto = tipoPagto;
+        this.total = total;
+        this.data = data;
+        this.comprovante = comprovante;
+        this.idEmpresa = idEmpresa;
+    }
+
+    // CONSTRUTOR COMPLETO (quando for carregar do BD)
     public Pagamento(int id, String tipoPagto, double total, LocalDate data, byte[] comprovante, int idEmpresa) {
         this.id = id;
         this.tipoPagto = tipoPagto;
@@ -22,7 +35,6 @@ public class Pagamento {
     }
 
     // GETTERS
-
     public int getId() {
         return id;
     }
@@ -48,7 +60,6 @@ public class Pagamento {
     }
 
     // SETTERS
-
     public void setId(int id) {
         this.id = id;
     }
@@ -76,12 +87,11 @@ public class Pagamento {
     // TO STRING
     @Override
     public String toString() {
-        return " -- Pagamento -- " +
+        return "-- Pagamento --" +
                 "\nID: " + id +
-                "\nTipo do pagamento: " + tipoPagto +
+                "\nTipo do Pagamento: " + tipoPagto +
                 "\nTotal: " + total +
                 "\nData: " + data +
-                "\nID da Empresa" + idEmpresa;
+                "\nID da Empresa: " + idEmpresa;
     }
 }
-

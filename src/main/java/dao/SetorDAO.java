@@ -1,134 +1,126 @@
 package dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
 import conexao.Conexao;
 import model.Setor;
 
-public class SetorDAO {
-    // CREATE - Inserir SETOR
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
+public class SetorDAO {
+
+    // CREATE - Inserir SETOR
     public int inserir(Setor setor) {
         Conexao conexao = new Conexao();
-        Connection con = conexao.conectar();
+        Connection conn = conexao.conectar();
         int retorno = 0;
 
         try {
             String sql = "INSERT INTO SETOR (NOME) VALUES (?)";
-            PreparedStatement pst = con.prepareStatement(sql);
+            PreparedStatement pst = conn.prepareStatement(sql);
             pst.setString(1, setor.getNome());
 
             int linhas = pst.executeUpdate();
             if (linhas > 0) {
                 retorno = 1;
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
             retorno = -1;
         } finally {
-            conexao.desconectar(con);
+            conexao.desconectar(conn);
         }
+
         return retorno;
     }
 
-    // READ - Buscar Setor por ID
-
-    public Setor buscarPorID(Setor setor) {
+    // READ - Buscar SETOR por ID
+    public Setor buscarPorId(int id) {
         Conexao conexao = new Conexao();
         Connection conn = conexao.conectar();
-        Setor s = null;
+        Setor setor = null;
 
         try {
             String sql = "SELECT * FROM SETOR WHERE ID = ?";
             PreparedStatement pst = conn.prepareStatement(sql);
-            pst.setInt(1, setor.getId());
+            pst.setInt(1, id);
             ResultSet rs = pst.executeQuery();
 
-            while (rs.next()) {
-                s = new Setor(
+            if (rs.next()) {
+                setor = new Setor(
                         rs.getInt("ID"),
                         rs.getString("NOME")
                 );
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            conexao.desconectar(conn);
-        }
-        return s;
-    }
-
-    // READ - Buscar por NOME
-
-    public Setor buscarPorNome(Setor setor, String nomeEmpresa) {
-        Conexao conexao = new Conexao();
-        Connection conn = conexao.conectar();
-        Setor s = null;
-
-        try {
-             String sql = "SELECT S.* " +
-                     "FROM SETOR S " +
-                     "JOIN FUNCIONARIO F ON S.ID = F.ID_SETOR " +
-                     "JOIN EMPRESA E ON F.ID_EMPRESA = E.ID " +
-                     "WHERE S.NOME = ? AND E.NOME = ?";
-             PreparedStatement pst = conn.prepareStatement(sql);
-             pst.setString(1, setor.getNome());
-             pst.setString(2,nomeEmpresa);
-             ResultSet rs = pst.executeQuery();
-
-             while (rs.next()) {
-                 s = new Setor(
-                         rs.getInt("ID"),
-                         rs.getString("NOME")
-                 );
-             }
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         } finally {
             conexao.desconectar(conn);
         }
-        return s;
+
+        return setor;
     }
 
-    // READ - Listar todos os Setores
+    // READ - Buscar SETOR por NOME e EMPRESA
+    public Setor buscarPorNome(String nomeSetor, String nomeEmpresa) {
+        Conexao conexao = new Conexao();
+        Connection conn = conexao.conectar();
+        Setor setor = null;
 
-    public List<Setor> listarTodos(Setor setor) {
+        try {
+            String sql = "SELECT S.* " +
+                    "FROM SETOR S " +
+                    "JOIN FUNCIONARIO F ON S.ID = F.ID_SETOR " +
+                    "JOIN EMPRESA E ON F.ID_EMPRESA = E.ID " +
+                    "WHERE S.NOME = ? AND E.NOME = ?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setString(1, nomeSetor);
+            pst.setString(2, nomeEmpresa);
+            ResultSet rs = pst.executeQuery();
+
+            if (rs.next()) {
+                setor = new Setor(
+                        rs.getInt("ID"),
+                        rs.getString("NOME")
+                );
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        } finally {
+            conexao.desconectar(conn);
+        }
+
+        return setor;
+    }
+
+    // READ - Listar todos os SETORES
+    public List<Setor> listarTodos() {
         Conexao conexao = new Conexao();
         Connection conn = conexao.conectar();
         List<Setor> setores = new ArrayList<>();
 
         try {
-            String sql = "SELECT S.* FROM SETOR S " +
-                    "JOIN FUNCIONARIO F ON S.ID = F.ID_SETOR " +
-                    "JOIN EMPRESA E ON F.ID_EMPRESA = E.ID " +
-                    "WHERE S.ID = ?";
-            PreparedStatement pst = conn.prepareStatement(sql);
-            pst.setInt(1, setor.getId());
-            ResultSet rs = pst.executeQuery(sql);
+            String sql = "SELECT * FROM SETOR";
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
 
             while (rs.next()) {
-                Setor s = new Setor(
+                setores.add(new Setor(
                         rs.getInt("ID"),
                         rs.getString("NOME")
-                );
-                setores.add(s);
+                ));
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
         } finally {
             conexao.desconectar(conn);
         }
+
         return setores;
     }
 
-    // UPDATE - Alterar NOME
-
-    public int atualizar(Setor setor, String nomeSetor) {
+    // UPDATE - Atualizar NOME do SETOR
+    public int atualizar(int id, String novoNome) {
         Conexao conexao = new Conexao();
         Connection conn = conexao.conectar();
         int retorno = 0;
@@ -136,25 +128,25 @@ public class SetorDAO {
         try {
             String sql = "UPDATE SETOR SET NOME = ? WHERE ID = ?";
             PreparedStatement pst = conn.prepareStatement(sql);
-            pst.setString(1, nomeSetor);
-            pst.setInt(2, setor.getId());
+            pst.setString(1, novoNome);
+            pst.setInt(2, id);
 
             int linhas = pst.executeUpdate();
             if (linhas > 0) {
                 retorno = 1;
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
             retorno = -1;
         } finally {
             conexao.desconectar(conn);
         }
+
         return retorno;
     }
 
     // DELETE - Deletar SETOR
-
-    public int deletar(Setor setor) {
+    public int deletar(int id) {
         Conexao conexao = new Conexao();
         Connection conn = conexao.conectar();
         int retorno = 0;
@@ -162,18 +154,19 @@ public class SetorDAO {
         try {
             String sql = "DELETE FROM SETOR WHERE ID = ?";
             PreparedStatement pst = conn.prepareStatement(sql);
-            pst.setInt(1, setor.getId());
+            pst.setInt(1, id);
 
             int linhas = pst.executeUpdate();
             if (linhas > 0) {
                 retorno = 1;
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
             retorno = -1;
         } finally {
             conexao.desconectar(conn);
         }
+
         return retorno;
     }
 }
