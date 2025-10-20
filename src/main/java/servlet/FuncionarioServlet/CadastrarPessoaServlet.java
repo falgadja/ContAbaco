@@ -1,4 +1,4 @@
-package servlet;
+package servlet.FuncionarioServlet;
 
 import dao.FuncionarioDAO;
 import jakarta.servlet.ServletException;

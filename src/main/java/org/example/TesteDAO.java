@@ -4,15 +4,10 @@ import java.sql.Connection;
 import java.time.LocalDate;
 import java.util.List;
 
-import conexao.Conexao;
 import dao.EmpresaDAO;
 import dao.EnderecoDAO;
-import dao.FechamentoAvariaDAO;
-import dao.FechamentoTurnoDAO;
 import model.Empresa;
 import model.Endereco;
-import model.FechamentoAvaria;
-import model.FechamentoTurno;
 
 public class  TesteDAO{
     public static void main(String[] args) {

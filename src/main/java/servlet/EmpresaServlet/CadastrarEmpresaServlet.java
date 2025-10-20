@@ -1,4 +1,4 @@
-package servlet;
+package servlet.EmpresaServlet;
 
 import Validacao.Validacao;
 import dao.EmpresaDAO;
