@@ -94,7 +94,7 @@ public class PlanoDAO {
     }
 
     // READ - LISTAR TODOS OS PLANOS
-    public List<Plano> listarTodos() {
+    public List<Plano> listar() {
         Conexao conexao = new Conexao();
         Connection conn = conexao.conectar();
         List<Plano> planos = new ArrayList<>();

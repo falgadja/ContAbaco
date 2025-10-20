@@ -166,6 +166,36 @@ public class PagamentoDAO {
         return lista;
     }
 
+    // READ - LISTAR TODOS OS PAGAMENTOS
+    public List<Pagamento> listar() {
+        Conexao conexao = new Conexao();
+        Connection conn = conexao.conectar();
+        List<Pagamento> pagamentos= new ArrayList<>();
+
+        try {
+            String sql = "SELECT * FROM PAGAMENTO";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                pagamentos.add(new Pagamento(
+                        rs.getInt("ID"),
+                        rs.getString("TIPO_PAGTO"),
+                        rs.getDouble("TOTAL"),
+                        rs.getObject("DATA_PAGTO", LocalDate.class),
+                        rs.getBytes("COMPROVANTE"),
+                        rs.getInt("ID_EMPRESA")
+                ));
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        } finally {
+            conexao.desconectar(conn);
+        }
+
+        return pagamentos;
+    }
+
     // UPDATE - ATUALIZAR PAGAMENTO
     public int atualizar(Pagamento pagamento) {
         Conexao conexao = new Conexao();

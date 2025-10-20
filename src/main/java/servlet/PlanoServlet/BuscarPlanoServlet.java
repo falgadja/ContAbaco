@@ -1,18 +1,18 @@
-package servlet.EmpresaServlet;
+package servlet.PlanoServlet;
 
-import dao.EmpresaDAO;
+import dao.PlanoDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.Empresa;
+import model.Plano;
 
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/BuscarEmpresaServlet")
-public class BuscarEmpresaServlet extends HttpServlet {
+@WebServlet("/BuscarPlanoServlet")
+public class BuscarPlanoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -24,32 +24,32 @@ public class BuscarEmpresaServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String nome = request.getParameter("nome");
-        EmpresaDAO empresaDAO = new EmpresaDAO();
+        PlanoDAO planoDAO = new PlanoDAO();
 
         try {
             //verifica se aconteceu uma pesquisa por nome
             if (nome != null && !nome.trim().isEmpty()) {
-                // Busca a empresa pelo nome
-                Empresa empresa = empresaDAO.buscarPorNome(nome);
+                // Busca o plano pelo nome
+                Plano plano = planoDAO.buscarPorNome(nome);
 
-                // Verifica se existe uma empresa com esse nome
-                if (empresa == null) {
-                    request.setAttribute("mensagemBusca", "Não foi encontrado nenhuma empresa com esse nome, digite novamente.");
+                // Verifica se existe um plano com esse nome
+                if ( plano == null) {
+                    request.setAttribute("mensagemBusca", "Não foi encontrado nenhum plano com esse nome, digite novamente.");
                 } else {
-                    request.setAttribute("mensagemBusca", "Empresa encontrada.");
-                    request.setAttribute("empresa", empresa);
+                    request.setAttribute("mensagemBusca", "Plano encontrado.");
+                    request.setAttribute("plano", plano);
                 }
 
             }
 
-            // Lista as empresas
-            List<Empresa> empresas = empresaDAO.listar();
+            // Lista os planos
+            List<Plano> planos = planoDAO.listar();
 
-            // Verifica se existem empresas registradas
-            if (empresas == null || empresas.isEmpty()) {
-                request.setAttribute("mensagemLista", "Não foi encontrado nenhuma empresa");
+            // Verifica se existem planos registrados
+            if (planos == null || planos.isEmpty()) {
+                request.setAttribute("mensagemLista", "Não foi encontrado nenhum plano");
             } else {
-                request.setAttribute("empresas", empresas);
+                request.setAttribute("planos", planos);
             }
         } catch (Exception e) {
             // Qualquer outro erro inesperado

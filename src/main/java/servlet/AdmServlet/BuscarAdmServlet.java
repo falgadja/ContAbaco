@@ -1,18 +1,18 @@
-package servlet.EmpresaServlet;
+package servlet.AdmServlet;
 
-import dao.EmpresaDAO;
+import dao.AdmDAO;
+import model.Administrador;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.Empresa;
 
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/BuscarEmpresaServlet")
-public class BuscarEmpresaServlet extends HttpServlet {
+@WebServlet("/BuscarAdmServlet")
+public class BuscarAdmServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -23,33 +23,33 @@ public class BuscarEmpresaServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String nome = request.getParameter("nome");
-        EmpresaDAO empresaDAO = new EmpresaDAO();
+        String email = request.getParameter("email");
+        AdmDAO admDAO = new AdmDAO();
 
         try {
-            //verifica se aconteceu uma pesquisa por nome
-            if (nome != null && !nome.trim().isEmpty()) {
+            //verifica se aconteceu uma pesquisa por e-mail
+            if (email != null && !email.trim().isEmpty()) {
                 // Busca a empresa pelo nome
-                Empresa empresa = empresaDAO.buscarPorNome(nome);
+                Administrador adm = admDAO.buscarPorEmail(email);
 
-                // Verifica se existe uma empresa com esse nome
-                if (empresa == null) {
-                    request.setAttribute("mensagemBusca", "Não foi encontrado nenhuma empresa com esse nome, digite novamente.");
+                // Verifica se existe um administrador com esse e-mail
+                if (adm == null) {
+                    request.setAttribute("mensagemBusca", "Não foi encontrado nenhum administrador com esse email, digite novamente.");
                 } else {
                     request.setAttribute("mensagemBusca", "Empresa encontrada.");
-                    request.setAttribute("empresa", empresa);
+                    request.setAttribute("adm", adm);
                 }
 
             }
 
-            // Lista as empresas
-            List<Empresa> empresas = empresaDAO.listar();
+            // Lista os administradores
+            List<Administrador> adms = admDAO.listar();
 
             // Verifica se existem empresas registradas
-            if (empresas == null || empresas.isEmpty()) {
-                request.setAttribute("mensagemLista", "Não foi encontrado nenhuma empresa");
+            if (adms == null || adms.isEmpty()) {
+                request.setAttribute("mensagemLista", "Não foi encontrado nenhum administrador");
             } else {
-                request.setAttribute("empresas", empresas);
+                request.setAttribute("adms", adms);
             }
         } catch (Exception e) {
             // Qualquer outro erro inesperado

@@ -5,9 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import dao.EmpresaDAO;
-import dao.EnderecoDAO;
 import model.Empresa;
-import model.Endereco;
 
 public class  TesteDAO{
     public static void main(String[] args) {

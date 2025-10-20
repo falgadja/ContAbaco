@@ -1,18 +1,18 @@
-package servlet.EmpresaServlet;
+package servlet.FuncionarioServlet;
 
-import dao.EmpresaDAO;
+import dao.FuncionarioDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.Empresa;
+import model.Funcionario;
 
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/BuscarEmpresaServlet")
-public class BuscarEmpresaServlet extends HttpServlet {
+@WebServlet("/BuscarFuncionarioServlet")
+public class BuscarFuncionarioServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -24,32 +24,32 @@ public class BuscarEmpresaServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String nome = request.getParameter("nome");
-        EmpresaDAO empresaDAO = new EmpresaDAO();
+        FuncionarioDAO funcionarioDAO = new FuncionarioDAO();
 
         try {
             //verifica se aconteceu uma pesquisa por nome
             if (nome != null && !nome.trim().isEmpty()) {
-                // Busca a empresa pelo nome
-                Empresa empresa = empresaDAO.buscarPorNome(nome);
+                // Busca o funcionário pelo nome
+                Funcionario funcionario = funcionarioDAO.buscarPorNome(nome);
 
-                // Verifica se existe uma empresa com esse nome
-                if (empresa == null) {
-                    request.setAttribute("mensagemBusca", "Não foi encontrado nenhuma empresa com esse nome, digite novamente.");
+                // Verifica se existe um funcionário com esse nome
+                if (funcionario == null) {
+                    request.setAttribute("mensagemBusca", "Não foi encontrado nenhum funcionário com esse nome, digite novamente.");
                 } else {
-                    request.setAttribute("mensagemBusca", "Empresa encontrada.");
-                    request.setAttribute("empresa", empresa);
+                    request.setAttribute("mensagemBusca", "Funcionário encontrado.");
+                    request.setAttribute("funcionário", funcionario);
                 }
 
             }
 
-            // Lista as empresas
-            List<Empresa> empresas = empresaDAO.listar();
+            // Lista os funcionários
+            List<Funcionario> funcionarios = funcionarioDAO.listar();
 
-            // Verifica se existem empresas registradas
-            if (empresas == null || empresas.isEmpty()) {
-                request.setAttribute("mensagemLista", "Não foi encontrado nenhuma empresa");
+            // Verifica se existem funcionários registrados
+            if (funcionarios == null || funcionarios.isEmpty()) {
+                request.setAttribute("mensagemLista", "Não foi encontrado nenhum funcionário");
             } else {
-                request.setAttribute("empresas", empresas);
+                request.setAttribute("funcionarios", funcionarios);
             }
         } catch (Exception e) {
             // Qualquer outro erro inesperado
