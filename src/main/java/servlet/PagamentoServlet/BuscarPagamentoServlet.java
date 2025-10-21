@@ -16,12 +16,6 @@ public class BuscarPagamentoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doPost(request, response);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
 
         String id = request.getParameter("id");
         PagamentoDAO pagamentoDAO = new PagamentoDAO();
@@ -69,5 +63,11 @@ public class BuscarPagamentoServlet extends HttpServlet {
 
         // Encaminha para o JSP
         request.getRequestDispatcher("../Cadastrarpagamento.jsp").forward(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doGet(request, response);
     }
 }

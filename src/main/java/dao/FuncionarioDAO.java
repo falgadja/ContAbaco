@@ -113,7 +113,7 @@ public class FuncionarioDAO {
     }
 
     // READ - BUSCAR FUNCIONARIO PELO NOME E SOBRENOME
-    public Funcionario buscarPorNomeESobrenome(String nome) { // Sobrescrita para pesquisar pelo primeiro nome e pelo nome completo
+    public Funcionario buscarPorNome(String nome) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
         Funcionario funcionario = null;

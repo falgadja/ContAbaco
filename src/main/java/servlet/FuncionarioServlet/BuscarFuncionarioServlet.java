@@ -16,29 +16,40 @@ public class BuscarFuncionarioServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doPost(request, response);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
 
         String nome = request.getParameter("nome");
         FuncionarioDAO funcionarioDAO = new FuncionarioDAO();
 
         try {
             //verifica se aconteceu uma pesquisa por nome
-            if (nome != null && !nome.trim().isEmpty()) {
-                // Busca o funcionário pelo nome
-                int ultimoEspaco = nome.trim().lastIndexOf(" ");
-                Funcionario funcionario = funcionarioDAO.buscarPorNomeESobrenome(nome.substring(0, ultimoEspaco), nome.substring(ultimoEspaco + 1));
+            if (nome != null && !nome.isEmpty()) {
 
-                // Verifica se existe um funcionário com esse nome
-                if (funcionario == null) {
-                    request.setAttribute("mensagemBusca", "Não foi encontrado nenhum funcionário com esse nome, digite novamente.");
+                // Retirar qualquer espaço antes ou depois
+                nome = nome.trim();
+
+                if (nome.contains(" ")) {
+                    // Busca o funcionário pelo nome e sobrenome
+                    int ultimoEspaco = nome.lastIndexOf(" ");
+                    Funcionario funcionario = funcionarioDAO.buscarPorNomeESobrenome(nome.substring(0, ultimoEspaco), nome.substring(ultimoEspaco + 1));
+
+                    // Verifica se existe um funcionário com esse nome
+                    if (funcionario == null) {
+                        request.setAttribute("mensagemBusca", "Não foi encontrado nenhum funcionário com esse nome, digite novamente.");
+                    } else {
+                        request.setAttribute("mensagemBusca", "Funcionário encontrado.");
+                        request.setAttribute("funcionario", funcionario);
+                    }
                 } else {
-                    request.setAttribute("mensagemBusca", "Funcionário encontrado.");
-                    request.setAttribute("funcionário", funcionario);
+                    // Busca o funcionário pelo nome
+                    Funcionario funcionario = funcionarioDAO.buscarPorNome(nome);
+
+                    // Verifica se existe um funcionário com esse nome
+                    if (funcionario == null) {
+                        request.setAttribute("mensagemBusca", "Não foi encontrado nenhum funcionário com esse nome, digite novamente.");
+                    } else {
+                        request.setAttribute("mensagemBusca", "Funcionário encontrado.");
+                        request.setAttribute("funcionario", funcionario);
+                    }
                 }
 
             } else {
@@ -61,5 +72,11 @@ public class BuscarFuncionarioServlet extends HttpServlet {
 
         // Encaminha para o JSP
         request.getRequestDispatcher("../CadastrarEmpresa.jsp").forward(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doGet(request, response);
     }
 }

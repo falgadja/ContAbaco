@@ -16,12 +16,6 @@ public class BuscarEmpresaServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doPost(request, response);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
 
         String nome = request.getParameter("nome");
         EmpresaDAO empresaDAO = new EmpresaDAO();
@@ -60,5 +54,11 @@ public class BuscarEmpresaServlet extends HttpServlet {
 
         // Encaminha para o JSP
         request.getRequestDispatcher("../CadastrarEmpresa.jsp").forward(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doGet(request, response);
     }
 }
