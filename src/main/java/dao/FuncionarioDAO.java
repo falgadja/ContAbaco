@@ -112,6 +112,39 @@ public class FuncionarioDAO {
         return funcionario;
     }
 
+    // READ - BUSCAR FUNCIONARIO PELO NOME E SOBRENOME
+    public Funcionario buscarPorNomeESobrenome(String nome) { // Sobrescrita para pesquisar pelo primeiro nome e pelo nome completo
+        Conexao conexao = new Conexao();
+        Connection con = conexao.conectar();
+        Funcionario funcionario = null;
+        String sql = "SELECT * FROM FUNCIONARIO WHERE nome = ?";
+
+        try {
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, nome);
+            ResultSet rs = pst.executeQuery();
+
+            if (rs.next()) {
+                funcionario = new Funcionario(
+                        rs.getInt("id"),
+                        rs.getString("nome"),
+                        rs.getString("sobrenome"),
+                        rs.getTimestamp("data_nascimento").toLocalDateTime().toLocalDate(),
+                        rs.getString("email"),
+                        rs.getString("senha"),
+                        rs.getInt("id_empresa"),
+                        rs.getInt("id_setor")
+                );
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        } finally {
+            conexao.desconectar(con);
+        }
+
+        return funcionario;
+    }
+
     // READ - BUSCAR FUNCIONARIOS PELO ID DA EMPRESA
     public List<Funcionario> buscarPorIdEmpresa(int idEmpresa) {
         Conexao conexao = new Conexao();

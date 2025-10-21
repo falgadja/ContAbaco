@@ -30,7 +30,8 @@ public class BuscarFuncionarioServlet extends HttpServlet {
             //verifica se aconteceu uma pesquisa por nome
             if (nome != null && !nome.trim().isEmpty()) {
                 // Busca o funcionário pelo nome
-                Funcionario funcionario = funcionarioDAO.buscarPorNome(nome);
+                int ultimoEspaco = nome.trim().lastIndexOf(" ");
+                Funcionario funcionario = funcionarioDAO.buscarPorNomeESobrenome(nome.substring(0, ultimoEspaco), nome.substring(ultimoEspaco + 1));
 
                 // Verifica se existe um funcionário com esse nome
                 if (funcionario == null) {
@@ -40,16 +41,17 @@ public class BuscarFuncionarioServlet extends HttpServlet {
                     request.setAttribute("funcionário", funcionario);
                 }
 
-            }
-
-            // Lista os funcionários
-            List<Funcionario> funcionarios = funcionarioDAO.listar();
-
-            // Verifica se existem funcionários registrados
-            if (funcionarios == null || funcionarios.isEmpty()) {
-                request.setAttribute("mensagemLista", "Não foi encontrado nenhum funcionário");
             } else {
-                request.setAttribute("funcionarios", funcionarios);
+
+                // Lista os funcionários
+                List<Funcionario> funcionarios = funcionarioDAO.listar();
+
+                // Verifica se existem funcionários registrados
+                if (funcionarios == null || funcionarios.isEmpty()) {
+                    request.setAttribute("mensagemLista", "Não foi encontrado nenhum funcionário");
+                } else {
+                    request.setAttribute("funcionarios", funcionarios);
+                }
             }
         } catch (Exception e) {
             // Qualquer outro erro inesperado

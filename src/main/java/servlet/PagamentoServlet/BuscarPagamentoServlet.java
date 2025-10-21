@@ -44,16 +44,17 @@ public class BuscarPagamentoServlet extends HttpServlet {
                     request.setAttribute("pagamento", pagamento);
                 }
 
-            }
+            }  else {
 
-            // Lista as pagamentos
-            List<Pagamento> pagamentos = pagamentoDAO.listar();
+                // Lista as pagamentos
+                List<Pagamento> pagamentos = pagamentoDAO.listar();
 
-            // Verifica se existem pagamentos registrados
-            if (pagamentos == null || pagamentos.isEmpty()) {
-                request.setAttribute("mensagemLista", "Não foi encontrado nenhum pagamento");
-            } else {
-                request.setAttribute("pagamentos", pagamentos);
+                // Verifica se existem pagamentos registrados
+                if (pagamentos == null || pagamentos.isEmpty()) {
+                    request.setAttribute("mensagemLista", "Não foi encontrado nenhum pagamento");
+                } else {
+                    request.setAttribute("pagamentos", pagamentos);
+                }
             }
         } catch (NumberFormatException nfe){
             // Caso o ID seja inválido, retorna uma mensagem ao JSP

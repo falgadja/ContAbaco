@@ -40,16 +40,17 @@ public class BuscarAdmServlet extends HttpServlet {
                     request.setAttribute("adm", adm);
                 }
 
-            }
+            }  else {
 
-            // Lista os administradores
-            List<Administrador> adms = admDAO.listar();
+                // Lista os administradores
+                List<Administrador> adms = admDAO.listar();
 
-            // Verifica se existem empresas registradas
-            if (adms == null || adms.isEmpty()) {
-                request.setAttribute("mensagemLista", "Não foi encontrado nenhum administrador");
-            } else {
-                request.setAttribute("adms", adms);
+                // Verifica se existem empresas registradas
+                if (adms == null || adms.isEmpty()) {
+                    request.setAttribute("mensagemLista", "Não foi encontrado nenhum administrador");
+                } else {
+                    request.setAttribute("adms", adms);
+                }
             }
         } catch (Exception e) {
             // Qualquer outro erro inesperado

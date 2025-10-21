@@ -40,16 +40,17 @@ public class BuscarEmpresaServlet extends HttpServlet {
                     request.setAttribute("empresa", empresa);
                 }
 
-            }
-
-            // Lista as empresas
-            List<Empresa> empresas = empresaDAO.listar();
-
-            // Verifica se existem empresas registradas
-            if (empresas == null || empresas.isEmpty()) {
-                request.setAttribute("mensagemLista", "Não foi encontrado nenhuma empresa");
             } else {
-                request.setAttribute("empresas", empresas);
+
+                // Lista as empresas
+                List<Empresa> empresas = empresaDAO.listar();
+
+                // Verifica se existem empresas registradas
+                if (empresas == null || empresas.isEmpty()) {
+                    request.setAttribute("mensagemLista", "Não foi encontrado nenhuma empresa");
+                } else {
+                    request.setAttribute("empresas", empresas);
+                }
             }
         } catch (Exception e) {
             // Qualquer outro erro inesperado

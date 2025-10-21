@@ -40,16 +40,17 @@ public class BuscarPlanoServlet extends HttpServlet {
                     request.setAttribute("plano", plano);
                 }
 
-            }
+            }  else {
 
-            // Lista os planos
-            List<Plano> planos = planoDAO.listar();
+                // Lista os planos
+                List<Plano> planos = planoDAO.listar();
 
-            // Verifica se existem planos registrados
-            if (planos == null || planos.isEmpty()) {
-                request.setAttribute("mensagemLista", "Não foi encontrado nenhum plano");
-            } else {
-                request.setAttribute("planos", planos);
+                // Verifica se existem planos registrados
+                if (planos == null || planos.isEmpty()) {
+                    request.setAttribute("mensagemLista", "Não foi encontrado nenhum plano");
+                } else {
+                    request.setAttribute("planos", planos);
+                }
             }
         } catch (Exception e) {
             // Qualquer outro erro inesperado
