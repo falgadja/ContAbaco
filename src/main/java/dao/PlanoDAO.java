@@ -8,6 +8,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlanoDAO {
+    // CREATE - INSERIR PLANO
+    public int inserir(Plano plano) {
+        Conexao conexao = new Conexao();
+        Connection conn = conexao.conectar();
+        int idGerado = -1;
+
+        try {
+            String sql = "INSERT INTO PLANO (NOME, PRECO) VALUES (?, ?) RETURNING ID";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setString(1, plano.getNome());
+            pst.setDouble(2, plano.getPreco());
+
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                idGerado = rs.getInt("ID");
+                plano.setId(idGerado);
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        } finally {
+            conexao.desconectar(conn);
+        }
+
+        return idGerado;
+    }
 
     // READ - BUSCAR PLANO PELO ID
     public Plano buscarPorId(int id) {

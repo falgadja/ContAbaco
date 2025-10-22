@@ -14,7 +14,7 @@ public class PagamentoDAO {
     public int inserir(Pagamento pagamento) {
         Conexao conexao = new Conexao();
         Connection conn = conexao.conectar();
-        int retorno = -1;
+        int idGerado = -1;
 
         try {
             String sql = "INSERT INTO PAGAMENTO (TIPO_PAGTO, TOTAL, DATA_PAGTO, COMPROVANTE, ID_EMPRESA) VALUES (?, ?, ?, ?, ?) RETURNING ID";
@@ -27,8 +27,8 @@ public class PagamentoDAO {
 
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
-                retorno = rs.getInt("ID");
-                pagamento.setId(retorno);
+                idGerado = rs.getInt("ID");
+                pagamento.setId(idGerado);
             }
         } catch (SQLException sqle) {
             sqle.printStackTrace();
@@ -36,7 +36,7 @@ public class PagamentoDAO {
             conexao.desconectar(conn);
         }
 
-        return retorno;
+        return idGerado;
     }
 
     // READ - BUSCAR PAGAMENTO PELO ID
