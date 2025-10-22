@@ -1,5 +1,7 @@
 package org.example;
 
+import conexao.Conexao;
+
 import java.sql.Connection;
 
 public class TesteBanco {
