@@ -15,19 +15,16 @@
     font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
 }
 
-html,
-body {
+html, body {
     height: 100%;
     width: 100%;
     background: var(--branco);
     color: var(--cor_falgadja_1);
 }
 
-.esquerda {
+.tela {
     display: flex;
-    height: 100vh;
-    width: 100%;
-    overflow: hidden;
+    min-height: 100vh;
 }
 
 .sidebar {
@@ -36,6 +33,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 18px;
+    background: #fff;
 }
 
 .aplicativo {
@@ -53,12 +51,7 @@ body {
     align-items: center;
     justify-content: center;
     overflow: hidden;
-}
-
-.logo img {
-    max-width: 100%;
-    max-height: 100%;
-    display: block;
+    background: #fff;
 }
 
 .titulo_app {
@@ -100,6 +93,7 @@ body {
     font-weight: 600;
     width: 190px;
     cursor: pointer;
+    text-align: left;
 }
 
 .botao.selecionado {
@@ -107,12 +101,6 @@ body {
     color: #fff;
     border-color: transparent;
     box-shadow: 0 6px 18px rgba(12, 0, 102, 0.25);
-}
-
-.icone {
-    width: 18px;
-    height: 18px;
-    object-fit: contain;
 }
 
 .separator {
@@ -124,6 +112,8 @@ body {
     flex: 1;
     padding: 36px 48px;
     overflow: auto;
+    background: #f7f7fb;
+    min-height: 100vh;
 }
 
 .titulos {
@@ -131,6 +121,7 @@ body {
     align-items: center;
     justify-content: space-between;
     gap: 12px;
+    margin-bottom: 14px;
 }
 
 #AR {
@@ -142,10 +133,9 @@ body {
 #CRUD {
     color: grey;
     font-weight: 600;
-    margin-top: -10px;
+    margin-top: -6px;
 }
 
-/* central search (only one) */
 .pesquisar {
     width: 480px;
     height: 44px;
@@ -155,6 +145,7 @@ body {
     align-items: center;
     padding: 8px 12px;
     gap: 10px;
+    background: #fff;
 }
 
 .pesquisar input {
@@ -169,44 +160,7 @@ body {
     color: rgba(24, 0, 204, 0.45);
 }
 
-.adicionador {
-    margin-top: 28px;
-}
-
-.botao-add {
-    padding: 12px 18px;
-    border-radius: 12px;
-    background: var(--cor_degrade);
-    color: #fff;
-    font-weight: 700;
-    border: 0;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.sair {
-    margin-top: auto;
-}
-
-.botao-sair {
-    padding: 12px 18px;
-    border-radius: 12px;
-    background: var(--cor_sair);
-    color: white;
-    border: 0;
-    cursor: pointer;
-    font-weight: 700;
-    width: 100%;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* ====== Containers de tabela (padronizado) ====== */
-.tabela,
-.tabela-adm {
+.tabela {
     margin-top: 20px;
     border: 3px solid rgba(24, 0, 204, 0.95);
     border-radius: 14px;
@@ -222,124 +176,35 @@ body {
 
 .tabela-container {
     width: 100%;
-    max-height: calc(100vh - 260px);
-    overflow-y: auto;
-    overflow-x: auto;
+    max-height: calc(100vh - 300px);
+    overflow: auto;
     padding: 10px;
 }
 
-.tabela-container::-webkit-scrollbar {
-    height: 10px;
-    width: 10px;
-}
-
-.tabela-container::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, rgba(24, 0, 204, 0.2), rgba(12, 0, 102, 0.2));
-    border-radius: 10px;
-}
-
-/* ========== ADM style (fixed columns, truncation) ========== */
-.adm-style table {
+table {
     width: 100%;
-    table-layout: fixed;
     border-collapse: collapse;
     font-size: 14px;
 }
 
-.adm-style thead th,
-.adm-style tbody td {
-    padding: 14px 16px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-weight: 600;
-    text-align: center;
-    /* centralizei ADM */
-}
-
-.adm-style tbody tr:nth-child(even) {
+thead th {
+    padding: 12px 14px;
     background: #fafaff;
+    text-align: left;
+    font-weight: 700;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
-.adm-style tbody tr:hover {
-    background: rgba(24, 0, 204, 0.04);
-}
-
-/* actions sticky column for adm-style */
-.adm-style th.acoes-col,
-.adm-style td.acoes {
-    position: sticky;
-    right: 0;
-    background: #fff;
-    box-shadow: -8px 0 12px rgba(12, 0, 102, 0.06);
-    width: 170px;
-    min-width: 170px;
-    max-width: 260px;
+tbody td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #f2f2f8;
     vertical-align: middle;
-    padding-left: 8px;
-    padding-right: 8px;
-
-    /* permitimos overflow visível para os botões e usamos flex para distribuir */
-    overflow: visible;
-    white-space: nowrap;
 }
 
-/* adaptações para garantir que os botões apareçam (sem "...") */
-.adm-style td.acoes .btn,
-.empresa-style td.acoes .btn,
-.related-sections td.acoes .btn {
-    display: inline-flex;
-    margin: 0 4px;
+tbody tr:hover {
+    background: rgba(24, 0, 204, 0.02);
 }
 
-/* ========== EMPRESA style (dynamic columns, no truncation) ========== */
-.empresa-style table {
-    width: auto;
-    /* natural width */
-    table-layout: auto;
-    /* columns sized by content */
-    border-collapse: collapse;
-    font-size: 14px;
-    white-space: nowrap;
-}
-
-.empresa-style thead th,
-.empresa-style tbody td {
-    padding: 14px 16px;
-    overflow: visible;
-    text-overflow: clip;
-    white-space: nowrap;
-    font-weight: 600;
-    text-align: center;
-    /* agora centralizado também */
-}
-
-.empresa-style tbody tr:nth-child(even) {
-    background: #fafaff;
-}
-
-.empresa-style tbody tr:hover {
-    background: rgba(24, 0, 204, 0.04);
-}
-
-/* sticky actions for empresa-style (min-width only) */
-.empresa-style th.acoes-col,
-.empresa-style td.acoes {
-    position: sticky;
-    right: 0;
-    background: #fff;
-    box-shadow: -8px 0 12px rgba(12, 0, 102, 0.06);
-    min-width: 170px;
-    padding-left: 8px;
-    padding-right: 8px;
-    vertical-align: middle;
-    text-align: center;
-
-    overflow: visible;
-    white-space: nowrap;
-}
-
-/* buttons */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -352,97 +217,31 @@ body {
     cursor: pointer;
 }
 
-.btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(12, 0, 102, 0.06);
+.action-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: flex-end;
 }
 
-.empresa-topo {
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
+.adicionador {
+    margin-top: 18px;
 }
 
-.empresa-topo-left {
-    display: flex;
-    gap: 14px;
-    align-items: center;
-}
-
-.empresa-back {
-    width: 40px;
-    height: 40px;
-    border: 2px solid var(--cor_falgadja_1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.botao-add {
+    padding: 12px 18px;
+    border-radius: 12px;
+    background: var(--cor_degrade);
+    color: #fff;
+    font-weight: 700;
+    border: 0;
     cursor: pointer;
-    background: #fff;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
 }
 
-.empresa-title {
-    display: flex;
-    flex-direction: column;
-}
-
-.empresa-title .label {
-    color: grey;
-    font-weight: 600;
-    font-size: 13px;
-    margin-bottom: -5px;
-}
-
-.empresa-title .nome-empresa {
-    font-size: 28px;
-    font-weight: 800;
-    color: var(--cor_falgadja_1);
-}
-
-.empresa-filter {
-    padding: 10px 12px;
-    border-radius: 10px;
-    border: 2px solid var(--cor_falgadja_1);
-    font-weight: 600;
-    background: #fff;
-}
-
-/* related sections controlled by JS: only one visible at a time */
-.related-sections table {
-    display: none;
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.related-sections table.active {
-    display: table;
-}
-
-/* th/td for related sections */
-.related-sections th,
-.related-sections td {
-    padding: 14px 16px;
-    font-weight: 600;
-    white-space: nowrap;
-    text-align: center;
-}
-
-.related-sections td.acoes,
-.related-sections th.acoes-col {
-    position: sticky;
-    right: 0;
-    background: #fff;
-    box-shadow: -8px 0 12px rgba(12, 0, 102, 0.06);
-    min-width: 170px;
-    text-align: center;
-    padding-left: 8px;
-    padding-right: 8px;
-    overflow: visible;
-    white-space: nowrap;
-}
-
-.add-modal-overlay {
+.modal-overlay {
     position: fixed;
     inset: 0;
     background: rgba(24, 0, 204, 0.06);
@@ -452,79 +251,55 @@ body {
     z-index: 1200;
 }
 
-.add-modal {
+.modal {
     width: 880px;
-    /* tela grande como seu mock */
     max-width: calc(100% - 48px);
-    height: 420px;
     max-height: 85vh;
     background: #fff;
     border-radius: 16px;
     border: 2px solid var(--cor_falgadja_1);
     box-shadow: 0 12px 32px rgba(12, 0, 102, 0.12);
     padding: 22px;
-    position: relative;
     display: flex;
     flex-direction: column;
     gap: 12px;
-    cursor: grab;
-    overflow: hidden;
 }
 
-.add-modal .inner-card {
+.modal .inner {
     border-radius: 14px;
-    border: 2px solid rgba(24, 0, 204, 0.18);
-    padding: 26px;
-    flex: 1;
+    border: 2px solid rgba(24, 0, 204, 0.12);
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
+    gap: 12px;
     overflow: auto;
+    max-height: 62vh;
 }
 
-.add-modal .modal-header {
+.modal .modal-header {
     display: flex;
-    align-items: center;
-    justify-content: center;
     flex-direction: column;
+    align-items: center;
     gap: 6px;
 }
 
-.add-modal .modal-header h3 {
+.modal .modal-header h3 {
     color: var(--cor_falgadja_1);
-    font-size: 26px;
+    font-size: 22px;
     font-weight: 800;
 }
 
-.add-modal .modal-header .sub {
-    font-size: 13px;
+.modal .modal-header .sub {
     color: grey;
-    font-weight: 600;
-    margin-top: -6px;
-}
-
-.add-modal .close-circle {
-    position: absolute;
-    right: 18px;
-    top: 18px;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: 2px solid rgba(24, 0, 204, 0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
+    font-size: 13px;
 }
 
 .form-grid {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
     align-items: center;
-    /* mantém conteúdo centralizado */
     padding: 6px 36px 10px 36px;
 }
 
@@ -541,12 +316,10 @@ body {
     color: var(--cor_falgadja_1);
     font-size: 13px;
     text-align: center;
-    /* label centralizado */
 }
 
-.form-row input {
+.form-row input, .form-row textarea, .form-row select {
     width: 60%;
-    /* largura responsiva para centralizar bem no modal grande */
     min-width: 260px;
     max-width: 520px;
     padding: 10px 12px;
@@ -554,8 +327,12 @@ body {
     border: 2px solid rgba(24, 0, 204, 0.25);
     outline: none;
     font-size: 14px;
-    margin: 0 auto;
     box-sizing: border-box;
+}
+
+.form-row input[readonly] {
+    background: #f6f6fb;
+    opacity: 0.9;
 }
 
 .entrar-btn {
@@ -580,35 +357,23 @@ body {
 }
 
 .confirm-box {
-    background: white;
+    background: #fff;
     padding: 18px;
     border-radius: 10px;
     min-width: 320px;
-    max-width: 560px;
     border: 2px solid rgba(24, 0, 204, 0.12);
     box-shadow: 0 10px 26px rgba(12, 0, 102, 0.14);
+    color: var(--cor_falgadja_1);
 }
 
-.confirm-actions {
-    display: flex;
-    gap: 12px;
-    justify-content: flex-end;
-    margin-top: 12px;
-}
+@media (max-width:980px) {
+    .modal {
+        width: calc(100% - 40px);
+    }
 
-.btn-cancel {
-    padding: 8px 12px;
-    border-radius: 8px;
-    border: 1px solid grey;
-    background: white;
-    cursor: pointer;
-}
-
-.btn-confirm {
-    padding: 8px 12px;
-    border-radius: 8px;
-    border: 0;
-    background: var(--cor_degrade);
-    color: #fff;
-    cursor: pointer;
+    .form-row input {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+    }
 }
