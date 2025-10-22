@@ -457,10 +457,10 @@ section {
 
 .beneficios-grade {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* FORÇA 3 COLUNAS */
+    grid-template-columns: repeat(3, 1fr); 
     gap: 30px;
-    max-width: 1200px; /* Garante que o conteúdo não se estique demais */
-    margin: 60px auto 0 auto; /* Centraliza o grid */
+    max-width: 1200px; 
+    margin: 60px auto 0 auto; 
 }
 
 .beneficio-card {
@@ -470,18 +470,22 @@ section {
     box-shadow: 0 6px 12px rgba(0,0,0,0.08);
     text-align: center;
     transition: transform 0.3s ease;
-    z-index: 1; /* Garante que os cards fiquem na frente */
+    z-index: 1; 
 }
 
 .beneficio-card:hover {
     transform: translateY(-6px);
 }
 
+.beneficio-icone img{
+    width: 40px;
+}
+
 .beneficio-icone {
-    width: 80px;  /* Aumentei ligeiramente o tamanho */
-    height: 80px; /* Aumentei ligeiramente o tamanho */
+    width: 80px;  
+    height: 80px;
     margin: 0 auto 25px;
-    border-radius: 20px; /* BORDAS ARREDONDADAS */
+    border-radius: 20px; 
     background: #e0e7ff;
     display: flex;
     align-items: center;
@@ -490,7 +494,7 @@ section {
 }
 
 .beneficio-card:hover .beneficio-icone {
-    background: #00158C;
+    background: #e0e7ff;
 }
 
 .beneficio-icone svg {
