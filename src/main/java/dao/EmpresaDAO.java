@@ -239,7 +239,7 @@ public class EmpresaDAO {
     public int atualizar(Empresa empresa) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
-        int retorno = 0;
+        int retorno;
         String sql = "UPDATE EMPRESA SET cnpj = ?, nome = ?, email = ?, senha = ?, id_plano = ?, qntd_funcionarios = ? WHERE id = ?";
 
         try {
@@ -267,7 +267,7 @@ public class EmpresaDAO {
     public int deletar(int id) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
-        int retorno = 0;
+        int retorno;
         String sql = "DELETE FROM EMPRESA WHERE id = ?";
 
         try {

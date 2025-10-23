@@ -149,7 +149,7 @@ public class PlanoDAO {
     public int atualizar(Plano plano) {
         Conexao conexao = new Conexao();
         Connection conn = conexao.conectar();
-        int retorno = 0;
+        int retorno;
 
         try {
             String sql = "UPDATE PLANO SET NOME = ?, PRECO = ? WHERE ID = ?";
@@ -176,7 +176,7 @@ public class PlanoDAO {
     public int deletar(int id) {
         Conexao conexao = new Conexao();
         Connection conn = conexao.conectar();
-        int retorno = 0;
+        int retorno;
 
         try {
             String sql = "DELETE FROM PLANO WHERE ID = ?";

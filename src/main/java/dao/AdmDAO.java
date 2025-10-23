@@ -134,7 +134,7 @@ public class AdmDAO {
     public int atualizar(Administrador adm) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
-        int retorno = 0;
+        int retorno;
         String sql = "UPDATE adm SET email=?, senha=? WHERE id=?";
 
         try {
@@ -159,7 +159,7 @@ public class AdmDAO {
     public int deletar(int id) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
-        int retorno = 0;
+        int retorno;
         String sql = "DELETE FROM adm WHERE id = ?";
 
         try {

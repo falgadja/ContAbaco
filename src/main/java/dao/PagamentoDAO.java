@@ -200,7 +200,7 @@ public class PagamentoDAO {
     public int atualizar(Pagamento pagamento) {
         Conexao conexao = new Conexao();
         Connection conn = conexao.conectar();
-        int retorno = 0;
+        int retorno;
 
         try {
             String sql = "UPDATE PAGAMENTO SET TIPO_PAGTO = ?, TOTAL = ?, DATA_PAGTO = ?, COMPROVANTE = ? WHERE ID = ?";
@@ -229,7 +229,7 @@ public class PagamentoDAO {
     public int deletar(int id) {
         Conexao conexao = new Conexao();
         Connection conn = conexao.conectar();
-        int retorno = 0;
+        int retorno;
 
         try {
             String sql = "DELETE FROM PAGAMENTO WHERE ID = ?";

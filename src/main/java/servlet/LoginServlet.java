@@ -28,7 +28,7 @@ public class LoginServlet extends HttpServlet {
         AdmDAO admDAO = new AdmDAO();
 
         try {
-            if (empresaDAO.buscarPorSenhaEemail(email, senha) != null) {
+            if (empresaDAO.buscarPorEmailESenha(email, senha) != null) {
                 request.getRequestDispatcher("../crud.jsp").forward(request, response);
             } else if (funcionarioDAO.buscarPorEmailESenha(email, senha) != null) {
                 request.getRequestDispatcher("../crud.jsp").forward(request, response);

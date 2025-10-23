@@ -120,7 +120,7 @@ public class EnderecoDAO {
     public int atualizar(Endereco endereco) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
-        int retorno = 0;
+        int retorno;
         String sql = "UPDATE endereco SET pais=?, estado=?, cidade=?, bairro=?, rua=?, numero=?, cep=?, id_empresa=? WHERE id=?";
 
         try {
@@ -151,7 +151,7 @@ public class EnderecoDAO {
     public int deletar(int id) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
-        int retorno = 0;
+        int retorno;
         String sql = "DELETE FROM endereco WHERE id = ?";
 
         try {
