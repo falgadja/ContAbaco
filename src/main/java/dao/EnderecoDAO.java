@@ -46,8 +46,8 @@ public class EnderecoDAO {
         return idGerado; // Retorna o ID gerado se der certo, se falhar retorna -1
     }
 
-    // READ - SELECIONAR Endereco PELO ID
-    public Endereco selecionarPorId(int id) {
+    // READ - BUSCAR Endereco PELO ID
+    public Endereco buscarPorId(int id) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
         Endereco endereco = null;

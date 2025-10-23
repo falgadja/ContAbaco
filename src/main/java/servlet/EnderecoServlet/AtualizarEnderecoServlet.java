@@ -11,7 +11,7 @@ import model.Endereco;
 import java.io.IOException;
 
 // Define que este servlet será acessado pela URL /AtualizarEnderecoServlet
-@WebServlet("AtualizarEnderecoServlet")
+@WebServlet("/AtualizarEnderecoServlet")
 public class AtualizarEnderecoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

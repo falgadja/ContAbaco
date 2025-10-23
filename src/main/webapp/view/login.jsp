@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: annaabreu-ieg
-  Date: 14/10/2025
-  Time: 20:51
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -146,7 +139,7 @@
             margin-top: 25px; /* Espaço acima do link de cadastro */
         }
 
-        p{
+        p {
             color: #304FFE;
         }
 
@@ -216,6 +209,7 @@
             display: block;
             margin-top: 15px;
         }
+
         .erro {
             color: red;
             text-align: center;
@@ -231,9 +225,10 @@
         <img src="../../img/logo%20azul%20bonito%20sem%20fundo%202%20(1).png" alt="Ícone Principal" class="icon-main">
 
         <h1>Faça seu login!</h1>
+        <p>${mensagem}</p>
 
-        <form>
-            <div class="form-group">
+        <form action="${pageContext.request.contextPath}/LoginServlet" method="post">
+        <div class="form-group">
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
             </div>
@@ -241,30 +236,30 @@
                 <label for="senha">Senha</label>
                 <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
             </div>
-            <a href="../esqueciSenha.jsp" class="link-sm link-forgot">Esqueci minha senha</a>
+            <a href="../view/erro.jsp" class="link-sm link-forgot">Esqueci minha senha</a>
             <button type="submit" class="btn btn-solid">Entrar</button>
         </form>
 
-        <a href="../Empresa/cadastrarEmpresa.jsp" class="link-sm link-register">Ainda não tenho cadastro</a>
+        <a href="../view/erro.jsp" class="link-sm link-register">Ainda não tenho cadastro</a>
     </div>
+</div>
 
+<script>
+    // Função para obter parâmetro da URL usando javascript
+    function getParametroURL(nome) {
+        const params = new URLSearchParams(window.location.search);
+        return params.get(nome);
+    }
 
-    <script>
-        // Função para obter parâmetro da URL usando javascript
-        function getParametroURL(nome) {
-            const params = new URLSearchParams(window.location.search);
-            return params.get(nome);
-        }
+    // Verificar se existe erro na URL
+    const erro = getParametroURL('erro');
+    const mensagemErro = document.getElementById('mensagemErro');
 
-        // Verificar se existe erro na URL
-        const erro = getParametroURL('erro');
-        const mensagemErro = document.getElementById('mensagemErro');
-
-        if (erro === '1') {
-            mensagemErro.textContent = "Email ou senha inválidos!";
-        } else if (erro === '2') {
-            mensagemErro.textContent = "Ocorreu um erro no sistema. Tente novamente mais tarde.";
-        }
-    </script>
+    if (erro === '1') {
+        mensagemErro.textContent = "Email ou senha inválidos!";
+    } else if (erro === '2') {
+        mensagemErro.textContent = "Ocorreu um erro no sistema. Tente novamente mais tarde.";
+    }
+</script>
 </body>
 </html>

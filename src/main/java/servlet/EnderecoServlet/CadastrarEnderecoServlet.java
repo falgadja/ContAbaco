@@ -10,7 +10,7 @@ import model.Endereco;
 
 import java.io.IOException;
 
-@WebServlet(name = "CadastrarEndereco", value = "/servlet/EnderecoServlet")
+@WebServlet(name = "/CadastrarEndereco", value = "/servlet/EnderecoServlet")
 public class CadastrarEnderecoServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

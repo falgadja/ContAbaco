@@ -11,7 +11,7 @@ import model.Empresa;
 import java.io.IOException;
 
 // Define que este servlet será acessado pela URL /AtualizarEmpresaServlet
-@WebServlet("AtualizarEmpresaServlet")
+@WebServlet("/AtualizarEmpresaServlet")
 public class AtualizarEmpresaServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

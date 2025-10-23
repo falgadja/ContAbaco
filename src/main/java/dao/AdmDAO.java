@@ -71,12 +71,13 @@ public class AdmDAO {
         return adm; // se não encontrar retorna null, se encontrar retorna o objeto
     }
 
-    // READ - BUSCAR Administrador PELO EMAIL
+    // READ - BUSCAR Administrador PELO EMAIL E SENHA
     public Administrador buscarPorEmailSenha(String email, String senha) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
         Administrador adm = null;
-        String sql = "SELECT * FROM adm WHERE email = ? AND senha = ?";
+        String sql = "SELECT * FROM administrador WHERE email = ? AND senha = ?";
+
 
         try {
             PreparedStatement pst = con.prepareStatement(sql);
