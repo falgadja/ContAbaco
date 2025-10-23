@@ -211,10 +211,8 @@ public class PagamentoDAO {
             pst.setBytes(4, pagamento.getComprovante());
             pst.setInt(5, pagamento.getId());
 
-            int linhas = pst.executeUpdate();
-            if (linhas > 0) {
-                retorno = 1;
-            }
+            retorno = pst.executeUpdate();
+
         } catch (SQLException sqle) {
             sqle.printStackTrace();
             retorno = -1;
@@ -236,10 +234,7 @@ public class PagamentoDAO {
             PreparedStatement pst = conn.prepareStatement(sql);
             pst.setInt(1, id);
 
-            int linhas = pst.executeUpdate();
-            if (linhas > 0) {
-                retorno = 1;
-            }
+            retorno = pst.executeUpdate();
         } catch (SQLException sqle) {
             sqle.printStackTrace();
             retorno = -1;
