@@ -158,10 +158,8 @@ public class PlanoDAO {
             pst.setDouble(2, plano.getPreco());
             pst.setInt(3, plano.getId());
 
-            int linhas = pst.executeUpdate();
-            if (linhas > 0) {
-                retorno = 1;
-            }
+            retorno = pst.executeUpdate();
+
         } catch (SQLException sqle) {
             sqle.printStackTrace();
             retorno = -1;
@@ -183,10 +181,8 @@ public class PlanoDAO {
             PreparedStatement pst = conn.prepareStatement(sql);
             pst.setInt(1, id);
 
-            int linhas = pst.executeUpdate();
-            if (linhas > 0) {
-                retorno = 1;
-            }
+            retorno = pst.executeUpdate();
+
         } catch (SQLException sqle) {
             sqle.printStackTrace();
             retorno = -1;
