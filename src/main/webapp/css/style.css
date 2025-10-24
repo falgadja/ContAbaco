@@ -1179,6 +1179,7 @@ section {
     justify-content: center;
     gap: 100px;
     align-items: center;
+    gap: 80px;
     flex-wrap: wrap;
     padding-top: 30px;
     margin-top: 40px;

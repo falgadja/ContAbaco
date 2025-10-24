@@ -11,7 +11,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página de Cadastro e Login para empresas</title>
+    <title>Página de Cadastro e Login</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -258,13 +258,6 @@
             /* A decoração de texto já é 'underline'. Você pode adicionar outros efeitos aqui, como uma mudança de cor */
             color: #0019CB;
         }
-        .erro-msg {
-            color: red;
-            font-weight: 600;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
 
     </style>
 </head>
@@ -272,51 +265,41 @@
 <div class="main-container">
     <div class="panel left-panel">
         <div class="content">
-            <img src="../../img/FalgadjaLogo.png" alt="Logo da Empresa" class="logo">
+            <img src="${pageContext.request.contextPath}/img/logo%20azul%20bonito%20sem%20fundo%202%20(1).png" alt="Logo da Empresa" class="logo">
             <h1>Bem-vindo de volta!</h1>
             <p>Acesse a sua conta agora mesmo.</p>
-            <a href="../Login/login.jsp"><button class="btn btn-outline">Entrar</button></a>
+            <a href="login.html"><button class="btn btn-outline">Entrar</button></a>
         </div>
     </div>
+
     <div class="panel right-panel">
-        <img src="../../img/abacoLogin.png" alt="Ícone Ábaco" class="icon-abaco">
 
         <div class="content">
             <h1>Faça o cadastro da sua empresa!</h1>
-            <%
-                String erro = (String) request.getAttribute("erro");
-                if (erro != null) {
-            %>
-            <div class="erro-msg"><%= erro %></div>
-            <%
-                }
-            %>
-            <form action="${pageContext.request.contextPath}/cadastrarEmpresa" method="post">
+            <form>
                 <div class="form-group">
                     <label for="empresa">Nome da Empresa</label>
-                    <input type="text" id="empresa" name="nomeEmpresa" placeholder="Digite o nome da sua empresa" required>
+                    <input type="text" id="empresa" name="empresa" placeholder="Digite o nome da sua empresa" required>
                 </div>
                 <div class="form-group">
                     <label for="cnpj">CNPJ</label>
-                    <input type="text" id="cnpj" name="cnpj" pattern="\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}|\d{14}" placeholder="00.000.000/0000-00" required>
-
+                    <input  type="text" id="cnpj" name="cnpj" placeholder="00.000.000/0000-00" required minlength="9">
                 </div>
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" id="email" name="emailEmpresa" placeholder="seuemail@exemplo.com" required>
+                    <input type="email" id="email" name="email" placeholder="seuemail@exemplo.com" required>
                 </div>
                 <div class="form-group">
                     <label for="senha">Senha</label>
-                    <input type="password" id="senha" name="senha" placeholder="Crie uma senha forte" required>
+                    <input type="password" id="senha" name="senha" placeholder="Crie uma senha forte" required minlength="8">
                 </div>
                 <div class="form-group">
-                    <label for="confirmarSenha">Confirme a sua senha</label>
-                    <input type="password" id="confirmarSenha" name="confirmarSenha" placeholder="Repita a senha" required>
+                    <label for="confirme-senha">Confirme a sua senha</label>
+                    <input type="password" id="confirme-senha" name="confirme-senha" placeholder="Repita a senha" required minlength="8">
                 </div>
-                <button type="submit">Finalizar</button>
-
+                <button type="submit" class="btn btn-solid">Cadastrar</button>
             </form>
-            <a href="../Funcionario/cadastrarPessoa.jsp" class="link-sm">Cadastrar como pessoa</a>
+            <a href="${pageContext.request.contextPath}/view/cadastrarPessoa.jsp" class="link-sm">Cadastrar como pessoa</a>
         </div>
     </div>
 </div>

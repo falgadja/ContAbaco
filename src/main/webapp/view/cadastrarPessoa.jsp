@@ -10,12 +10,13 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Página de Cadastro e Login para pessoas</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro / Login</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    /* --- Reset Básico e Estilos do Corpo --- */
     /* --- Reset Básico e Estilos do Corpo --- */
     * {
       margin: 0;
@@ -263,67 +264,35 @@
 <div class="main-container">
   <div class="panel left-panel">
     <div class="content">
-      <img src="../../img/logo%20azul%20bonito%20sem%20fundo%202%20(1).png" alt="Logo da Empresa" class="logo">
+      <img src="${pageContext.request.contextPath}/img/logo%20azul%20bonito%20sem%20fundo%202%20(1).png" alt="Logo da Empresa" class="logo">
       <h1>Bem-vindo de volta!</h1>
       <p>Acesse sua conta agora mesmo.</p>
-      <a href="../Login/login.jsp"><button class="btn btn-outline">Entrar</button></a>
+      <a href="login.html"><button class="btn btn-outline">Entrar</button></a>
     </div>
   </div>
 
-
-  <% String erro = (String) request.getAttribute("erro"); %>
-  <% if (erro != null) { %>
-  <div style="color:red; font-weight:bold;">
-    <%= erro %>
-  </div>
-  <% } %>
-
-
   <div class="panel right-panel">
-    <img src="../../img/abaco%20login%201%202%20(1).png" alt="Ícone Ábaco" class="icon-abaco">
 
     <div class="content">
       <h1>Faça seu cadastro!</h1>
-      <form action="${pageContext.request.contextPath}/cadastrarPessoa" method="post">
-        <div class="form-group">
-          <label for="nome">Nome</label>
-          <input type="text" id="nome" name="nome" placeholder="Digite seu nome">
-        </div>
-
-        <div class="form-group">
-          <label for="sobrenome">Sobrenome</label>
-          <input type="text" id="sobrenome" name="sobrenome" placeholder="Digite seu sobrenome">
-        </div>
-
-        <div class="form-group">
-          <label for="data-nascimento">Data de Nascimento</label>
-          <input type="date" id="data-nascimento" name="data-nascimento">
-        </div>
-
+      <form>
         <div class="form-group">
           <label for="email">Email</label>
-          <input type="email" id="email" name="email" placeholder="seuemail@exemplo.com">
+          <input type="email" id="email" name="email" placeholder="seuemail@exemplo.com" required>
         </div>
-
         <div class="form-group">
           <label for="senha">Senha</label>
-          <input type="password" id="senha" name="senha" placeholder="Crie uma senha forte">
+          <input type="password" id="senha" name="senha" placeholder="Crie uma senha forte" required minlength="8">
         </div>
-
         <div class="form-group">
           <label for="confirme-senha">Confirme sua senha</label>
-          <input type="password" id="confirme-senha" name="confirme-senha" placeholder="Repita a senha">
+          <input type="password" id="confirme-senha" name="confirme-senha" placeholder="Repita a senha" required minlength="8">
         </div>
-
         <button type="submit" class="btn btn-solid">Cadastrar</button>
       </form>
-
-      <a href="../Empresa/cadastrarEmpresa.jsp" class="link-sm">Cadastrar como Empresa</a>
+      <a href="${pageContext.request.contextPath}/view/cadastrarEmpresa.jsp" class="link-sm">Cadastrar como Empresa</a>
     </div>
   </div>
 </div>
 </body>
 </html>
-
-
-

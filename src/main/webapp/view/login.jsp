@@ -5,9 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Página de Login</title>
+
+    <%-- Fontes do Google --%>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
         /* --- Reset Básico e Estilos do Corpo --- */
         * {
@@ -29,7 +32,7 @@
         /* --- Container Principal do Login --- */
         .login-container {
             width: 100%;
-            max-width: 700px; /* Largura ajustada para um formulário único */
+            max-width: 700px;
             padding: 50px 40px;
             border-radius: 40px;
             background-color: #ffffff;
@@ -50,7 +53,7 @@
         }
 
         h1 {
-            font-size: clamp(1.8rem, 5vw, 2.2rem); /* Fonte responsiva */
+            font-size: clamp(1.8rem, 5vw, 2.2rem);
             font-weight: 700;
             color: #304FFE;
             margin-bottom: 30px;
@@ -110,7 +113,7 @@
         .btn-solid {
             background-color: #304FFE;
             color: #ffffff;
-            margin-top: 10px; /* Espaço acima do botão */
+            margin-top: 10px;
         }
 
         .btn-solid:hover {
@@ -120,33 +123,30 @@
         /* --- Links --- */
         .link-sm {
             font-size: 0.85rem;
-            text-decoration: underline; /* MODIFICADO: O sublinhado agora é padrão */
+            text-decoration: underline;
             color: #304FFE;
             transition: all 0.3s ease;
         }
 
         .link-sm:hover {
-            color: #0019CB; /* O sublinhado já é padrão, então mudamos a cor no hover */
+            color: #0019CB;
         }
 
         .link-forgot {
             width: 100%;
-            text-align: right; /* Alinha o link à direita */
+            text-align: right;
             margin-bottom: 20px;
         }
 
         .link-register {
-            margin-top: 25px; /* Espaço acima do link de cadastro */
+            margin-top: 25px;
         }
 
         p {
             color: #304FFE;
         }
 
-        /* Ícone */
-        .icon img {
-            margin-bottom: 10px;
-        }
+        /* --- Estilos que você tinha duplicado (agora unificados) --- */
 
         /* Título */
         h2 {
@@ -221,8 +221,9 @@
 <body>
 <div class="login-container">
     <div class="content">
-        <!-- Ícones de exemplo -->
-        <img src="../../img/logo%20azul%20bonito%20sem%20fundo%202%20(1).png" alt="Ícone Principal" class="icon-main">
+
+
+        <img src="${pageContext.request.contextPath}/img/logo%20azul%20bonito%20sem%20fundo%202%20(1).png" alt="Ícone Principal" class="icon-main">
 
         <h1>Faça seu login!</h1>
         <p>${mensagem}</p>
