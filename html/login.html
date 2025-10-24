@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Login</title>
+    <link rel="stylesheet" href="../css/login.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="login-container">
+        <div class="content">
+            <img src="../img/logo azul bonito sem fundo 2 (1).png" alt="Ícone Principal" class="icon-main">
+            
+            <h1>Faça seu login!</h1>
+            
+            <form>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
+                </div>
+                <div class="form-group">
+                    <label for="senha">Senha</label>
+                    <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required minlength="8">
+                </div>
+                <button type="submit" class="btn btn-solid">Entrar</button>
+            </form>
+
+            <a href="pessoa.html" class="link-sm link-register">Ainda não tenho cadastro</a>
+        </div>
+
+
+<script>
+    // Função para obter parâmetro da URL usando javascript
+    function getParametroURL(nome) {
+        const params = new URLSearchParams(window.location.search);
+        return params.get(nome);
+    }
+    
+    // Verificar se existe erro na URL
+    const erro = getParametroURL('erro');
+    const mensagemErro = document.getElementById('mensagemErro');
+
+    if (erro === '1') {
+        mensagemErro.textContent = "Email ou senha inválidos!";
+    } else if (erro === '2') {
+        mensagemErro.textContent = "Ocorreu um erro no sistema. Tente novamente mais tarde.";
+    }
+</script>
+</body>
+</html>
