@@ -96,14 +96,11 @@ public class Empresa {
     // TO STRING
     @Override
     public String toString() {
-        return "Empresa{" +
-                "id=" + id +
-                ", cnpj=" + cnpj +
-                ", nome='" + nome + '\'' +
-                ", email='" + email + '\'' +
-                ", senha='" + senha + '\'' +
-                ", idPlano=" + idPlano +
-                ", qntdFuncionarios=" + qntdFuncionarios +
-                '}';
+        return "-- Empresa --" +
+                "\nID: " + id +
+                "\nCnpj: " + cnpj +
+                "\nNome: " + nome +
+                "\nEmail: " + email +
+                "\nSenha: " + senha;
     }
 }

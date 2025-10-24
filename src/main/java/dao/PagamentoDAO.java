@@ -14,7 +14,7 @@ public class PagamentoDAO {
     public int inserir(Pagamento pagamento) {
         Conexao conexao = new Conexao();
         Connection conn = conexao.conectar();
-        int retorno = -1;
+        int idGerado = -1;
 
         try {
             String sql = "INSERT INTO PAGAMENTO (TIPO_PAGTO, TOTAL, DATA_PAGTO, COMPROVANTE, ID_EMPRESA) VALUES (?, ?, ?, ?, ?) RETURNING ID";
@@ -27,8 +27,8 @@ public class PagamentoDAO {
 
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
-                retorno = rs.getInt("ID");
-                pagamento.setId(retorno);
+                idGerado = rs.getInt("ID");
+                pagamento.setId(idGerado);
             }
         } catch (SQLException sqle) {
             sqle.printStackTrace();
@@ -36,7 +36,7 @@ public class PagamentoDAO {
             conexao.desconectar(conn);
         }
 
-        return retorno;
+        return idGerado;
     }
 
     // READ - BUSCAR PAGAMENTO PELO ID
@@ -200,7 +200,7 @@ public class PagamentoDAO {
     public int atualizar(Pagamento pagamento) {
         Conexao conexao = new Conexao();
         Connection conn = conexao.conectar();
-        int retorno = 0;
+        int retorno;
 
         try {
             String sql = "UPDATE PAGAMENTO SET TIPO_PAGTO = ?, TOTAL = ?, DATA_PAGTO = ?, COMPROVANTE = ? WHERE ID = ?";
@@ -211,10 +211,8 @@ public class PagamentoDAO {
             pst.setBytes(4, pagamento.getComprovante());
             pst.setInt(5, pagamento.getId());
 
-            int linhas = pst.executeUpdate();
-            if (linhas > 0) {
-                retorno = 1;
-            }
+            retorno = pst.executeUpdate();
+
         } catch (SQLException sqle) {
             sqle.printStackTrace();
             retorno = -1;
@@ -229,17 +227,14 @@ public class PagamentoDAO {
     public int deletar(int id) {
         Conexao conexao = new Conexao();
         Connection conn = conexao.conectar();
-        int retorno = 0;
+        int retorno;
 
         try {
             String sql = "DELETE FROM PAGAMENTO WHERE ID = ?";
             PreparedStatement pst = conn.prepareStatement(sql);
             pst.setInt(1, id);
 
-            int linhas = pst.executeUpdate();
-            if (linhas > 0) {
-                retorno = 1;
-            }
+            retorno = pst.executeUpdate();
         } catch (SQLException sqle) {
             sqle.printStackTrace();
             retorno = -1;

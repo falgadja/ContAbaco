@@ -131,10 +131,8 @@ public class SetorDAO {
             pst.setString(1, novoNome);
             pst.setInt(2, id);
 
-            int linhas = pst.executeUpdate();
-            if (linhas > 0) {
-                retorno = 1;
-            }
+            retorno = pst.executeUpdate();
+
         } catch (SQLException sqle) {
             sqle.printStackTrace();
             retorno = -1;
@@ -156,10 +154,8 @@ public class SetorDAO {
             PreparedStatement pst = conn.prepareStatement(sql);
             pst.setInt(1, id);
 
-            int linhas = pst.executeUpdate();
-            if (linhas > 0) {
-                retorno = 1;
-            }
+            retorno = pst.executeUpdate();
+
         } catch (SQLException sqle) {
             sqle.printStackTrace();
             retorno = -1;

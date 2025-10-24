@@ -71,12 +71,13 @@ public class AdmDAO {
         return adm; // se não encontrar retorna null, se encontrar retorna o objeto
     }
 
-    // READ - BUSCAR Administrador PELO EMAIL
+    // READ - BUSCAR Administrador PELO EMAIL E SENHA
     public Administrador buscarPorEmailSenha(String email, String senha) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
         Administrador adm = null;
-        String sql = "SELECT * FROM adm WHERE email = ? AND senha = ?";
+        String sql = "SELECT * FROM administrador WHERE email = ? AND senha = ?";
+
 
         try {
             PreparedStatement pst = con.prepareStatement(sql);
@@ -134,7 +135,7 @@ public class AdmDAO {
     public int atualizar(Administrador adm) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
-        int retorno = 0;
+        int retorno;
         String sql = "UPDATE adm SET email=?, senha=? WHERE id=?";
 
         try {
@@ -159,7 +160,7 @@ public class AdmDAO {
     public int deletar(int id) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
-        int retorno = 0;
+        int retorno;
         String sql = "DELETE FROM adm WHERE id = ?";
 
         try {

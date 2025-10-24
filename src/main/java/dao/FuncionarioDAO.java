@@ -281,7 +281,7 @@ public class FuncionarioDAO {
     public int atualizar(Funcionario funcionario) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
-        int retorno = 0;
+        int retorno;
         String sql = "UPDATE FUNCIONARIO SET data_nascimento = ?, nome = ?, senha = ?, email = ?, id_setor = ?, id_empresa = ?, sobrenome = ? WHERE id = ?";
 
         try {
@@ -310,7 +310,7 @@ public class FuncionarioDAO {
     public int deletar(int id) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
-        int retorno = 0;
+        int retorno;
         String sql = "DELETE FROM FUNCIONARIO WHERE id = ?";
 
         try {

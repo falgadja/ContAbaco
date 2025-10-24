@@ -9,7 +9,10 @@ public class Conexao {
     PreparedStatement pstmt;
 
     // Variaveis de ambiente para conectar com o BD
-    Dotenv dotenv = Dotenv.configure().directory("C:\\Users\\annaabreu-ieg\\OneDrive - Instituto J&F\\Área de Trabalho\\deucerto\\falgajdaServlet\\Falgadja\\.env").load();
+    Dotenv dotenv = Dotenv.configure()
+            .directory("C:\\Users\\annaabreu-ieg\\OneDrive - Instituto J&F\\Área de Trabalho\\deucerto\\falgajdaServlet\\Falgadja")
+            .load();
+
     String DB_URL = dotenv.get("DB_URL");
     String DB_USUARIO = dotenv.get("DB_USUARIO");
     String DB_SENHA = dotenv.get("DB_SENHA");
@@ -30,7 +33,7 @@ public class Conexao {
     // metodo para desconectar o BD
     public boolean desconectar(Connection conn){
         try {
-            if (conn != null && conn.isClosed()) {
+            if (conn != null && !conn.isClosed()) {
                 conn.close();
                 return true;
             }

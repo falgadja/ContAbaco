@@ -8,6 +8,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlanoDAO {
+    // CREATE - INSERIR PLANO
+    public int inserir(Plano plano) {
+        Conexao conexao = new Conexao();
+        Connection conn = conexao.conectar();
+        int idGerado = -1;
+
+        try {
+            String sql = "INSERT INTO PLANO (NOME, PRECO) VALUES (?, ?) RETURNING ID";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setString(1, plano.getNome());
+            pst.setDouble(2, plano.getPreco());
+
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                idGerado = rs.getInt("ID");
+                plano.setId(idGerado);
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        } finally {
+            conexao.desconectar(conn);
+        }
+
+        return idGerado;
+    }
+
 
     // READ - BUSCAR PLANO PELO ID
     public Plano buscarPorId(int id) {
@@ -124,7 +150,7 @@ public class PlanoDAO {
     public int atualizar(Plano plano) {
         Conexao conexao = new Conexao();
         Connection conn = conexao.conectar();
-        int retorno = 0;
+        int retorno;
 
         try {
             String sql = "UPDATE PLANO SET NOME = ?, PRECO = ? WHERE ID = ?";
@@ -133,10 +159,8 @@ public class PlanoDAO {
             pst.setDouble(2, plano.getPreco());
             pst.setInt(3, plano.getId());
 
-            int linhas = pst.executeUpdate();
-            if (linhas > 0) {
-                retorno = 1;
-            }
+            retorno = pst.executeUpdate();
+
         } catch (SQLException sqle) {
             sqle.printStackTrace();
             retorno = -1;
@@ -151,17 +175,15 @@ public class PlanoDAO {
     public int deletar(int id) {
         Conexao conexao = new Conexao();
         Connection conn = conexao.conectar();
-        int retorno = 0;
+        int retorno;
 
         try {
             String sql = "DELETE FROM PLANO WHERE ID = ?";
             PreparedStatement pst = conn.prepareStatement(sql);
             pst.setInt(1, id);
 
-            int linhas = pst.executeUpdate();
-            if (linhas > 0) {
-                retorno = 1;
-            }
+            retorno = pst.executeUpdate();
+
         } catch (SQLException sqle) {
             sqle.printStackTrace();
             retorno = -1;

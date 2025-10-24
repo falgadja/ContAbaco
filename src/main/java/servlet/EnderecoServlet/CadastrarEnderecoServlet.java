@@ -1,5 +1,4 @@
 package servlet.EnderecoServlet;
-
 import dao.EnderecoDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -10,28 +9,66 @@ import model.Endereco;
 
 import java.io.IOException;
 
-@WebServlet(name = "CadastrarEndereco", value = "/servlet/EnderecoServlet")
+@WebServlet("/cadastrarEndereco")
 public class CadastrarEnderecoServlet extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
 
-        Endereco endereco = new Endereco();
-        endereco.setPais(request.getParameter("pais"));
-        endereco.setEstado(request.getParameter("estado"));
-        endereco.setCidade(request.getParameter("cidade"));
-        endereco.setBairro(request.getParameter("bairro"));
-        endereco.setRua(request.getParameter("rua"));
-        endereco.setNumero(Integer.parseInt(request.getParameter("numero")));
-        endereco.setCep(request.getParameter("cep"));
-        endereco.setIdEmpresa(Integer.parseInt(request.getParameter("idEmpresa")));
+    @Override // Inicializa o servlet de cadastro de endereço
+    public void init() throws ServletException {
+        super.init();
+    }
 
-        EnderecoDAO enderecoDAO = new EnderecoDAO();
-        int resultado = enderecoDAO.inserir(endereco);
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Apenas exibe o formulário de cadastro
+        request.getRequestDispatcher("/view/Empresa/cadastrarEndereco.jsp").forward(request, response);
+    }
 
-        if (resultado != -1) {
-            response.sendRedirect("view/crud.jsp"); // Cadastro finalizado
-        } else {
-            response.sendRedirect("erro.jsp");
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            String pais = request.getParameter("pais");
+            String estado = request.getParameter("estado");
+            String cidade = request.getParameter("cidade");
+            String bairro = request.getParameter("bairro");
+            String rua = request.getParameter("rua");
+            String cep = request.getParameter("cep");
+            String numeroStr = request.getParameter("numero");
+            String idEmpresaStr = request.getParameter("idEmpresa");
+
+            // Validação de campos obrigatórios
+            if (pais.isBlank() || estado.isBlank() || cidade.isBlank() || bairro.isBlank() ||
+                    rua.isBlank() || cep.isBlank() || numeroStr.isBlank() || idEmpresaStr.isBlank()) {
+                request.setAttribute("mensagem", "Todos os campos são obrigatórios!");
+                request.getRequestDispatcher("/view/Empresa/cadastrarEndereco.jsp").forward(request, response);
+                return;
+            }
+
+            int numero = Integer.parseInt(numeroStr);
+            int idEmpresa = Integer.parseInt(idEmpresaStr);
+
+            Endereco endereco = new Endereco(pais, estado, cidade, bairro, rua, numero, cep, idEmpresa);
+            EnderecoDAO enderecoDAO = new EnderecoDAO();
+            int idGerado = enderecoDAO.inserir(endereco);
+
+            if (idGerado > 0) {
+                response.sendRedirect(request.getContextPath() + "/view/crud.jsp");
+            } else {
+                request.setAttribute("mensagem", "Não foi possível cadastrar o endereço. Tente novamente!");
+                request.getRequestDispatcher("/view/Empresa/cadastrarEndereco.jsp").forward(request, response);
+            }
+
+        } catch (NumberFormatException e) {
+            request.setAttribute("mensagem", "Erro: número inválido informado!");
+            request.getRequestDispatcher("/view/Empresa/cadastrarEndereco.jsp").forward(request, response);
+        } catch (Exception e) {
+            request.setAttribute("mensagem", "Erro ao processar o cadastro de endereço!");
+            request.getRequestDispatcher("/view/Empresa/cadastrarEndereco.jsp").forward(request, response);
         }
+    }
+
+
+    @Override // Finaliza o servlet e libera recursos alocados
+    public void destroy() {
+        super.destroy();
     }
 }
