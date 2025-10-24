@@ -35,7 +35,7 @@ public class LoginServlet extends HttpServlet {
             } else if (admDAO.buscarPorEmailSenha(email, senha) != null) {
                 request.getRequestDispatcher("/view/crud.jsp").forward(request, response);
             } else {
-                request.getRequestDispatcher("/view/erro.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/login.jsp").forward(request, response);
             }
         } catch (Exception e) {
             request.setAttribute("mensagem", "Email ou senha invalidos, digite novamente");
