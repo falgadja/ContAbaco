@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet(name="/login")
+@WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
 
     @Override
@@ -29,17 +29,17 @@ public class LoginServlet extends HttpServlet {
 
         try {
             if (empresaDAO.buscarPorEmailESenha(email, senha) != null) {
-                request.getRequestDispatcher("../crud.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/erro.jsp").forward(request, response);
             } else if (funcionarioDAO.buscarPorEmailESenha(email, senha) != null) {
-                request.getRequestDispatcher("../crud.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/erro.jsp").forward(request, response);
             } else if (admDAO.buscarPorEmailSenha(email, senha) != null) {
-                request.getRequestDispatcher("../crud.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/crud.jsp").forward(request, response);
             } else {
-                request.getRequestDispatcher("../erro.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/erro.jsp").forward(request, response);
             }
         } catch (Exception e) {
             request.setAttribute("mensagem", "Email ou senha invalidos, digite novamente");
-            request.getRequestDispatcher("../webapp/view/Login/Login.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/login.jsp").forward(request, response);
         }
     }
 }

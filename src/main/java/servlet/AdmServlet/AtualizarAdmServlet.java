@@ -11,7 +11,7 @@ import model.Administrador;
 import java.io.IOException;
 
 // Define que este servlet será acessado pela URL /AtualizarAdmServlet
-@WebServlet("AtualizarAdmServlet")
+@WebServlet("/AtualizarAdmServlet")
 public class AtualizarAdmServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

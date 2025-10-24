@@ -53,12 +53,6 @@ public class InserirPlanoServlet extends HttpServlet {
             } else {
                 request.setAttribute("mensagem", "Não foi possível inserir, tente novamente mais tarde.");
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            request.setAttribute("mensagem", "Erro ao processar a requisição.");
-        } catch (ServletException e) {
-            e.printStackTrace();
-            request.setAttribute("mensagem", "Erro interno do servidor.");
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("mensagem", "Erro inesperado. Contate o administrador.");
