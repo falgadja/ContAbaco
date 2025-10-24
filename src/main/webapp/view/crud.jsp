@@ -12,7 +12,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Área Restrita - CRUD</title>
-    <link rel="icon" href="imagens/logo azul bonito sem fundo.png">
+    <link rel="icon" href="${pageContext.request.contextPath}/img/logo%20azul%20bonito%20sem%20fundo%202%20(1).png">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
 
@@ -258,7 +258,7 @@
 <div class="esquerda">
     <aside class="sidebar">
         <div class="aplicativo">
-            <div class="logo"><img src="imagens/contAbaco cantinho.png" alt="logo ContÁbaco"></div>
+            <div class="logo"><img src="${pageContext.request.contextPath}/img/contAbaco%20cantinho%20.png" alt="logo ContÁbaco"></div>
             <div>
                 <div class="titulo_app">ContÁbaco</div>
                 <div class="subtitulo_app">adm</div>
@@ -267,14 +267,14 @@
         <div class="linha"></div>
 
         <nav class="nav barra-lateral">
-            <button class="botao selecionado" onclick="mostrarPagina('adm', this)"><img src="../img/coroaAdm.png" alt="" class="icone"> Adm</button>
-            <button class="botao" onclick="mostrarPagina('empresas', this)"><img src="../img/simboloEmpresa.png" alt="" class="icone"> Empresas</button>
-            <a href=""><button class="botao" onclick="mostrarPagina('planos', this)"><img src="../img/cardenetaPlanos.png" alt="" class="icone"> Planos</button></a>
-            <button class="botao" onclick="mostrarPagina('pagamento', this)"><img src="../img/maoPagamento.png" alt="" class="icone"> Pagamento</button>
+            <button class="botao selecionado" onclick="mostrarPagina('adm', this)"><img src="${pageContext.request.contextPath}/img/coroaAdm.png" alt="" class="icone"> Adm</button>
+            <button class="botao" onclick="mostrarPagina('empresas', this)"><img src="${pageContext.request.contextPath}/img/simboloEmpresa.png" alt="" class="icone"> Empresas</button>
+            <a href=""><button class="botao" onclick="mostrarPagina('planos', this)"><img src="${pageContext.request.contextPath}/img/cardenetaPlanos.png" alt="" class="icone"> Planos</button></a>
+            <button class="botao" onclick="mostrarPagina('pagamento', this)"><img src="${pageContext.request.contextPath}/img/maoPagamento.png" alt="" class="icone"> Pagamento</button>
         </nav>
 
         <div class="sair">
-            <button class="botao-sair"><img src="imagens/sair.png" alt="" class="icone"> Sair</button>
+            <button class="botao-sair"><img src="${pageContext.request.contextPath}/img/sair.png" alt="" class="icone"> Sair</button>
         </div>
     </aside>
 
@@ -288,13 +288,13 @@
             </div>
 
             <div class="pesquisar">
-                <img src="imagens/lupa.png" alt="" id="lupa">
+                <img src="${pageContext.request.contextPath}/img/lupa.png" alt="" id="lupa">
                 <input type="text" placeholder="Buscar por id, nome, email...">
             </div>
         </div>
 
         <div class="adicionador">
-            <button class="botao-add"><img src="imagens/circulo_mais.png" alt="" class="icone-add"> Adicionar Novo</button>
+            <button class="botao-add"><img src="${pageContext.request.contextPath}/img/circulo_mais.png" alt="" class="icone-add"> Adicionar Novo</button>
         </div>
 
         <div class="tabela">
