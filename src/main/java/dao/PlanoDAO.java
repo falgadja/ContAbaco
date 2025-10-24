@@ -34,7 +34,6 @@ public class PlanoDAO {
         return idGerado;
     }
 
-
     // READ - BUSCAR PLANO PELO ID
     public Plano buscarPorId(int id) {
         Conexao conexao = new Conexao();

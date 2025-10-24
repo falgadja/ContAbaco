@@ -9,7 +9,7 @@ import model.Endereco;
 
 import java.io.IOException;
 
-@WebServlet("/cadastrarEndereco")
+@WebServlet(name = "/CadastrarEndereco", value = "/servlet/EnderecoServlet")
 public class CadastrarEnderecoServlet extends HttpServlet {
 
     @Override // Inicializa o servlet de cadastro de endereço

@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Área Restrita - CRUD</title>
+    <link rel="icon" href="${pageContext.request.contextPath}/img/logo%20azul%20bonito%20sem%20fundo%202%20(1).png">
     <style>
         /* ===== RESET ===== */
         * {
