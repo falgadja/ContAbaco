@@ -9,7 +9,7 @@ public class Conexao {
     PreparedStatement pstmt;
 
     // Variaveis de ambiente para conectar com o BD
-    Dotenv dotenv = Dotenv.configure().directory("C:\\Users\\arthurmachado-ieg\\OneDrive - Instituto J&F\\Área de Trabalho\\Falgadja_backend\\.env").load();
+    Dotenv dotenv = Dotenv.configure().load();
     String DB_URL = dotenv.get("DB_URL");
     String DB_USUARIO = dotenv.get("DB_USUARIO");
     String DB_SENHA = dotenv.get("DB_SENHA");
