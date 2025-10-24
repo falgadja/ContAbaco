@@ -1,0 +1,20 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: annaabreu-ieg
+  Date: 24/10/2025
+  Time: 00:30
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="dao.FuncionarioDAO" %>
+
+<%
+    String idStr = request.getParameter("id");
+    if (idStr != null) {
+        int id = Integer.parseInt(idStr);
+        FuncionarioDAO dao = new FuncionarioDAO();
+        dao.deletar(id);
+    }
+    response.sendRedirect(request.getContextPath() + "/view/Funcionario/crudFuncionario.jsp");
+%>
+
