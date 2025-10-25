@@ -15,7 +15,7 @@
 Thumbs.db
 
 # Configurações de ambiente
-.env
+src/main/resources/.env
 
 # Diretórios de build
 /target/
