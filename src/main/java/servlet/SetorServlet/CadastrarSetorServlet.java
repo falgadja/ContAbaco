@@ -10,7 +10,7 @@ import model.Setor;
 
 import java.io.IOException;
 
-@WebServlet("/cadastrarSetor")
+@WebServlet("/InserirSetor")
 public class CadastrarSetorServlet extends HttpServlet {
 
     @Override

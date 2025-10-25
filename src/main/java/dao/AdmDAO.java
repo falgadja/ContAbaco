@@ -17,7 +17,7 @@ public class AdmDAO {
     public int inserir(Administrador adm) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
-        String sql = "INSERT INTO adm (email, senha) VALUES (?, ?) RETURNING id";
+        String sql = "INSERT INTO administrador (email, senha) VALUES (?, ?) RETURNING id";
         int idGerado = -1;
 
         try {
@@ -46,7 +46,7 @@ public class AdmDAO {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
         Administrador adm = null;
-        String sql = "SELECT * FROM adm WHERE email = ?";
+        String sql = "SELECT * FROM administrador WHERE email = ?";
 
         try {
             PreparedStatement pst = con.prepareStatement(sql);
@@ -108,7 +108,8 @@ public class AdmDAO {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
         List<Administrador> adms = new ArrayList<>();
-        String sql = "SELECT * FROM adm";
+        String sql = "SELECT * FROM administrador" +
+                "";
 
         try {
             PreparedStatement pst = con.prepareStatement(sql);

@@ -15,7 +15,7 @@
 <body>
 <h1>Cadastrar Novo Plano</h1>
 
-<form action="<%= request.getContextPath() %>/CadastrarPlanoServlet" method="post">
+<form action="<%= request.getContextPath() %>/InserirPlano" method="post">
     <label>Nome do Plano:</label>
     <input type="text" name="nome" required><br><br>
 

@@ -9,7 +9,7 @@ public class Conexao {
     PreparedStatement pstmt;
 
     // Variaveis de ambiente para conectar com o BD
-    Dotenv dotenv = Dotenv.configure().load();
+    Dotenv dotenv=Dotenv.load();
     String DB_URL = dotenv.get("DB_URL");
     String DB_USUARIO = dotenv.get("DB_USUARIO");
     String DB_SENHA = dotenv.get("DB_SENHA");

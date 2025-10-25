@@ -11,8 +11,8 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
 
-@WebServlet("/cadastrarEmpresa")
-public class CadastrarEmpresaServlet extends HttpServlet {
+@WebServlet("/InserirEmpresa")
+public class InserirEmpresaServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -62,10 +62,13 @@ public class CadastrarEmpresaServlet extends HttpServlet {
             // Faz hash da senha
             String senhaHash = BCrypt.hashpw(senha, BCrypt.gensalt());
 
+            //Pegar só os numeros do cnpj
+            String cnpjNumeros = cnpj.replaceAll("[^0-9]", "");
+
             // Cria objeto Empresa
             Empresa empresa = new Empresa();
             empresa.setNome(nome);
-            empresa.setCnpj(cnpj);
+            empresa.setCnpj(cnpjNumeros);
             empresa.setEmail(email);
             empresa.setSenha(senhaHash);
             empresa.setIdPlano(1);

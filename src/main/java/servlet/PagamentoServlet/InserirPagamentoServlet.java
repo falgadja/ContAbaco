@@ -14,9 +14,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 
-@WebServlet("/cadastrarPagamento")
+@WebServlet("/InserirPagamento")
 @MultipartConfig // Necessário para upload de arquivo (comprovante)
-public class CadastrarPagamentoServlet extends HttpServlet {
+public class InserirPagamentoServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {

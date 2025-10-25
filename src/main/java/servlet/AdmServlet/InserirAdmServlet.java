@@ -9,8 +9,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import model.Administrador;
+import org.mindrot.jbcrypt.BCrypt;
 
-@WebServlet("/cadastrarAdm")
+@WebServlet("/InserirAdm")
 public class InserirAdmServlet extends HttpServlet {
 
     //Será criado apenas uma vez
@@ -23,7 +24,7 @@ public class InserirAdmServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Apenas exibe o formulário de cadastro
-        request.getRequestDispatcher("/view/Empresa/cadastrarEmpresa.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/Adm/cadastrarAdm.jsp").forward(request, response);
     }
 
     @Override
@@ -35,14 +36,16 @@ public class InserirAdmServlet extends HttpServlet {
         // Verifica se as senhas são iguais
         if (!senha.equals(confirmarSenha)) {
             request.setAttribute("mensagem", "As senhas não são iguais!");
-            request.getRequestDispatcher("/view/Empresa/cadastrarEmpresa.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/Adm/crudAdm.jsp").forward(request, response);
         }else{
+            //Hash da senha
+            String senhaHash = BCrypt.hashpw(senha, BCrypt.gensalt());
 
         // Criar objeto Administrador
             try {
             Administrador administrador = new Administrador();
         administrador.setEmail(email);
-        administrador.setSenha(senha);
+        administrador.setSenha(senhaHash);
 
         //Criar objeto de ADM DAO
         AdmDAO admDAO = new AdmDAO();
@@ -51,23 +54,23 @@ public class InserirAdmServlet extends HttpServlet {
 
             int idAdm = admDAO.inserir(administrador);
             if (idAdm > 0) {
-                response.sendRedirect("/view/crud.jsp"); // sucesso
+                response.sendRedirect(request.getContextPath() + "/view/Adm/crudAdm.jsp");
             } else {
                 request.setAttribute("mensagem", "Não foi possível inserir, tente mais tarde!");
-                request.getRequestDispatcher("/view/Empresa/cadastrarEmpresa.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/erro.jsp").forward(request, response);
             }
         } catch (IOException e) {
             e.printStackTrace();
             request.setAttribute("mensagem", "Erro ao processar a requisição.");
-            request.getRequestDispatcher("/view/Empresa/cadastrarEmpresa.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/erro.jsp").forward(request, response);
         } catch (ServletException e) {
             e.printStackTrace();
             request.setAttribute("mensagem", "Erro interno do servidor.");
-            request.getRequestDispatcher("/view/Empresa/cadastrarEmpresa.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/erro.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("mensagem", "Ocorreu um erro ao inserir o administrador!");
-            request.getRequestDispatcher("/view/Empresa/cadastrarEmpresa.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/erro.jsp").forward(request, response);
         }
         }
     }

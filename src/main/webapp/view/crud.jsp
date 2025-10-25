@@ -1,18 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.util.List" %>
+<%@ page import="model.Empresa" %>
+<%@ page import="dao.EmpresaDAO" %>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Área Restrita - CRUD</title>
+    <title>Empresas - Área Restrita</title>
     <link rel="icon" href="${pageContext.request.contextPath}/img/logo%20azul%20bonito%20sem%20fundo%202%20(1).png">
     <style>
         /* ===== RESET ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
 
         body {
             display: flex;
@@ -32,19 +30,9 @@
             padding: 25px 0;
         }
 
-        .logo {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .logo h2 {
-            font-size: 1.3rem;
-            color: #140066;
-        }
-
-        .logo small {
-            color: #777;
-        }
+        .logo { text-align: center; margin-bottom: 40px; }
+        .logo h2 { font-size: 1.3rem; color: #140066; }
+        .logo small { color: #777; }
 
         .menu {
             width: 100%;
@@ -64,18 +52,12 @@
             font-weight: 500;
             display: flex;
             align-items: center;
-            gap: 10px;
             transition: 0.2s;
         }
 
-        .menu a.active {
+        .menu a.active, .menu a:hover {
             background-color: #140066;
             color: white;
-        }
-
-        .menu a:hover {
-            background-color: #140066;
-            color: #fff;
         }
 
         .logout {
@@ -90,51 +72,27 @@
             transition: 0.3s;
         }
 
-        .logout:hover {
-            background-color: #a30000;
-        }
+        .logout:hover { background-color: #a30000; }
 
         /* ===== CONTEÚDO ===== */
-        .content {
-            flex: 1;
-            padding: 40px;
-        }
-
+        .content { flex: 1; padding: 40px; }
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;
         }
-
-        .header h1 {
-            color: #140066;
-            font-size: 1.7rem;
-        }
-
-        .header p {
-            font-size: 0.9rem;
-            color: #555;
-        }
+        .header h1 { color: #140066; font-size: 1.7rem; }
 
         .search-box {
-            display: flex;
-            align-items: center;
+            display: flex; align-items: center;
             border: 1.5px solid #140066;
             border-radius: 8px;
             padding: 8px 12px;
             width: 280px;
         }
-
         .search-box input {
-            border: none;
-            outline: none;
-            flex: 1;
-            font-size: 0.9rem;
+            border: none; outline: none; flex: 1; font-size: 0.9rem;
         }
 
         .btn-add {
-            display: inline-block;
             background-color: #140066;
             color: white;
             border: none;
@@ -144,10 +102,7 @@
             font-weight: 500;
             transition: 0.3s;
         }
-
-        .btn-add:hover {
-            background-color: #0a0044;
-        }
+        .btn-add:hover { background-color: #0a0044; }
 
         /* ===== TABELA ===== */
         table {
@@ -164,28 +119,16 @@
             padding: 14px 16px;
             border-bottom: 1px solid #ddd;
         }
-
         th {
             background-color: #f8f8ff;
             color: #140066;
             text-transform: uppercase;
             font-size: 0.85rem;
         }
+        td { font-size: 0.95rem; color: #333; }
+        tr:hover { background-color: #f0f0ff; }
 
-        td {
-            font-size: 0.95rem;
-            color: #333;
-        }
-
-        tr:hover {
-            background-color: #f0f0ff;
-        }
-
-        .acoes {
-            display: flex;
-            gap: 10px;
-        }
-
+        .acoes { display: flex; gap: 10px; }
         .acoes button {
             background: none;
             border: 1.5px solid #140066;
@@ -194,17 +137,8 @@
             cursor: pointer;
             transition: 0.2s;
         }
+        .acoes button:hover { background-color: #140066; color: white; }
 
-        .acoes button:hover {
-            background-color: #140066;
-            color: white;
-        }
-
-        .acoes i {
-            font-size: 1rem;
-        }
-
-        /* ===== ÍCONES ===== */
         @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css');
     </style>
 </head>
@@ -217,11 +151,11 @@
     </div>
 
     <div class="menu">
-        <a href="#">Adm</a>
-        <a href="#" class="active">Empresas</a>
-        <a href="#">Funcionários</a>
-        <a href="#">Planos</a>
-        <a href="#">Pagamento</a>
+        <a href="<%= request.getContextPath() %>/view/Adm/crudAdm.jsp">Adm</a>
+        <a href="<%= request.getContextPath() %>/view/Empresa/crudEmpresa.jsp" class="active">Empresas</a>
+        <a href="<%= request.getContextPath() %>/view/Funcionario/crudFuncionario.jsp">Funcionários</a>
+        <a href="<%= request.getContextPath() %>/view/Plano/crudPlano.jsp">Planos</a>
+        <a href="<%= request.getContextPath() %>/view/Pagamento/crudPagamento.jsp">Pagamentos</a>
     </div>
 
     <button class="logout">Sair</button>
@@ -230,49 +164,58 @@
 <div class="content">
     <div class="header">
         <div>
-            <h1>Área Restrita</h1>
-            <p>CRUD</p>
+            <h1>Empresas Cadastradas</h1>
+            <p>Visualize, edite ou exclua empresas registradas no sistema.</p>
         </div>
-        <div class="search-box">
-            <i class="fa fa-search"></i>
-            <input type="text" placeholder="Buscar por id, nome, email...">
-        </div>
+        <a href="<%= request.getContextPath() %>/view/Empresa/cadastrarEmpresa.jsp" class="btn-add">+ Adicionar Empresa</a>
     </div>
 
-    <button class="btn-add"><i class="fa fa-plus"></i> Adicionar Novo</button>
+    <!-- ===== TABELA DINÂMICA ===== -->
+    <%
+        EmpresaDAO dao = new EmpresaDAO();
+        List<Empresa> lista = dao.listar();
 
+        if (lista != null && !lista.isEmpty()) {
+    %>
     <table>
         <thead>
         <tr>
-            <th>id_empresa</th>
-            <th>nome</th>
-            <th>cnpj</th>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>CNPJ</th>
+            <th>Email</th>
+            <th>Telefone</th>
             <th>Ações</th>
         </tr>
         </thead>
         <tbody>
+        <% for (Empresa e : lista) { %>
         <tr>
-            <td>1</td>
-            <td>JBS</td>
-            <td>02.916.265/0001-60</td>
+            <td><%= e.getId() %></td>
+            <td><%= e.getNome() %></td>
+            <td><%= e.getCnpj() %></td>
+            <td><%= e.getEmail() %></td>
             <td class="acoes">
-                <button><i class="fa fa-eye"></i></button>
-                <button><i class="fa fa-pen"></i></button>
-                <button><i class="fa fa-trash"></i></button>
+                <form action="<%= request.getContextPath() %>/editarEmpresa" method="get" style="display:inline;">
+                    <input type="hidden" name="id" value="<%= e.getId() %>">
+                    <button title="Editar"><i class="fa fa-pen"></i></button>
+                </form>
+                <form action="<%= request.getContextPath() %>/excluirEmpresa" method="post" style="display:inline;">
+                    <input type="hidden" name="id" value="<%= e.getId() %>">
+                    <button title="Excluir" onclick="return confirm('Tem certeza que deseja excluir esta empresa?');"><i class="fa fa-trash"></i></button>
+                </form>
             </td>
         </tr>
-        <tr>
-            <td>2</td>
-            <td>Faz Galinha Industrial</td>
-            <td>00.000.000/0000-00</td>
-            <td class="acoes">
-                <button><i class="fa fa-eye"></i></button>
-                <button><i class="fa fa-pen"></i></button>
-                <button><i class="fa fa-trash"></i></button>
-            </td>
-        </tr>
+        <% } %>
         </tbody>
     </table>
+    <%
+    } else {
+    %>
+    <p>Nenhuma empresa cadastrada no momento.</p>
+    <%
+        }
+    %>
 </div>
 
 </body>

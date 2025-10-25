@@ -12,14 +12,8 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.io.IOException;
 import java.time.LocalDate;
 
-@WebServlet("/cadastrarFuncionario")
-public class CadastrarFuncionarioServlet extends HttpServlet {
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        request.getRequestDispatcher("/view/Funcionario/cadastrarFuncionario.jsp").forward(request, response);
-    }
+@WebServlet("/InserirFuncionario")
+public class InserirFuncionarioServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -33,21 +27,29 @@ public class CadastrarFuncionarioServlet extends HttpServlet {
             String email = request.getParameter("email");
             String senha = request.getParameter("senha");
             String confirmarSenha = request.getParameter("confirmarSenha");
-            int idSetor = Integer.parseInt(request.getParameter("idSetor"));
-            int idEmpresa = Integer.parseInt(request.getParameter("idEmpresa"));
+
+            // Ajuste: pegar os parâmetros corretos do JSP
+            String idSetorStr = request.getParameter("id_setor");
+            String idEmpresaStr = request.getParameter("id_empresa");
 
             // Valida campos obrigatórios
-            if (nome == null || nome.isBlank() || //isBlank verifica se o usuario mandou espaço vazio
+            if (nome == null || nome.isBlank() ||
                     sobrenome == null || sobrenome.isBlank() ||
                     dataNascimentoStr == null || dataNascimentoStr.isBlank() ||
                     email == null || email.isBlank() ||
                     senha == null || senha.isBlank() ||
-                    confirmarSenha == null || confirmarSenha.isBlank()) {
+                    confirmarSenha == null || confirmarSenha.isBlank() ||
+                    idSetorStr == null || idSetorStr.isBlank() ||
+                    idEmpresaStr == null || idEmpresaStr.isBlank()) {
 
                 request.setAttribute("mensagem", "Todos os campos são obrigatórios!");
                 request.getRequestDispatcher("/view/Funcionario/cadastrarFuncionario.jsp").forward(request, response);
                 return;
             }
+
+            // Conversão segura dos IDs
+            int idSetor = Integer.parseInt(idSetorStr);
+            int idEmpresa = Integer.parseInt(idEmpresaStr);
 
             // Validação de senha
             if (!senha.equals(confirmarSenha)) {
@@ -78,7 +80,7 @@ public class CadastrarFuncionarioServlet extends HttpServlet {
             int idFuncionario = funcionarioDAO.inserir(funcionario);
 
             if (idFuncionario > 0) {
-                response.sendRedirect("/view/crud.jsp"); // sucesso
+                response.sendRedirect(request.getContextPath()+"/view/Funcionario/crudFuncionario.jsp"); // sucesso
             } else {
                 request.setAttribute("mensagem", "Não foi possível cadastrar o funcionário. Tente novamente!");
                 request.getRequestDispatcher("/view/Funcionario/cadastrarFuncionario.jsp").forward(request, response);
@@ -95,3 +97,4 @@ public class CadastrarFuncionarioServlet extends HttpServlet {
         }
     }
 }
+
