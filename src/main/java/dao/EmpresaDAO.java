@@ -232,7 +232,31 @@ public class EmpresaDAO {
             conexao.desconectar(con);
         }
 
+
+
         return empresas;
+    }
+    //READ - BUSCAR PELO EMAIL E RETORNAR O HASH
+    public String buscarHashPorEmail(String email) {
+        Conexao conexao = new Conexao();
+        Connection con = conexao.conectar();
+        String sql = "SELECT senha FROM empresa WHERE email = ?";
+        String hash = null;
+
+        try (
+                PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                hash = rs.getString("senha");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao buscar hash do administrador: " + e.getMessage());
+        }
+
+        return hash;
     }
 
     // UPDATE - ATUALIZAR EMPRESA

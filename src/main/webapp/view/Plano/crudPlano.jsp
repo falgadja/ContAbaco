@@ -146,7 +146,6 @@
         <a href="<%= request.getContextPath() %>/view/Funcionario/crudFuncionario.jsp">Funcionários</a>
         <a href="<%= request.getContextPath() %>/view/Plano/crudPlano.jsp" class="active">Planos</a>
         <a href="<%= request.getContextPath() %>/view/Pagamento/crudPagamento.jsp">Pagamentos</a>
-        <a href="<%= request.getContextPath() %>/>view/Endereco/crudEndereco.jsp">Endereços</a>
     </div>
 
     <button class="logout">Sair</button>

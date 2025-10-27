@@ -75,9 +75,9 @@
         <tr>
             <th>ID</th>
             <th>Nome</th>
-            <th>CNPJ</th>
+            <th>Cnpj</th>
             <th>Email</th>
-            <th>Telefone</th>
+            <th>Quantidade funcionários</th>
             <th>Plano</th>
             <th>Ações</th>
         </tr>
@@ -94,17 +94,12 @@
         %>
         <tr>
             <td><%= e.getId() %></td>
-            <td>
-                <!-- Botão para detalhes -->
-                <button onclick="window.location.href='<%= request.getContextPath() %>/view/Empresa/detalhesEmpresa.jsp?id=<%= e.getId() %>'">
-                    <%= e.getNome() %>
-                </button>
-            </td>
+            <td><%=e.getNome()%></td>
             <td><%= e.getCnpj() %></td>
             <td><%= e.getEmail() %></td>
             <td><%= e.getQntdFuncionarios() %></td>
             <td><%= plano %></td>
-            <td><%= e.getNome() %></td>
+
             <td class="acoes">
                 <!-- Ver detalhes -->
                 <button onclick="window.location.href='<%= request.getContextPath() %>/view/Empresa/detalhesEmpresa.jsp?id=<%= e.getId() %>'">

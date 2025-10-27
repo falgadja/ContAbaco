@@ -24,7 +24,6 @@ public class AtualizarEnderecoServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Recebendo dados do formulário
         String idParametro = request.getParameter("id");
         String pais = request.getParameter("pais");
         String estado = request.getParameter("estado");
@@ -39,7 +38,6 @@ public class AtualizarEnderecoServlet extends HttpServlet {
         EnderecoDAO enderecoDAO = new EnderecoDAO();
 
         try {
-            // Verifica se os parâmetros estão vazios ou nulos
             if (idParametro == null || idParametro.isEmpty() ||
                     pais == null || pais.trim().isEmpty() ||
                     estado == null || estado.trim().isEmpty() ||
@@ -50,16 +48,13 @@ public class AtualizarEnderecoServlet extends HttpServlet {
                     cep == null || cep.trim().isEmpty() ||
                     idEmpresaParametro == null || idEmpresaParametro.isEmpty()) {
 
-                // Define uma mensagem de erro que será mostrada
-                request.setAttribute("mensagemAtualizar", "Não foi possível encontrar os parâmetros.");
+                request.setAttribute("mensagemAtualizar", "Parâmetros ausentes no formulário.");
 
             } else {
-
                 int id = Integer.parseInt(idParametro);
                 int numero = Integer.parseInt(numeroParametro);
                 int idEmpresa = Integer.parseInt(idEmpresaParametro);
 
-                // Criando o objeto do modelo
                 endereco.setId(id);
                 endereco.setPais(pais.trim());
                 endereco.setEstado(estado.trim());
@@ -70,21 +65,19 @@ public class AtualizarEnderecoServlet extends HttpServlet {
                 endereco.setCep(cep.trim());
                 endereco.setIdEmpresa(idEmpresa);
 
-                // Chama o metodo atualizar do dao
                 if (enderecoDAO.atualizar(endereco) > 0) {
-                    request.setAttribute("mensagemAtualizar", "Endereço atualizado com sucesso.");
+                    response.sendRedirect(request.getContextPath() + "/view/Empresa/crudEmpresa.jsp");
+                    return; // encerra o método para não cair no forward abaixo
                 } else {
                     request.setAttribute("mensagemAtualizar", "Não foi possível atualizar o Endereço.");
                 }
             }
         } catch (NumberFormatException nfe) {
-            // Caso algum valor numérico seja inválido
             request.setAttribute("mensagemAtualizar", "Valores numéricos inválidos.");
         } catch (Exception e) {
-            // Caso ocorra qualquer outro erro inesperado
             request.setAttribute("mensagemAtualizar", "Erro inesperado ao tentar atualizar o endereço.");
+            e.printStackTrace();
         }
-        request.getRequestDispatcher("/view/Empresa/crudEmpresa.jsp").forward(request, response);
     }
 
 }

@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Administrador;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
 
@@ -41,12 +42,15 @@ public class AtualizarAdmServlet extends HttpServlet {
                 int id = Integer.parseInt(idParametro);
 
                 Administrador adm = new Administrador();
+
+               //Hash da senha antes de inserir no crud
+                String senhaHash = BCrypt.hashpw(senha, BCrypt.gensalt());
                 adm.setId(id);
                 adm.setEmail(email);
 
                 // Atualiza senha apenas se o usuário digitou algo
                 if (senha != null && !senha.trim().isEmpty()) {
-                    adm.setSenha(senha);
+                    adm.setSenha(senhaHash);
                 }
 
                 if (admDAO.atualizar(adm) > 0) {
