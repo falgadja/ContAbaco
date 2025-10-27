@@ -27,10 +27,17 @@ public class InserirFuncionarioServlet extends HttpServlet {
             String email = request.getParameter("email");
             String senha = request.getParameter("senha");
             String confirmarSenha = request.getParameter("confirmarSenha");
+            String idSetorStr = request.getParameter("idSetor");
+            String idEmpresaStr = request.getParameter("idEmpresa");
 
-            // Ajuste: pegar os parâmetros corretos do JSP
-            String idSetorStr = request.getParameter("id_setor");
-            String idEmpresaStr = request.getParameter("id_empresa");
+            System.out.println("Nome: " + nome);
+            System.out.println("Sobrenome: " + sobrenome);
+            System.out.println("Data de nascimento: " + dataNascimentoStr);
+            System.out.println("Email: " + email);
+            System.out.println("Senha: " + senha);
+            System.out.println("id setor"+ idSetorStr);
+            System.out.println("id empresa"+ idEmpresaStr);
+
 
             // Valida campos obrigatórios
             if (nome == null || nome.isBlank() ||
@@ -47,7 +54,7 @@ public class InserirFuncionarioServlet extends HttpServlet {
                 return;
             }
 
-            // Conversão segura dos IDs
+            // Transformar o id em int
             int idSetor = Integer.parseInt(idSetorStr);
             int idEmpresa = Integer.parseInt(idEmpresaStr);
 

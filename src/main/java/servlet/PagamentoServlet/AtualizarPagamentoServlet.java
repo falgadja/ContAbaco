@@ -1,12 +1,12 @@
 package servlet.PagamentoServlet;
 
 import dao.PagamentoDAO;
-import model.Pagamento;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.Pagamento;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -18,7 +18,7 @@ public class AtualizarPagamentoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Redireciona chamadas GET para o método POST
+        // Redireciona GET para POST (mesmo padrão do AtualizarEmpresaServlet)
         doPost(request, response);
     }
 
@@ -27,67 +27,65 @@ public class AtualizarPagamentoServlet extends HttpServlet {
             throws ServletException, IOException {
 
         // Recebendo dados do formulário
-        String idParametro = request.getParameter("id");
+        String idParam = request.getParameter("id");
         String tipoPagto = request.getParameter("tipoPagto");
-        String totalParametro = request.getParameter("total");
-        String dataParametro = request.getParameter("data");
-        String idEmpresaParametro = request.getParameter("idEmpresa");
-
-        // Obs: comprovante pode ser recebido como arquivo (input type="file")
-        // aqui deixaremos como null, pois o upload é tratado de outra forma
-        byte[] comprovante = null;
+        String totalParam = request.getParameter("total");
+        String dataParam = request.getParameter("data");
+        String idEmpresaParam = request.getParameter("idEmpresa");
 
         Pagamento pagamento = new Pagamento();
-        PagamentoDAO pagamentoDAO = new PagamentoDAO();
+        PagamentoDAO dao = new PagamentoDAO();
 
         try {
             // Verifica se os parâmetros estão vazios ou nulos
-            if (idParametro == null || idParametro.isEmpty() ||
+            if (idParam == null || idParam.isEmpty() ||
                     tipoPagto == null || tipoPagto.trim().isEmpty() ||
-                    totalParametro == null || totalParametro.isEmpty() ||
-                    dataParametro == null || dataParametro.trim().isEmpty() ||
-                    idEmpresaParametro == null || idEmpresaParametro.isEmpty()) {
+                    totalParam == null || totalParam.isEmpty() ||
+                    dataParam == null || dataParam.trim().isEmpty() ||
+                    idEmpresaParam == null || idEmpresaParam.isEmpty()) {
 
-                // Define uma mensagem de erro que será mostrada
-                request.setAttribute("mensagemAtualizar", "Não foi possível encontrar os parâmetros.");
-
-            } else {
-
-                // Conversões e validações
-                int id = Integer.parseInt(idParametro);
-                int idEmpresa = Integer.parseInt(idEmpresaParametro);
-                double total = Double.parseDouble(totalParametro);
-
-                LocalDate data;
-                try {
-                    data = LocalDate.parse(dataParametro);
-                } catch (DateTimeParseException e) {
-                    request.setAttribute("mensagemAtualizar", "Data inválida.");
-                    return;
-                }
-
-                // Criando o objeto Pagamento
-                pagamento.setId(id);
-                pagamento.setTipoPagto(tipoPagto.trim());
-                pagamento.setTotal(total);
-                pagamento.setData(data);
-                pagamento.setComprovante(comprovante); // opcional por enquanto
-                pagamento.setIdEmpresa(idEmpresa);
-
-                // Chama o método atualizar do DAO
-                if (pagamentoDAO.atualizar(pagamento) > 0) {
-                    request.setAttribute("mensagemAtualizar", "Pagamento atualizado com sucesso.");
-                } else {
-                    request.setAttribute("mensagemAtualizar", "Não foi possível atualizar o pagamento.");
-                }
+                request.setAttribute("mensagemAtualizar", "Preencha todos os campos.");
+                request.getRequestDispatcher("/view/Pagamento/atualizarPagamento.jsp").forward(request, response);
+                return;
             }
 
-        } catch (NumberFormatException nfe) {
-            // Caso algum valor numérico seja inválido
+            // Conversão dos parâmetros
+            int id = Integer.parseInt(idParam);
+            double total = Double.parseDouble(totalParam);
+            LocalDate data = LocalDate.parse(dataParam);
+            int idEmpresa = Integer.parseInt(idEmpresaParam);
+
+            // Preenche o objeto Pagamento
+            pagamento.setId(id);
+            pagamento.setTipoPagto(tipoPagto.trim());
+            pagamento.setTotal(total);
+            pagamento.setData(data);
+            pagamento.setIdEmpresa(idEmpresa);
+
+            // Atualiza no banco
+            int linhasAfetadas = dao.atualizar(pagamento);
+
+            if (linhasAfetadas > 0) {
+                request.setAttribute("mensagemAtualizar", "Pagamento atualizado com sucesso.");
+                response.sendRedirect(request.getContextPath() + "/view/Pagamento/crudPagamento.jsp");
+            } else {
+                request.setAttribute("pagamento", pagamento);
+                request.setAttribute("mensagemAtualizar", "Não foi possível atualizar o pagamento.");
+                request.getRequestDispatcher("/view/Pagamento/atualizarPagamento.jsp").forward(request, response);
+            }
+
+        } catch (NumberFormatException e) {
+            request.setAttribute("pagamento", pagamento);
             request.setAttribute("mensagemAtualizar", "Valores numéricos inválidos.");
+            request.getRequestDispatcher("/view/Pagamento/atualizarPagamento.jsp").forward(request, response);
+        } catch (DateTimeParseException e) {
+            request.setAttribute("pagamento", pagamento);
+            request.setAttribute("mensagemAtualizar", "Data inválida.");
+            request.getRequestDispatcher("/view/Pagamento/atualizarPagamento.jsp").forward(request, response);
         } catch (Exception e) {
-            // Caso ocorra qualquer outro erro inesperado
-            request.setAttribute("mensagemAtualizar", "Erro inesperado ao tentar atualizar o pagamento.");
+            request.setAttribute("pagamento", pagamento);
+            request.setAttribute("mensagemAtualizar", "Erro inesperado ao atualizar o pagamento.");
+            request.getRequestDispatcher("/view/Pagamento/atualizarPagamento.jsp").forward(request, response);
         }
     }
 }

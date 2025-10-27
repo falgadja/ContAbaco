@@ -9,13 +9,11 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-// Define que este servlet será acessado pela URL /DeletarPlanoServlet
 @WebServlet("/DeletarPlanoServlet")
 public class DeletarPlanoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Redireciona chamadas GET para o metodo POST
         doPost(request, response);
     }
 
@@ -27,17 +25,11 @@ public class DeletarPlanoServlet extends HttpServlet {
         PlanoDAO planoDAO = new PlanoDAO();
 
         try {
-            // Verifica se o parâmetro ID está vazio ou nulo
             if (idParametro == null || idParametro.isEmpty()) {
-
-                // Define uma mensagem de erro que será mostrada
-                request.setAttribute("mensagemDeletar", "ID do Plano não foi encontrado.");
-
+                request.setAttribute("mensagemDeletar", "ID do plano não foi encontrado.");
             } else {
-                // Converte o ID recebido (String) para número inteiro
                 int id = Integer.parseInt(idParametro);
 
-                // Chama o metodo deletar do DAO
                 if (planoDAO.deletar(id) > 0) {
                     request.setAttribute("mensagemDeletar", "Plano deletado com sucesso!");
                 } else {
@@ -45,14 +37,12 @@ public class DeletarPlanoServlet extends HttpServlet {
                 }
             }
         } catch (NumberFormatException nfe) {
-            // Caso o ID enviado não seja um número
-            request.setAttribute("mensagemDeletar", "ID Inválido.");
+            request.setAttribute("mensagemDeletar", "ID inválido.");
         } catch (Exception e) {
-            // Caso ocorra qualquer outro erro inesperado
             request.setAttribute("mensagemDeletar", "Erro inesperado ao tentar deletar.");
         }
 
-        // Encaminha a requisição e resposta para a página JSP de CRUD
-        request.getRequestDispatcher("../crud.jsp").forward(request, response);
+        // Caminho absoluto para o JSP de CRUD do plano
+        request.getRequestDispatcher("/view/Plano/crudPlano.jsp").forward(request, response);
     }
 }

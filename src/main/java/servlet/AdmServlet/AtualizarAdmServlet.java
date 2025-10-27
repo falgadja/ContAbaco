@@ -7,16 +7,17 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Administrador;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
 
-// Define que este servlet será acessado pela URL /AtualizarAdmServlet
 @WebServlet("/AtualizarAdmServlet")
 public class AtualizarAdmServlet extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Redireciona chamadas GET para o metodo POST
+        // Redireciona GET para POST
         doPost(request, response);
     }
 
@@ -24,45 +25,49 @@ public class AtualizarAdmServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Recebendo dados do formulário
         String idParametro = request.getParameter("id");
         String email = request.getParameter("email");
         String senha = request.getParameter("senha");
 
-        Administrador administrador = new Administrador();
         AdmDAO admDAO = new AdmDAO();
+        String mensagem;
 
         try {
-            // Verifica se os parâmetros estão vazios ou nulos
             if (idParametro == null || idParametro.isEmpty() ||
-                    email == null || email.trim().isEmpty() ||
-                    senha == null || senha.trim().isEmpty()) {
+                    email == null || email.trim().isEmpty()) {
 
-                // Define uma mensagem de erro que será mostrada
-                request.setAttribute("mensagemAtualizar", "Não foi possível encontrar os parâmetros.");
+                mensagem = "Parâmetros inválidos. Não foi possível atualizar.";
 
             } else {
-
                 int id = Integer.parseInt(idParametro);
 
-                // Criando o objeto do modelo
-                administrador.setId(id);
-                administrador.setEmail(email);
-                administrador.setSenha(senha);
+                Administrador adm = new Administrador();
 
-                // Chama o metodo atualizar do dao
-                if (admDAO.atualizar(administrador) > 0) {
-                    request.setAttribute("mensagemAtualizar", "Administrador atualizado com sucesso.");
+               //Hash da senha antes de inserir no crud
+                String senhaHash = BCrypt.hashpw(senha, BCrypt.gensalt());
+                adm.setId(id);
+                adm.setEmail(email);
+
+                // Atualiza senha apenas se o usuário digitou algo
+                if (senha != null && !senha.trim().isEmpty()) {
+                    adm.setSenha(senhaHash);
+                }
+
+                if (admDAO.atualizar(adm) > 0) {
+                    mensagem = "Administrador atualizado com sucesso!";
                 } else {
-                    request.setAttribute("mensagemAtualizar", "Não foi possível atualizar o Administrador.");
+                    mensagem = "Não foi possível atualizar o administrador.";
                 }
             }
+
         } catch (NumberFormatException nfe) {
-            // Caso o ID enviado não seja um número
-            request.setAttribute("mensagemAtualizar", "ID Inválido.");
+            mensagem = "ID inválido.";
         } catch (Exception e) {
-            // Caso ocorra qualquer outro erro inesperado
-            request.setAttribute("mensagemAtualizar", "Erro inesperado ao tentar atualizar.");
+            mensagem = "Erro inesperado ao tentar atualizar.";
+            e.printStackTrace();
         }
+
+        // Redireciona para o CRUD com a mensagem como query string
+        response.sendRedirect(request.getContextPath() + "/view/Adm/crudAdm.jsp?msg=");
     }
 }

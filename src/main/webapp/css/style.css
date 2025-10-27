@@ -56,7 +56,7 @@ section {
 .navegacao-container {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     height: 70px;
     width: 100%;
     padding: 0 20px;
@@ -96,6 +96,7 @@ section {
     gap: 30px;
     justify-content: center;
     flex: 1;
+    padding-top: 15px;
 }
 
 .menu-link {
@@ -114,6 +115,7 @@ section {
     gap: 15px;
     align-items: center;
     margin-left: 0;
+    padding-top: 3px;
 }
 
 /* --- BOTÕES --- */
@@ -127,7 +129,7 @@ section {
     transition: all 0.3s ease;
     display: inline-block;
     box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
-    
+
 }
 
 .botao-principal:hover {
@@ -184,8 +186,8 @@ section {
 /* --- SEÇÃO DESTAQUE --- */
 .destaque {
     background: white;
-    position: relative; 
-    overflow: hidden;   
+    position: relative;
+    overflow: hidden;
 }
 
 .destaque::before {
@@ -193,23 +195,23 @@ section {
     position: absolute;
     top: 0;
     right: 0;
-    width: 100%; 
+    width: 100%;
     height: 100%;
     margin-right: -350px;
-    background-image: url('../img/linhasAbaco.png'); 
+    background-image: url('../img/linhasAbaco.png');
     background-repeat: no-repeat;
     background-position: right center;
     background-size: contain;
-    opacity: 0.9; 
-    z-index: 0;   
+    opacity: 0.9;
+    z-index: 0;
 
-    -webkit-mask-image: 
-        linear-gradient(to right, transparent 10%, black 20%, black 80%, transparent 95%), 
-        linear-gradient(to bottom, transparent 10%, black 20%, black 80%, transparent 95%); 
-    mask-image: 
-        linear-gradient(to right, transparent 10%, black 20%, black 80%, transparent 95%),
-        linear-gradient(to bottom, transparent 10%, black 20%, black 80%, transparent 95%);
-    -webkit-mask-composite: intersect; 
+    -webkit-mask-image:
+            linear-gradient(to right, transparent 10%, black 20%, black 80%, transparent 95%),
+            linear-gradient(to bottom, transparent 10%, black 20%, black 80%, transparent 95%);
+    mask-image:
+            linear-gradient(to right, transparent 10%, black 20%, black 80%, transparent 95%),
+            linear-gradient(to bottom, transparent 10%, black 20%, black 80%, transparent 95%);
+    -webkit-mask-composite: intersect;
     mask-composite: intersect;
 }
 
@@ -218,8 +220,8 @@ section {
     grid-template-columns: 1fr 1fr;
     gap: 60px;
     align-items: center;
-    position: relative; 
-    z-index: 1;         
+    position: relative;
+    z-index: 1;
 }
 
 .destaque-titulo {
@@ -280,13 +282,13 @@ section {
     max-width: 800px;
     margin: 0 auto 60px;
     text-align: center;
-    
+
 }
 
 .sobre {
     background: #ffffff;
-    padding-bottom: 10px; 
-    padding-top: 20px; 
+    padding-bottom: 10px;
+    padding-top: 20px;
 }
 
 .sobre-texto {
@@ -457,10 +459,10 @@ section {
 
 .beneficios-grade {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); 
+    grid-template-columns: repeat(3, 1fr);
     gap: 30px;
-    max-width: 1200px; 
-    margin: 60px auto 0 auto; 
+    max-width: 1200px;
+    margin: 60px auto 0 auto;
 }
 
 .beneficio-card {
@@ -470,7 +472,7 @@ section {
     box-shadow: 0 6px 12px rgba(0,0,0,0.08);
     text-align: center;
     transition: transform 0.3s ease;
-    z-index: 1; 
+    z-index: 1;
 }
 
 .beneficio-card:hover {
@@ -482,10 +484,10 @@ section {
 }
 
 .beneficio-icone {
-    width: 80px;  
+    width: 80px;
     height: 80px;
     margin: 0 auto 25px;
-    border-radius: 20px; 
+    border-radius: 20px;
     background: #e0e7ff;
     display: flex;
     align-items: center;
@@ -615,7 +617,7 @@ section {
 }
 
 .botoes-container input[type="radio"] {
-  display: none;
+    display: none;
 }
 
 .botoes-container input[type="radio"]:checked + label {
@@ -625,12 +627,12 @@ section {
 }
 
 .botoes-container label {
-  border: 1px solid #7890e0;
-  color: #7890e0;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    border: 1px solid #7890e0;
+    color: #7890e0;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
 
 
@@ -647,26 +649,26 @@ section {
 
 
 .texto-container .texto {
-  display: none;
+    display: none;
 }
 .subtitulo{
     width: 600px;
 }
 
 .titulo {
-  font-size: 60px;
-  color: #2b3a8a;
-  text-align: left;
-  margin-bottom: 20px;
-  font-weight: bold;
+    font-size: 60px;
+    color: #2b3a8a;
+    text-align: left;
+    margin-bottom: 20px;
+    font-weight: bold;
 }
 
 .subtitulo {
-  font-size: 20px;
-  line-height: 1.5;
-  text-align: left;
-  max-width: 800px;
-  margin: 0;
+    font-size: 20px;
+    line-height: 1.5;
+    text-align: left;
+    max-width: 800px;
+    margin: 0;
 }
 
 .beneficio-icone {
@@ -717,7 +719,7 @@ section {
 .plano-card {
     background: white;
     border-radius: 16px;
-    padding: 40px 30px;             
+    padding: 40px 30px;
     border: 1px solid #d1d5db;
     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     position: relative;
@@ -725,8 +727,8 @@ section {
 }
 
 .plano-card .svgazul{
-     margin-top: -17px;
-     height: 180px;
+    margin-top: -17px;
+    height: 180px;
 }
 
 .plano-card svg {
@@ -820,9 +822,9 @@ section {
 
 /* --- SEÇÃO QUEM SOMOS --- */
 .quem-somos {
-    position: relative; 
-    overflow: hidden;   
-    background: #ffffff; 
+    position: relative;
+    overflow: hidden;
+    background: #ffffff;
 }
 
 .quem-somos-container {
@@ -830,16 +832,16 @@ section {
     margin: 0 auto;
     padding: 0 20px;
     display: grid;
-    grid-template-columns: 1fr 1fr; 
+    grid-template-columns: 1fr 1fr;
     align-items: center;
     position: relative;
-    z-index: 1; 
+    z-index: 1;
 }
 
 .quem-somos .titulo-secao,
 .quem-somos .quem-somos-texto {
     grid-column: 1 / 2;
-    text-align: left; 
+    text-align: left;
 }
 
 
@@ -856,12 +858,12 @@ section {
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
-    opacity: 0.2; 
+    opacity: 0.2;
     z-index: 0;
 }
 
 .quem-somos-texto {
-    max-width: 100%; 
+    max-width: 100%;
     margin-bottom: 20px;
     margin-left: 0;
     font-size: 1.125rem;
@@ -1225,7 +1227,7 @@ section {
     .contato-rodape p {
         justify-content: center;
     }
-     .icones-sociais {
+    .icones-sociais {
         justify-content: center;
     }
     .rodape-inferior {
@@ -1248,7 +1250,7 @@ section {
 }
 
 .parte3 {
-    padding-top: 10px;  
+    padding-top: 10px;
     padding-bottom: 20px;
     display: none;
     grid-template-columns: 1fr 1fr;
@@ -1265,72 +1267,72 @@ section {
 #colab:checked ~ .sobre .botoes-container label[for="colab"],
 #gestor:checked ~ .sobre .botoes-container label[for="gestor"],
 #web:checked ~ .sobre .botoes-container label[for="web"] {
-    background-color: #0327f5; 
-    color: #ffffff;          
-    border-color: #0327f5;     
+    background-color: #0327f5;
+    color: #ffffff;
+    border-color: #0327f5;
 }
 
-#colab:checked ~ .parte3 #txt-colab { 
-    display: block; 
+#colab:checked ~ .parte3 #txt-colab {
+    display: block;
 }
-#gestor:checked ~ .parte3 #txt-gestor { 
-    display: block; 
+#gestor:checked ~ .parte3 #txt-gestor {
+    display: block;
 }
 #web:checked ~ .parte3 #txt-web {
-     display: block; 
-    }
+    display: block;
+}
 
 
 
 /* Responsividade */
 @media (max-width: 992px) {
-  .navegacao-container {
-    flex-direction: column; 
-    height: auto;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    gap: 20px;
-  }
+    .navegacao-container {
+        flex-direction: column;
+        height: auto;
+        padding-top: 15px;
+        padding-bottom: 15px;
+        gap: 20px;
+    }
 
-  .marca img {
-    margin-right: 0;
-  }
+    .marca img {
+        margin-right: 0;
+    }
 
-  .menu {
-    flex: 1;
-    order: 2;
-  }
+    .menu {
+        flex: 1;
+        order: 2;
+    }
 
-  .botoes-acesso {
-    order: 3;
-  }
+    .botoes-acesso {
+        order: 3;
+    }
 
-  .marca {
-    order: 1;
-  }
+    .marca {
+        order: 1;
+    }
 }
 
 @media (max-width: 480px) {
-  .menu {
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    width: 100%;
-  }
+    .menu {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        width: 100%;
+    }
 
-  .botoes-acesso {
-    flex-direction: column;
-    align-items: stretch;
-    width: 80%;
-    margin: 0 auto;
-  }
+    .botoes-acesso {
+        flex-direction: column;
+        align-items: stretch;
+        width: 80%;
+        margin: 0 auto;
+    }
 
-  .botao-principal,
-  .botao-secundario {
-    text-align: center;
-  }
+    .botao-principal,
+    .botao-secundario {
+        text-align: center;
+    }
 
-  .marca img {
-    width: 180px;
-  }
+    .marca img {
+        width: 180px;
+    }
 }

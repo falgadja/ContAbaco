@@ -10,18 +10,20 @@ public class Empresa {
     private String senha;
     private int idPlano;
     private int qntdFuncionarios;
+    private int idEndereco;
 
     // CONSTRUTOR VAZIO
     public Empresa() {}
 
     // CONSTRUTOR SEM ID (para novos registros)
-    public Empresa(String cnpj, String nome, String email, String senha, int idPlano, int qntdFuncionarios) {
+    public Empresa(String cnpj, String nome, String email, String senha, int idPlano, int qntdFuncionarios,int idEndereco) {
         this.cnpj = cnpj;
         this.nome = nome;
         this.email = email;
         this.senha = senha;
         this.idPlano = idPlano;
         this.qntdFuncionarios = qntdFuncionarios;
+        this.idEndereco = idEndereco;
     }
 
     // CONSTRUTOR COMPLETO (quando for carregar do BD)
@@ -62,6 +64,10 @@ public class Empresa {
 
     public int getQntdFuncionarios() {
         return qntdFuncionarios;
+    }
+
+    public int getIdEndereco() {
+        return idEndereco;
     }
 
     // SETTERS

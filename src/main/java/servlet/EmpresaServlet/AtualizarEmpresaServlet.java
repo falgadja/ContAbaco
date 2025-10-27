@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Empresa;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
 
@@ -60,13 +61,18 @@ public class AtualizarEmpresaServlet extends HttpServlet {
                 empresa.setCnpj(cnpj.trim());
                 empresa.setNome(nome.trim());
                 empresa.setEmail(email.trim());
-                empresa.setSenha(senha.trim());
                 empresa.setIdPlano(idPlano);
                 empresa.setQntdFuncionarios(qntdFuncionarios);
+
+                //Hash da senha
+                String senhaHash = BCrypt.hashpw(senha, BCrypt.gensalt());
+                empresa.setSenha(senhaHash.trim());
+
 
                 // Chama o metodo atualizar do dao
                 if (empresaDAO.atualizar(empresa) > 0) {
                     request.setAttribute("mensagemAtualizar", "Empresa atualizada com sucesso.");
+                    response.sendRedirect(request.getContextPath() + "/view/Empresa/crudEmpresa.jsp");
                 } else {
                     request.setAttribute("mensagemAtualizar", "Não foi possível atualizar a Empresa.");
                 }

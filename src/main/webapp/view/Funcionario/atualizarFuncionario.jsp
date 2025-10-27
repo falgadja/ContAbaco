@@ -36,8 +36,18 @@
 </head>
 <body>
 <h1>Atualizar Funcionário</h1>
+<%
+    String mensagem = request.getParameter("mensagem");
+    if ("atualizado".equals(mensagem)) {
+%>
+<p>Funcionário atualizado com sucesso!</p>
+<%
+    }
+%>
 
-<form action="<%= request.getContextPath() %>/FuncionarioAtualizarServlet" method="post">
+<form action="<%= request.getContextPath() %>/AtualizarFuncionarioServlet" method="post">
+
+
     <input type="hidden" name="id" value="<%= funcionario.getId() %>"/>
 
     <label>Nome:</label>

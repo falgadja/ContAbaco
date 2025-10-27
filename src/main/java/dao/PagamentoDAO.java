@@ -17,13 +17,12 @@ public class PagamentoDAO {
         int idGerado = -1;
 
         try {
-            String sql = "INSERT INTO PAGAMENTO (TIPO_PAGTO, TOTAL, DATA_PAGTO, COMPROVANTE, ID_EMPRESA) VALUES (?, ?, ?, ?, ?) RETURNING ID";
+            String sql = "INSERT INTO PAGAMENTO (TIPO_PAGTO, TOTAL, DATA_PAGTO, ID_EMPRESA) VALUES (?, ?, ?, ?) RETURNING ID";
             PreparedStatement pst = conn.prepareStatement(sql);
             pst.setString(1, pagamento.getTipoPagto());
             pst.setDouble(2, pagamento.getTotal());
             pst.setDate(3, Date.valueOf(pagamento.getData()));
-            pst.setBytes(4, pagamento.getComprovante());
-            pst.setInt(5, pagamento.getIdEmpresa());
+            pst.setInt(4, pagamento.getIdEmpresa());
 
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
@@ -57,7 +56,6 @@ public class PagamentoDAO {
                         rs.getString("TIPO_PAGTO"),
                         rs.getDouble("TOTAL"),
                         rs.getObject("DATA_PAGTO", LocalDate.class),
-                        rs.getBytes("COMPROVANTE"),
                         rs.getInt("ID_EMPRESA")
                 );
             }
@@ -89,7 +87,6 @@ public class PagamentoDAO {
                         rs.getString("TIPO_PAGTO"),
                         rs.getDouble("TOTAL"),
                         rs.getObject("DATA_PAGTO", LocalDate.class),
-                        rs.getBytes("COMPROVANTE"),
                         rs.getInt("ID_EMPRESA")
                 ));
             }
@@ -122,7 +119,6 @@ public class PagamentoDAO {
                         rs.getString("TIPO_PAGTO"),
                         rs.getDouble("TOTAL"),
                         rs.getObject("DATA_PAGTO", LocalDate.class),
-                        rs.getBytes("COMPROVANTE"),
                         rs.getInt("ID_EMPRESA")
                 ));
             }
@@ -153,7 +149,6 @@ public class PagamentoDAO {
                         rs.getString("TIPO_PAGTO"),
                         rs.getDouble("TOTAL"),
                         rs.getObject("DATA_PAGTO", LocalDate.class),
-                        rs.getBytes("COMPROVANTE"),
                         rs.getInt("ID_EMPRESA")
                 ));
             }
@@ -183,7 +178,6 @@ public class PagamentoDAO {
                         rs.getString("TIPO_PAGTO"),
                         rs.getDouble("TOTAL"),
                         rs.getObject("DATA_PAGTO", LocalDate.class),
-                        rs.getBytes("COMPROVANTE"),
                         rs.getInt("ID_EMPRESA")
                 ));
             }
@@ -208,7 +202,6 @@ public class PagamentoDAO {
             pst.setString(1, pagamento.getTipoPagto());
             pst.setDouble(2, pagamento.getTotal());
             pst.setDate(3, Date.valueOf(pagamento.getData()));
-            pst.setBytes(4, pagamento.getComprovante());
             pst.setInt(5, pagamento.getId());
 
             retorno = pst.executeUpdate();

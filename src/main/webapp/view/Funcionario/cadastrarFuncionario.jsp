@@ -1,4 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.util.List" %>
+<%@ page import="dao.SetorDAO" %>
+<%@ page import="dao.EmpresaDAO" %>
+<%@ page import="model.Setor" %>
+<%@ page import="model.Empresa" %>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -15,6 +20,7 @@
     <div class="panel right-panel">
         <div class="content">
             <h1>Faça seu cadastro!</h1>
+
             <form action="${pageContext.request.contextPath}/InserirFuncionario" method="post">
 
                 <div class="form-group">
@@ -28,8 +34,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="data_nascimento">Data de Nascimento</label>
-                    <input type="date" id="data_nascimento" name="dataNascimento" required>
+                    <label for="dataNascimento">Data de Nascimento</label>
+                    <input type="date" id="dataNascimento" name="dataNascimento" required>
                 </div>
 
                 <div class="form-group">
@@ -43,44 +49,48 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="confirme_senha">Confirme sua senha</label>
-                    <input type="password" id="confirme_senha" name="confirme_senha" placeholder="Repita a senha" minlength="8" maxlength="30" required>
+                    <label for="confirmarSenha">Confirme sua senha</label>
+                    <input type="password" id="confirmarSenha" name="confirmarSenha" placeholder="Repita a senha" minlength="8" maxlength="30" required>
                 </div>
 
-                <%@ page import="java.util.List" %>
-                <%@ page import="dao.SetorDAO" %>
-                <%@ page import="model.Setor" %>
-                <%@ page import="model.Empresa" %>
-                <%@ page import="dao.EmpresaDAO" %>
+                <div class="form-group">
+                    <label for="idSetor">Setor</label>
+                    <select id="idSetor" name="idSetor" required>
+                        <option value="">Selecione o setor</option>
+                        <%
+                            SetorDAO setorDAO = new SetorDAO();
+                            List<Setor> setores = setorDAO.listarTodos();
+                            for (Setor setor : setores) {
+                        %>
+                        <option value="<%= setor.getId() %>"><%= setor.getNome() %></option>
+                        <% } %>
+                    </select>
+                </div>
 
-                <select id="id_setor" name="idSetor" required>
-                    <option value="">Selecione o setor</option>
-                    <%
-                        SetorDAO setorDAO = new SetorDAO();
-                        List<Setor> setores = setorDAO.listarTodos();
-                        for (Setor setor : setores) {
-                    %>
-                    <option value="<%= setor.getId() %>"><%= setor.getNome() %></option>
-                    <%
-                        }
-                    %>
-                </select>
-
-                <select id="id_empresa" name="id_empresa" required>
-                    <option value="">Selecione a empresa</option>
-                    <%
-                        EmpresaDAO empresaDAO = new EmpresaDAO();
-                        List<Empresa> empresas = empresaDAO.listar(); // método listar retorna List<Empresa>
-                        for (Empresa empresa : empresas) {
-                    %>
-                    <option value="<%= empresa.getId() %>"><%= empresa.getNome() %></option>
-                    <%
-                        }
-                    %>
-                </select>
+                <div class="form-group">
+                    <label for="idEmpresa">Empresa</label>
+                    <select id="idEmpresa" name="idEmpresa" required>
+                        <option value="">Selecione a empresa</option>
+                        <%
+                            EmpresaDAO empresaDAO = new EmpresaDAO();
+                            List<Empresa> empresas = empresaDAO.listar();
+                            for (Empresa empresa : empresas) {
+                        %>
+                        <option value="<%= empresa.getId() %>"><%= empresa.getNome() %></option>
+                        <% } %>
+                    </select>
+                </div>
 
                 <button type="submit" class="btn btn-solid">Cadastrar</button>
             </form>
+
+            <%-- Mensagem de erro ou sucesso --%>
+            <%
+                String mensagem = (String) request.getAttribute("mensagem");
+                if (mensagem != null) {
+            %>
+            <p style="color: red; margin-top: 15px;"><%= mensagem %></p>
+            <% } %>
 
         </div>
     </div>

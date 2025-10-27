@@ -26,7 +26,6 @@ public class AdmDAO {
             pst.setString(2, adm.getSenha());
 
             ResultSet rs = pst.executeQuery();
-
             if (rs.next()) {
                 idGerado = rs.getInt("id");
                 adm.setId(idGerado);
@@ -41,6 +40,58 @@ public class AdmDAO {
         return idGerado; // Retorna o ID gerado se der certo, se falhar retorna -1
     }
 
+    // READ - BUSCAR Administrador PELO ID
+    public Administrador buscarPorId(int id) {
+        Conexao conexao = new Conexao();
+        Connection con = conexao.conectar();
+        Administrador adm = null;
+        String sql = "SELECT * FROM administrador WHERE id = ?";
+
+        try {
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setInt(1, id);
+            ResultSet rs = pst.executeQuery();
+
+            if (rs.next()) {
+                adm = new Administrador(
+                        rs.getInt("id"),
+                        rs.getString("email"),
+                        rs.getString("senha")
+                );
+            }
+
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        } finally {
+            conexao.desconectar(con);
+        }
+
+        return adm; // se não encontrar retorna null
+    }
+    // READ - Buscar e retornar o HASH
+    public String buscarHashPorEmail(String email) {
+        Conexao conexao = new Conexao();
+        Connection con = conexao.conectar();
+        String sql = "SELECT senha FROM administrador WHERE email = ?";
+        String hash = null;
+
+        try (
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                hash = rs.getString("senha");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao buscar hash do administrador: " + e.getMessage());
+        }
+
+        return hash;
+    }
+
     // READ - BUSCAR Administrador PELO EMAIL
     public Administrador buscarPorEmail(String email) {
         Conexao conexao = new Conexao();
@@ -51,7 +102,6 @@ public class AdmDAO {
         try {
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setString(1, email);
-
             ResultSet rs = pst.executeQuery();
 
             if (rs.next()) {
@@ -68,7 +118,7 @@ public class AdmDAO {
             conexao.desconectar(con);
         }
 
-        return adm; // se não encontrar retorna null, se encontrar retorna o objeto
+        return adm;
     }
 
     // READ - BUSCAR Administrador PELO EMAIL E SENHA
@@ -78,12 +128,10 @@ public class AdmDAO {
         Administrador adm = null;
         String sql = "SELECT * FROM administrador WHERE email = ? AND senha = ?";
 
-
         try {
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setString(1, email);
             pst.setString(2, senha);
-
             ResultSet rs = pst.executeQuery();
 
             if (rs.next()) {
@@ -100,7 +148,7 @@ public class AdmDAO {
             conexao.desconectar(con);
         }
 
-        return adm; // se não encontrar retorna null, se encontrar retorna o objeto
+        return adm;
     }
 
     // READ - LISTAR TODOS OS Administradores
@@ -108,8 +156,7 @@ public class AdmDAO {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
         List<Administrador> adms = new ArrayList<>();
-        String sql = "SELECT * FROM administrador" +
-                "";
+        String sql = "SELECT * FROM administrador";
 
         try {
             PreparedStatement pst = con.prepareStatement(sql);
@@ -129,7 +176,7 @@ public class AdmDAO {
             conexao.desconectar(con);
         }
 
-        return adms; // retorna a lista, vazia se não encontrar nada
+        return adms;
     }
 
     // UPDATE - ATUALIZAR Administrador
@@ -137,7 +184,7 @@ public class AdmDAO {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
         int retorno;
-        String sql = "UPDATE adm SET email=?, senha=? WHERE id=?";
+        String sql = "UPDATE administrador SET email = ?, senha = ? WHERE id = ?";
 
         try {
             PreparedStatement pst = con.prepareStatement(sql);
@@ -149,12 +196,12 @@ public class AdmDAO {
 
         } catch (SQLException sqle) {
             sqle.printStackTrace();
-            retorno = -1; // Se ocorreu alguma exceção retorna -1
+            retorno = -1;
         } finally {
             conexao.desconectar(con);
         }
 
-        return retorno; // Se tiver atualizado o Administrador, retorna o numero de linhas alteradas, se não retorna 0
+        return retorno;
     }
 
     // DELETE - DELETAR Administrador
@@ -162,21 +209,20 @@ public class AdmDAO {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
         int retorno;
-        String sql = "DELETE FROM adm WHERE id = ?";
+        String sql = "DELETE FROM administrador WHERE id = ?";
 
         try {
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setInt(1, id);
-
             retorno = pst.executeUpdate();
 
         } catch (SQLException sqle) {
             sqle.printStackTrace();
-            retorno = -1; // Se ocorreu alguma exceção retorna -1
+            retorno = -1;
         } finally {
             conexao.desconectar(con);
         }
 
-        return retorno; // Se tiver deletado o Administrador, retorna o numero de linhas alteradas, se não retorna 0
+        return retorno;
     }
 }

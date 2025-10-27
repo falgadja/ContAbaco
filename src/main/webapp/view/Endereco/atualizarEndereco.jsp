@@ -34,8 +34,13 @@
 <body>
 <h1>Atualizar Endereço</h1>
 
-<form action="<%= request.getContextPath() %>/EnderecoAtualizarServlet" method="post">
+<form action="<%= request.getContextPath() %>/AtualizarEnderecoServlet" method="post">
     <input type="hidden" name="id" value="<%= endereco.getId() %>"/>
+    <input type="hidden" name="idEmpresa" value="<%=endereco.getIdEmpresa()%>">
+
+    <label>Pais: </label>
+    <input type="text" name="pais" value="<%= endereco.getPais() %>" required/><br/><br/>
+
     <label>Rua:</label>
     <input type="text" name="rua" value="<%= endereco.getRua() %>" required/><br/><br/>
 
@@ -54,8 +59,12 @@
     <label>CEP:</label>
     <input type="text" name="cep" value="<%= endereco.getCep() %>" required/><br/><br/>
 
+
     <button type="submit">Atualizar</button>
     <a href="<%= request.getContextPath() %>/view/Endereco/crudEndereco.jsp">Cancelar</a>
+
+
+    <p>${mensagemAtualizar}</p>
 </form>
 
 </body>
