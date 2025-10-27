@@ -34,7 +34,7 @@
 <body>
 <h1>Atualizar Endereço</h1>
 
-<form action="<%= request.getContextPath() %>/EnderecoAtualizarServlet" method="post">
+<form action="<%= request.getContextPath() %>/AtualizarEnderecoServlet" method="post">
     <input type="hidden" name="id" value="<%= endereco.getId() %>"/>
     <label>Rua:</label>
     <input type="text" name="rua" value="<%= endereco.getRua() %>" required/><br/><br/>

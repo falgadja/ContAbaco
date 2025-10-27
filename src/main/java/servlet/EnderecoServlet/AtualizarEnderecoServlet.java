@@ -84,5 +84,7 @@ public class AtualizarEnderecoServlet extends HttpServlet {
             // Caso ocorra qualquer outro erro inesperado
             request.setAttribute("mensagemAtualizar", "Erro inesperado ao tentar atualizar o endereço.");
         }
+        request.getRequestDispatcher("/view/Empresa/crudEmpresa.jsp").forward(request, response);
     }
+
 }

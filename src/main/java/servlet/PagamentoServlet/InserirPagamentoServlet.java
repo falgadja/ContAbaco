@@ -41,14 +41,12 @@ public class InserirPagamentoServlet extends HttpServlet {
             String dataStr = request.getParameter("data");
             int idEmpresa = Integer.parseInt(request.getParameter("idEmpresa"));
 
-            // Upload do comprovante (campo tipo "file" no formulário)
-            Part comprovantePart = request.getPart("comprovante");
-            InputStream comprovanteStream = comprovantePart != null ? comprovantePart.getInputStream() : null;
-            byte[] comprovanteBytes = null;
+            System.out.println("Tipo de pagto: " + tipoPagto);
+            System.out.println("Total: " + total);
+            System.out.println("Data: " + dataStr);
+            System.out.println("IdEmpresa: " + idEmpresa);
 
-            if (comprovanteStream != null) {
-                comprovanteBytes = comprovanteStream.readAllBytes();
-            }
+
 
             // Conversão de data
             LocalDate data = LocalDate.parse(dataStr);
@@ -58,7 +56,6 @@ public class InserirPagamentoServlet extends HttpServlet {
             pagamento.setTipoPagto(tipoPagto);
             pagamento.setTotal(total);
             pagamento.setData(data);
-            pagamento.setComprovante(comprovanteBytes);
             pagamento.setIdEmpresa(idEmpresa);
 
             // Insere no banco via DAO
@@ -66,7 +63,7 @@ public class InserirPagamentoServlet extends HttpServlet {
             int idPagamento = pagamentoDAO.inserir(pagamento);
 
             if (idPagamento > 0) {
-                response.sendRedirect("/view/crud.jsp"); // sucesso
+                response.sendRedirect(request.getContextPath()+"/view/Pagamento/crudPagamento.jsp"); // sucesso
             } else {
                 request.setAttribute("mensagem", "Não foi possível cadastrar o pagamento. Tente novamente!");
                 request.getRequestDispatcher("/view/Pagamento/cadastrarPagamento.jsp").forward(request, response);

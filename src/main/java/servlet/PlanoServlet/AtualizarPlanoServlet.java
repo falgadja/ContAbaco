@@ -52,6 +52,7 @@ public class AtualizarPlanoServlet extends HttpServlet {
                 // Atualiza no banco
                 if (planoDAO.atualizar(plano) > 0) {
                     request.setAttribute("mensagemAtualizar", "Plano atualizado com sucesso.");
+                    response.sendRedirect(request.getContextPath() + "/view/Plano/crudPlano.jsp");
                 } else {
                     request.setAttribute("mensagemAtualizar", "Não foi possível atualizar o plano.");
                 }

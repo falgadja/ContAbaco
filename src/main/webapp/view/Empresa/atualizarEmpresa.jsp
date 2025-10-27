@@ -32,17 +32,36 @@
 <%
     if (empresa != null) {
 %>
-<form action="AtualizarEmpresaServlet" method="post">
+<form action="<%= request.getContextPath() %>/AtualizarEmpresaServlet" method="post">
     <input type="hidden" name="id" value="<%= empresa.getId() %>">
-    Nome: <input type="text" name="nome" value="<%= empresa.getNome() %>" required><br><br>
-    CNPJ: <input type="text" name="cnpj" value="<%= empresa.getCnpj() %>" required><br><br>
-    Email: <input type="email" name="email" value="<%= empresa.getEmail() %>" required><br><br>
-    Senha: <input type="password" name="senha" placeholder="Deixe vazio para não alterar"><br><br>
-    Plano (ID): <input type="number" name="idPlano" value="<%= empresa.getIdPlano() %>" required><br><br>
-    Qtd Funcionários: <input type="number" name="qntdFuncionarios" value="<%= empresa.getQntdFuncionarios() %>" required><br><br>
+
+    <label for="nome">Nome:</label>
+    <input type="text" id="nome" name="nome" value="<%= empresa.getNome() %>" required>
+    <br><br>
+
+    <label for="cnpj">CNPJ:</label>
+    <input type="text" id="cnpj" name="cnpj" value="<%= empresa.getCnpj() %>" required>
+    <br><br>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" value="<%= empresa.getEmail() %>" required>
+    <br><br>
+
+    <label for="senha">Senha:</label>
+    <input type="password" id="senha" name="senha" placeholder="Deixe vazio para não alterar">
+    <br><br>
+
+    <label for="idPlano">Plano (ID):</label>
+    <input type="number" id="idPlano" name="idPlano" value="<%= empresa.getIdPlano() %>" required>
+    <br><br>
+
+    <label for="qntdFuncionarios">Qtd Funcionários:</label>
+    <input type="number" id="qntdFuncionarios" name="qntdFuncionarios" value="<%= empresa.getQntdFuncionarios() %>" required>
+    <br><br>
+
     <input type="submit" value="Atualizar">
-    <a href="crudEmpresa.jsp">Cancelar</a>
 </form>
+
 <%
 } else {
 %>

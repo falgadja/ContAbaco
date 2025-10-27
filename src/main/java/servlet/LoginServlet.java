@@ -33,7 +33,7 @@ public class LoginServlet extends HttpServlet {
             } else if (funcionarioDAO.buscarPorEmailESenha(email, senha) != null) {
                 request.getRequestDispatcher("/view/erro.jsp").forward(request, response);
             } else if (admDAO.buscarPorEmailSenha(email, senha) != null) {
-                request.getRequestDispatcher("/view/crud.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/Empresa/crudEmpresa.jsp").forward(request, response);
             } else {
                 request.setAttribute("mensagem", "Email ou senha invalidos, digite novamente");
                 request.getRequestDispatcher("/view/login.jsp").forward(request, response);

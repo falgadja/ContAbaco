@@ -232,10 +232,10 @@
             <td><%= a.getEmail() %></td>
             <td><%= a.getSenha() %></td>
             <td class="acoes">
-                <button onclick="window.location.href='<%= request.getContextPath() %>/view/Adm/editarAdm.jsp?id=<%= a.getId() %>'">
+                <button onclick="window.location.href='<%= request.getContextPath() %>/view/Adm/atualizarAdm.jsp?id=<%= a.getId() %>'">
                     <i class="fa fa-pen"></i>
                 </button>
-                <button onclick="if(confirm('Deseja excluir este administrador?')) window.location.href='<%= request.getContextPath() %>/excluirAdm?id=<%= a.getId() %>'">
+                <button onclick="if(confirm('Deseja excluir este administrador?')) window.location.href='<%= request.getContextPath() %>/DeletarAdmServlet?id=<%= a.getId() %>'">
                     <i class="fa fa-trash"></i>
                 </button>
             </td>

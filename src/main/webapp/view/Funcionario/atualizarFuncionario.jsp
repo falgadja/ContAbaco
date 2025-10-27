@@ -37,7 +37,7 @@
 <body>
 <h1>Atualizar Funcionário</h1>
 
-<form action="<%= request.getContextPath() %>/FuncionarioAtualizarServlet" method="post">
+<form action="<%= request.getContextPath() %>/AtualizarFuncionarioServlet" method="post">
     <input type="hidden" name="id" value="<%= funcionario.getId() %>"/>
 
     <label>Nome:</label>

@@ -67,6 +67,7 @@ public class AtualizarEmpresaServlet extends HttpServlet {
                 // Chama o metodo atualizar do dao
                 if (empresaDAO.atualizar(empresa) > 0) {
                     request.setAttribute("mensagemAtualizar", "Empresa atualizada com sucesso.");
+                    response.sendRedirect(request.getContextPath() + "/view/Empresa/crudEmpresa.jsp");
                 } else {
                     request.setAttribute("mensagemAtualizar", "Não foi possível atualizar a Empresa.");
                 }

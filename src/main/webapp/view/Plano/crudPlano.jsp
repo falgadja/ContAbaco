@@ -146,6 +146,7 @@
         <a href="<%= request.getContextPath() %>/view/Funcionario/crudFuncionario.jsp">Funcionários</a>
         <a href="<%= request.getContextPath() %>/view/Plano/crudPlano.jsp" class="active">Planos</a>
         <a href="<%= request.getContextPath() %>/view/Pagamento/crudPagamento.jsp">Pagamentos</a>
+        <a href="<%= request.getContextPath() %>/>view/Endereco/crudEndereco.jsp">Endereços</a>
     </div>
 
     <button class="logout">Sair</button>
@@ -184,14 +185,19 @@
             <td><%= String.format("%.2f", p.getPreco()) %></td>
 
             <td class="acoes">
-                <form action="<%= request.getContextPath() %>/editarPlano" method="get" style="display:inline;">
+                <!-- Botão para Editar: redireciona para atualizarPlano.jsp -->
+                <button onclick="window.location.href='<%= request.getContextPath() %>/view/Plano//atualizarPlano.jsp?id=<%= p.getId() %>'" title="Editar">
+                    <i class="fa fa-pen"></i>
+                </button>
+
+                <!-- Botão para Excluir: chama o servlet com confirmação -->
+                <form action="<%= request.getContextPath() %>/DeletarPlanoServlet" method="post" style="display:inline;">
                     <input type="hidden" name="id" value="<%= p.getId() %>">
-                    <button title="Editar"><i class="fa fa-pen"></i></button>
+                    <button title="Excluir" onclick="return confirm('Tem certeza que deseja excluir este plano?');">
+                        <i class="fa fa-trash"></i>
+                    </button>
                 </form>
-                <form action="<%= request.getContextPath() %>/excluirPlano" method="post" style="display:inline;">
-                    <input type="hidden" name="id" value="<%= p.getId() %>">
-                    <button title="Excluir" onclick="return confirm('Tem certeza que deseja excluir este plano?');"><i class="fa fa-trash"></i></button>
-                </form>
+
             </td>
         </tr>
         <% } %>

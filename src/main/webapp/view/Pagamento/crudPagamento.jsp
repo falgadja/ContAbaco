@@ -1,7 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
-<%@ page import="dao.PagamentoDAO" %>
 <%@ page import="model.Pagamento" %>
+<%@ page import="model.Empresa" %>
+<%@ page import="dao.PagamentoDAO" %>
+<%@ page import="dao.EmpresaDAO" %>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -9,28 +11,29 @@
     <title>Pagamentos - Área Restrita</title>
     <link rel="icon" href="${pageContext.request.contextPath}/img/logo%20azul%20bonito%20sem%20fundo%202%20(1).png">
     <style>
+        /* ===== RESET ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { display: flex; background-color: #ffffff; color: #140066; height: 100vh; }
 
-        /* SIDEBAR */
+        /* ===== SIDEBAR ===== */
         .sidebar { width: 250px; background-color: #ffffff; border-right: 2px solid #140066; display: flex; flex-direction: column; align-items: center; padding: 25px 0; }
         .logo { text-align: center; margin-bottom: 40px; }
         .logo h2 { font-size: 1.3rem; color: #140066; }
         .logo small { color: #777; }
         .menu { width: 100%; display: flex; flex-direction: column; gap: 10px; padding: 0 20px; }
-        .menu a { text-decoration: none; color: #140066; border: 1.5px solid #140066; border-radius: 8px; padding: 10px; text-align: left; font-weight: 500; display: flex; align-items: center; transition: 0.2s; }
+        .menu a { text-decoration: none; color: #140066; border: 1.5px solid #140066; border-radius: 8px; padding: 10px; font-weight: 500; display: flex; align-items: center; transition: 0.2s; }
         .menu a.active, .menu a:hover { background-color: #140066; color: white; }
         .logout { margin-top: auto; background-color: #d60000; color: white; border: none; border-radius: 6px; padding: 12px 30px; cursor: pointer; font-weight: 600; transition: 0.3s; }
         .logout:hover { background-color: #a30000; }
 
-        /* CONTEÚDO */
+        /* ===== CONTEÚDO ===== */
         .content { flex: 1; padding: 40px; }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
         .header h1 { color: #140066; font-size: 1.7rem; }
         .btn-add { background-color: #140066; color: white; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: 500; transition: 0.3s; text-decoration: none; }
         .btn-add:hover { background-color: #0a0044; }
 
-        /* TABELA */
+        /* ===== TABELA ===== */
         table { width: 100%; border-collapse: collapse; margin-top: 20px; border: 1.5px solid #140066; border-radius: 12px; overflow: hidden; }
         th, td { text-align: left; padding: 14px 16px; border-bottom: 1px solid #ddd; }
         th { background-color: #f8f8ff; color: #140066; text-transform: uppercase; font-size: 0.85rem; }
@@ -65,22 +68,27 @@
 <div class="content">
     <div class="header">
         <div>
-            <h1>Pagamentos Cadastrados</h1>
-            <p>Visualize, edite ou exclua pagamentos registrados.</p>
+            <h1>Pagamentos Registrados</h1>
+            <p>Visualize, edite ou exclua pagamentos cadastrados.</p>
         </div>
         <a href="<%= request.getContextPath() %>/view/Pagamento/cadastrarPagamento.jsp" class="btn-add">+ Adicionar Pagamento</a>
     </div>
 
+    <!-- ===== TABELA DINÂMICA ===== -->
     <%
-        PagamentoDAO dao = new PagamentoDAO();
-        List<Pagamento> pagamentos = dao.listar();
-        if (pagamentos != null && !pagamentos.isEmpty()) {
+        PagamentoDAO pagamentoDAO = new PagamentoDAO();
+        List<Pagamento> lista = pagamentoDAO.listar();
+
+        EmpresaDAO empresaDAO = new EmpresaDAO();
+        List<Empresa> empresas = empresaDAO.listar();
+
+        if (lista != null && !lista.isEmpty()) {
     %>
     <table>
         <thead>
         <tr>
             <th>ID</th>
-            <th>Tipo</th>
+            <th>Tipo de Pagamento</th>
             <th>Total</th>
             <th>Data</th>
             <th>Empresa</th>
@@ -88,32 +96,38 @@
         </tr>
         </thead>
         <tbody>
-        <% for (Pagamento p : pagamentos) { %>
+        <% for (Pagamento p : lista) { %>
         <tr>
             <td><%= p.getId() %></td>
             <td><%= p.getTipoPagto() %></td>
-            <td><%= p.getTotal() %></td>
+            <td>R$ <%= String.format("%.2f", p.getTotal()) %></td>
             <td><%= p.getData() %></td>
-            <td><%= p.getIdEmpresa() %></td>
-            <td><%= p.getComprovante() %></td>
+            </td>
             <td class="acoes">
-                <form action="<%= request.getContextPath() %>/view/Pagamento/atualizarPagamento.jsp" method="get" style="display:inline;">
+                <!-- Botão Editar -->
+                <button onclick="window.location.href='<%= request.getContextPath() %>/view/Pagamento/atualizarPagamento.jsp?id=<%= p.getId() %>'" title="Editar">
+                    <i class="fa fa-pen"></i>
+                </button>
+
+                <!-- Botão Excluir -->
+                <form action="<%= request.getContextPath() %>/DeletarPagamentoServlet" method="post" style="display:inline;">
                     <input type="hidden" name="id" value="<%= p.getId() %>">
-                    <button title="Editar"><i class="fa fa-pen"></i></button>
-                </form>
-                <form action="<%= request.getContextPath() %>/excluirPagamento" method="post" style="display:inline;">
-                    <input type="hidden" name="id" value="<%= p.getId() %>">
-                    <button title="Excluir" onclick="return confirm('Tem certeza que deseja excluir este pagamento?');"><i class="fa fa-trash"></i></button>
+                    <button title="Excluir" onclick="return confirm('Tem certeza que deseja excluir este pagamento?');">
+                        <i class="fa fa-trash"></i>
+                    </button>
                 </form>
             </td>
         </tr>
         <% } %>
         </tbody>
     </table>
-    <% } else { %>
+    <%
+    } else {
+    %>
     <p>Nenhum pagamento cadastrado no momento.</p>
-    <% } %>
+    <%
+        }
+    %>
 </div>
-
 </body>
 </html>

@@ -29,7 +29,13 @@
     </style>
 </head>
 <body>
-<h1>CRUD de Endereços</h1>
+<div class="menu">
+    <a href="<%= request.getContextPath() %>/view/Adm/crudAdm.jsp">Adm</a>
+    <a href="<%= request.getContextPath() %>/view/Empresa/crudEmpresa.jsp">Empresas</a>
+    <a href="<%= request.getContextPath() %>/view/Funcionario/crudFuncionario.jsp" class="active">Funcionários</a>
+    <a href="<%= request.getContextPath() %>/view/Plano/crudPlano.jsp">Planos</a>
+    <a href="<%= request.getContextPath() %>/view/Pagamento/crudPagamento.jsp">Pagamentos</a>
+</div>
 
 <!-- Link para adicionar novo endereço -->
 <a href="<%= request.getContextPath() %>/view/Endereco/cadastrarEndereco.jsp" class="button">Adicionar Novo Endereço</a>

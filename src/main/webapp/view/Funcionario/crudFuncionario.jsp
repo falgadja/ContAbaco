@@ -189,14 +189,20 @@
       <td><%= f.getDataNascimento()%></td>
       <td><%= f.getSenha() %></td>
       <td class="acoes">
-        <form action="<%= request.getContextPath() %>/editarFuncionario" method="get" style="display:inline;">
+        <!-- Botão de Editar -->
+        <button onclick="window.location.href='<%= request.getContextPath() %>/view/Funcionario/atualizarFuncionario.jsp?id=<%= f.getId() %>'" title="Editar">
+          <i class="fa fa-pen"></i>
+        </button>
+
+
+        <!-- Botão de Excluir -->
+        <form action="<%= request.getContextPath() %>/DeletarFuncionarioServlet" method="post" style="display:inline;">
           <input type="hidden" name="id" value="<%= f.getId() %>">
-          <button title="Editar"><i class="fa fa-pen"></i></button>
+          <button title="Excluir" onclick="return confirm('Tem certeza que deseja excluir este funcionário?');">
+            <i class="fa fa-trash"></i>
+          </button>
         </form>
-        <form action="<%= request.getContextPath() %>/excluirFuncionario" method="post" style="display:inline;">
-          <input type="hidden" name="id" value="<%= f.getId() %>">
-          <button title="Excluir" onclick="return confirm('Tem certeza que deseja excluir este funcionário?');"><i class="fa fa-trash"></i></button>
-        </form>
+
       </td>
     </tr>
     <% } %>

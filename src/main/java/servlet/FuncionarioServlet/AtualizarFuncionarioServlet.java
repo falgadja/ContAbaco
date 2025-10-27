@@ -81,6 +81,7 @@ public class AtualizarFuncionarioServlet extends HttpServlet {
                 // Chama o metodo atualizar do dao
                 if (funcionarioDAO.atualizar(funcionario) > 0) {
                     request.setAttribute("mensagemAtualizar", "Funcionário atualizado com sucesso.");
+                    response.sendRedirect(request.getContextPath() + "/view/Funcionario/crudFuncionario.jsp");
                 } else {
                     request.setAttribute("mensagemAtualizar", "Não foi possível atualizar o funcionário.");
                 }

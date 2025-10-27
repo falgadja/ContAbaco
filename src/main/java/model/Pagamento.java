@@ -9,28 +9,25 @@ public class Pagamento {
     private String tipoPagto;
     private double total;
     private LocalDate data;
-    private byte[] comprovante;
     private int idEmpresa;
 
     // CONSTRUTOR VAZIO
     public Pagamento() {}
 
     // CONSTRUTOR SEM ID (para novos registros)
-    public Pagamento(String tipoPagto, double total, LocalDate data, byte[] comprovante, int idEmpresa) {
+    public Pagamento(String tipoPagto, double total, LocalDate data,  int idEmpresa) {
         this.tipoPagto = tipoPagto;
         this.total = total;
         this.data = data;
-        this.comprovante = comprovante;
         this.idEmpresa = idEmpresa;
     }
 
     // CONSTRUTOR COMPLETO (quando for carregar do BD)
-    public Pagamento(int id, String tipoPagto, double total, LocalDate data, byte[] comprovante, int idEmpresa) {
+    public Pagamento(int id, String tipoPagto, double total, LocalDate data, int idEmpresa) {
         this.id = id;
         this.tipoPagto = tipoPagto;
         this.total = total;
         this.data = data;
-        this.comprovante = comprovante;
         this.idEmpresa = idEmpresa;
     }
 
@@ -49,10 +46,6 @@ public class Pagamento {
 
     public LocalDate getData() {
         return data;
-    }
-
-    public byte[] getComprovante() {
-        return comprovante;
     }
 
     public int getIdEmpresa() {
@@ -74,10 +67,6 @@ public class Pagamento {
 
     public void setData(LocalDate data) {
         this.data = data;
-    }
-
-    public void setComprovante(byte[] comprovante) {
-        this.comprovante = comprovante;
     }
 
     public void setIdEmpresa(int idEmpresa) {

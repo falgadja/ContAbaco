@@ -29,7 +29,7 @@ public class BuscarAdmServlet extends HttpServlet {
         try {
             //verifica se aconteceu uma pesquisa por e-mail
             if (email != null && !email.trim().isEmpty()) {
-                // Busca a empresa pelo nome
+                // Busca o adm pelo email
                 Administrador adm = admDAO.buscarPorEmail(email);
 
                 // Verifica se existe um administrador com esse e-mail
