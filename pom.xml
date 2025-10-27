@@ -15,11 +15,16 @@
     </properties>
 
     <dependencies>
-        <!-- PostgreSQL -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.6.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.4</version>
         </dependency>
 
         <!-- Dotenv -->
@@ -64,7 +69,6 @@
                 </configuration>
             </plugin>
 
-            <!-- WAR Plugin (gera WAR corretamente para Tomcat) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -77,3 +81,4 @@
         </plugins>
     </build>
 </project>
+
