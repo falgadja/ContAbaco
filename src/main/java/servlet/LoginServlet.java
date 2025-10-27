@@ -37,15 +37,15 @@ public class LoginServlet extends HttpServlet {
             } else if (hashFunc != null && BCrypt.checkpw(senha, hashFunc)) {
                 request.getRequestDispatcher("/view/Funcionario/crudFuncionario.jsp").forward(request, response);
             } else if (hashEmpresa != null && BCrypt.checkpw(senha, hashEmpresa)) {
-                request.getRequestDispatcher("/view/erro.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/Erros/erro.jsp").forward(request, response);
             } else {
                 request.setAttribute("mensagem", "Email ou senha inválidos, digite novamente");
-                request.getRequestDispatcher("/view/login.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/Login/login.jsp").forward(request, response);
             }
 
         } catch (Exception e) {
             request.setAttribute("mensagem", "Erro inesperado: " + e.getMessage());
-            request.getRequestDispatcher("/view/login.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/Login/login/jsp").forward(request, response);
         }
     }
 }
