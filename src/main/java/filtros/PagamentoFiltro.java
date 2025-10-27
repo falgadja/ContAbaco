@@ -2,6 +2,8 @@ package filtros;
 
 import model.Pagamento;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PagamentoFiltro {
@@ -107,4 +109,33 @@ public class PagamentoFiltro {
         // Retorna a lista ordenada
         return pagamentos;
     }
+
+    public List<Pagamento> filtrarPorTipo(List<Pagamento> pags, List<String> tipos) {
+        // Instancia a lista que será retornada
+        List<Pagamento> filtrados = new ArrayList<>();
+
+        // Verifica se o tipo corresponde a algum tipo passado na lista
+        for (Pagamento p : pags) {
+            if (tipos.contains(p.getTipoPagto())) {
+                // Se corresponder adiciona na lista que será retornada
+                filtrados.add(p);
+            }
+        }
+        return filtrados;
+    }
+
+    public List<Pagamento> filtrarPorData(List<Pagamento> pags, LocalDate inicio, LocalDate fim) {
+        // Instancia a lista que será retornada
+        List<Pagamento> filtrados = new ArrayList<>();
+
+        // Verifica se a data esta entre as datas passadas
+        for (Pagamento p : pags) {
+            if ((p.getData().isEqual(inicio) || p.getData().isAfter(inicio)) && (p.getData().isEqual(fim) || p.getData().isBefore(fim))) {
+                // Se estiver entre, adiciona na lista que será retornada
+                filtrados.add(p);
+            }
+        }
+        return filtrados;
+    }
+
 }

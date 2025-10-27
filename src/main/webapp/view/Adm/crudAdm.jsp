@@ -202,15 +202,27 @@
 <div class="content">
     <div class="header">
         <div>
-            <h1>Administradores</h1>
-            <p>Listagem completa</p>
+            <h1>Empresas Cadastrados</h1>
+            <p>Visualize, edite ou exclua empresas registrados.</p>
         </div>
-        <div class="search-box">
-            <i class="fa fa-search"></i>
-            <input type="text" placeholder="Buscar por nome ou email...">
-        </div>
-        <a href="<%= request.getContextPath() %>/view/Adm/cadastrarAdm.jsp" class="btn-add">+ Adicionar Adm</a>
+        <a href="<%= request.getContextPath() %>/view/Adm/cadastrarAdm.jsp" class="btn-add">+ Adicionar Empresa</a>
     </div>
+    <form action="${pageContext.request.contextPath}/BuscarAdmServlet" method="get">
+        <label for="id">Buscar por ID:</label>
+        <input type="text" name="id" id="id" placeholder="Digite o ID">
+
+        <label for="tipoOrdenacao">Ordenar por:</label>
+        <select name="tipoOrdenacao" id="tipoOrdenacao">
+            <option value="">-- Nenhum --</option>
+            <option value="idCrescente">ID Crescente</option>
+            <option value="idDecrescente">ID Decrescente</option>
+            <option value="Az">Email dos administradores em ordem crescente</option>
+            <option value="Za">Email dos administradores em ordem decrescente</option>
+        </select>
+    </form>
+
+
+    <p class="mensagem">${mensagem}</p>
 
     <table>
         <thead>
@@ -218,29 +230,16 @@
             <th>ID</th>
             <th>Email</th>
             <th>Senha</th>
-            <th>Ações</th>
         </tr>
         </thead>
         <tbody>
-        <%
-            AdmDAO dao = new AdmDAO();
-            List<Administrador> lista = dao.listar();
-            for (Administrador a : lista) {
-        %>
-        <tr>
-            <td><%= a.getId() %></td>
-            <td><%= a.getEmail() %></td>
-            <td><%= a.getSenha() %></td>
-            <td class="acoes">
-                <button onclick="window.location.href='<%= request.getContextPath() %>/view/Adm/editarAdm.jsp?id=<%= a.getId() %>'">
-                    <i class="fa fa-pen"></i>
-                </button>
-                <button onclick="if(confirm('Deseja excluir este administrador?')) window.location.href='<%= request.getContextPath() %>/excluirAdm?id=<%= a.getId() %>'">
-                    <i class="fa fa-trash"></i>
-                </button>
-            </td>
-        </tr>
-        <% } %>
+        <c:forEach var="a" items="${adms}">
+            <tr>
+                <td>${e.id}</td>
+                <td>${e.email}</td>
+                <td>${e.senha}</td>
+            </tr>
+        </c:forEach>
         </tbody>
     </table>
 </div>

@@ -1,7 +1,10 @@
 package filtros;
 
 import model.Empresa;
+import model.Pagamento;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class EmpresaFiltro {
@@ -41,7 +44,7 @@ public class EmpresaFiltro {
     }
 
 
-    public List<Empresa> OrdenarEmailAz (List<Empresa> empresas){
+    public List<Empresa> OrdenarNomeAz (List<Empresa> empresas){
         // Percorre a lista, fazendo que todos os elementos vizinhos troquem de posições até ela ser ordenada
         for (int i = 0; i < empresas.size() - 1; i++) {
             // Percorre novamente a lista trocando elementos vizinhos
@@ -58,7 +61,7 @@ public class EmpresaFiltro {
         return empresas;
     }
 
-    public List<Empresa> OrdenarEmailZa (List<Empresa> empresas){
+    public List<Empresa> OrdenarNomeZa (List<Empresa> empresas){
         // Percorre a lista, fazendo que todos os elementos vizinhos troquem de posições até ela ser ordenada
         for (int i = 0; i < empresas.size() - 1; i++) {
             // Percorre novamente a lista trocando elementos vizinhos
@@ -108,4 +111,21 @@ public class EmpresaFiltro {
         // Retorna a lista ordenada
         return empresas;
     }
+
+
+    public List<Empresa> filtrarPorQtdFuncionario(List<Empresa> empresas, int min, int max) {
+        // Instancia a lista que será retornada
+        List<Empresa> filtrados = new ArrayList<>();
+
+        // Verifica se a quantidade de funcionários da empresa está entre as quantidades passadas
+        for (Empresa e : empresas) {
+            if (e.getQntdFuncionarios() >= min && e.getQntdFuncionarios() <= max) {
+                // Se estiver entre, adiciona na lista que será retornada
+                filtrados.add(e);
+            }
+        }
+        return filtrados;
+    }
+
 }
+

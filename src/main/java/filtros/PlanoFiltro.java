@@ -1,8 +1,9 @@
 package filtros;
 
-import model.Plano;
+import model.Pagamento;
 import model.Plano;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PlanoFiltro {

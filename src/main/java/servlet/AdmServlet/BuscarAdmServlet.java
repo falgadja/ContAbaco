@@ -1,6 +1,7 @@
 package servlet.AdmServlet;
 
 import dao.AdmDAO;
+import filtros.AdministradorFiltro;
 import model.Administrador;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -24,19 +25,22 @@ public class BuscarAdmServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String email = request.getParameter("email");
+        String tipoOrdenacao = request.getParameter("tipoOrdenacao");
+
         AdmDAO admDAO = new AdmDAO();
+        AdministradorFiltro administradorFiltro = new AdministradorFiltro();
 
         try {
             //verifica se aconteceu uma pesquisa por e-mail
             if (email != null && !email.trim().isEmpty()) {
-                // Busca a empresa pelo nome
+                // Busca o administrador pelo email
                 Administrador adm = admDAO.buscarPorEmail(email);
 
                 // Verifica se existe um administrador com esse e-mail
                 if (adm == null) {
-                    request.setAttribute("mensagemBusca", "Não foi encontrado nenhum administrador com esse email, digite novamente.");
+                    request.setAttribute("mensagem", "Não foi encontrado nenhum administrador com esse email, digite novamente.");
                 } else {
-                    request.setAttribute("mensagemBusca", "Empresa encontrada.");
+                    request.setAttribute("mensagem", "Administrador encontrada.");
                     request.setAttribute("adm", adm);
                 }
 
@@ -45,12 +49,26 @@ public class BuscarAdmServlet extends HttpServlet {
                 // Lista os administradores
                 List<Administrador> adms = admDAO.listar();
 
-                // Verifica se existem empresas registradas
+                // Verifica se existem administradores
                 if (adms == null || adms.isEmpty()) {
-                    request.setAttribute("mensagemLista", "Não foi encontrado nenhum administrador");
+                    request.setAttribute("mensagem", "Não foi encontrado nenhum administrador");
                 } else {
                     request.setAttribute("adms", adms);
                 }
+
+                // Ordenação da lista de empresa
+                if (tipoOrdenacao != null && !tipoOrdenacao.isEmpty() && adms != null && !adms.isEmpty()) {
+                    if (tipoOrdenacao.equals("idCrescente")) {
+                        adms = administradorFiltro.OrdenarIdCrece(adms);
+                    } else if (tipoOrdenacao.equals("idDecrescente")) {
+                        adms = administradorFiltro.OrdenarIdDecre(adms);
+                    } else if (tipoOrdenacao.equals("Az")) {
+                        adms = administradorFiltro.OrdenarEmailAz(adms);
+                    } else if (tipoOrdenacao.equals("Za")) {
+                        adms = administradorFiltro.OrdenarEmailZa(adms);
+                    }
+                }
+                request.setAttribute("adms", adms);
             }
         } catch (Exception e) {
             // Qualquer outro erro inesperado

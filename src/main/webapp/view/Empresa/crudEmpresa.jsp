@@ -164,81 +164,69 @@
 <div class="content">
     <div class="header">
         <div>
-            <h1>Empresas Cadastradas</h1>
-            <p>Visualize, edite ou exclua empresas registradas no sistema.</p>
+            <h1>Empresas Cadastrados</h1>
+            <p>Visualize, edite ou exclua empresas registrados.</p>
         </div>
         <a href="<%= request.getContextPath() %>/view/Empresa/cadastrarEmpresa.jsp" class="btn-add">+ Adicionar Empresa</a>
     </div>
+    <form action="${pageContext.request.contextPath}/BuscarEmpresaServlet" method="get">
+        <label for="id">Buscar por ID:</label>
+        <input type="text" name="id" id="id" placeholder="Digite o ID">
 
-    <!-- ===== TABELA DINÂMICA ===== -->
-    <%
-        EmpresaDAO dao = new EmpresaDAO();
-        List<Empresa> lista = dao.listar();
+        <label for="tipoOrdenacao">Ordenar por:</label>
+        <select name="tipoOrdenacao" id="tipoOrdenacao">
+            <option value="">-- Nenhum --</option>
+            <option value="idCrescente">ID Crescente</option>
+            <option value="idDecrescente">ID Decrescente</option>
+            <option value="Az">Nome das empresas em ordem crescente</option>
+            <option value="Za">Nome das empresas em ordem crescente</option>
+            <option value="qtndFuncionarioCrescente">Quantidade de funcionarios em ordem crescente</option>
+            <option value="qtndFuncionarioCrescente">Quantidade de funcionarios em ordem decrescente</option>
 
-        if (lista != null && !lista.isEmpty()) {
-    %>
+        </select>
+
+
+
+        <label for="min">Número mínimo de funcionários da empresa:</label>
+        <input type="text" name="min" id="min" placeholder="Digite o mínimo de funcionários da empresa">
+
+        <label for="max">Número maxímo de funcionários da empresa:</label>
+        <input type="text" name="max" id="max" placeholder="Digite o maxímo de funcionários da empresa">
+
+        <button type="submit">Filtrar</button>
+    </form>
+
+
+    <p class="mensagem">${mensagem}</p>
+
     <table>
         <thead>
         <tr>
             <th>ID</th>
-            <th>Nome</th>
             <th>CNPJ</th>
+            <th>Nome</th>
             <th>Email</th>
-            <th>Telefone</th>
-            <th>Ações</th>
+            <th>Senha</th>
+            <th>ID do plano</th>
+            <th>Quantidade de funcionários</th>
         </tr>
         </thead>
         <tbody>
-        <% for (Empresa e : lista) { %>
-        <tr>
-            <td><%= e.getId() %></td>
-            <td><%= e.getNome() %></td>
-            <td><%= e.getCnpj() %></td>
-            <td><%= e.getEmail() %></td>
-            <td><%= e.getQntdFuncionarios() %></td>
-            <!-- ===== Java para pegar o nome ===== -->
-            <td><%= e.getCnpj() %></td>
-            <td><%= e.getEmail() %></td>
-            <td><%= e.getQntdFuncionarios() %></td>
-
-            <%
-                String plano;
-                if (e.getIdPlano() == 1) {
-                    plano = "Plano Mensal";
-                } else if (e.getIdPlano() == 2) {
-                    plano = "Plano Anual";
-                } else if (e.getIdPlano() == 3) {
-                    plano = "Plano Premium";
-                } else {
-                    plano = "Plano Teste";
-                }
-            %>
-            <td><%= plano %></td>
-
-
-            <
-            <td class="acoes">
-                <form action="<%= request.getContextPath() %>/editarEmpresa" method="get" style="display:inline;">
-                    <input type="hidden" name="id" value="<%= e.getId() %>">
-                    <button title="Editar"><i class="fa fa-pen"></i></button>
-                </form>
-                <form action="<%= request.getContextPath() %>/excluirEmpresa" method="post" style="display:inline;">
-                    <input type="hidden" name="id" value="<%= e.getId() %>">
-                    <button title="Excluir" onclick="return confirm('Tem certeza que deseja excluir esta empresa?');"><i class="fa fa-trash"></i></button>
-                </form>
-            </td>
-        </tr>
-        <% } %>
+        <c:forEach var="e" items="${empresas}">
+            <tr>
+                <td>${e.id}</td>
+                <td>${e.cnpj}</td>
+                <td>${e.nome}</td>
+                <td>${e.email}</td>
+                <td>${e.senha}</td>
+                <td>${p.idPlano}</td>
+                <td>${p.qntdFuncionarios}</td>
+            </tr>
+        </c:forEach>
         </tbody>
     </table>
-    <%
-    } else {
-    %>
-    <p>Nenhuma empresa cadastrada no momento.</p>
-    <%
-        }
-    %>
 </div>
+
 
 </body>
 </html>

@@ -154,56 +154,51 @@
 <div class="content">
     <div class="header">
         <div>
-            <h1>Planos Cadastrados</h1>
-            <p>Visualize, edite ou exclua planos disponíveis.</p>
+            <h1>Funcionários Cadastrados</h1>
+            <p>Visualize, edite ou exclua funcionários registrados.</p>
         </div>
-        <a href="<%= request.getContextPath() %>/view/Plano/cadastrarPlano.jsp" class="btn-add">+ Adicionar Plano</a>
+        <a href="<%= request.getContextPath() %>/view/Funcionario/cadastrarFuncionario.jsp" class="btn-add">+ Adicionar Funcionário</a>
     </div>
+    <form action="${pageContext.request.contextPath}/BuscarFuncionarioServlet" method="get">
+        <label for="id">Buscar por ID:</label>
+        <input type="text" name="id" id="id" placeholder="Digite o ID">
 
-    <!-- ===== TABELA DINÂMICA ===== -->
-    <%
-        PlanoDAO dao = new PlanoDAO();
-        List<Plano> lista = dao.listar();
+        <label for="id">Buscar por ID da empresa:</label>
+        <input type="text" name="idEmpresa" id="idEmpresa" placeholder="Digite o ID da empresa do funcionário:">
 
-        if (lista != null && !lista.isEmpty()) {
-    %>
+        <label for="tipoOrdenacao">Ordenar por:</label>
+        <select name="tipoOrdenacao" id="tipoOrdenacao">
+            <option value="">-- Nenhum --</option>
+            <option value="idCrescente">ID Crescente</option>
+            <option value="idDecrescente">ID Decrescente</option>
+            <option value="Az">Nome A-z</option>
+            <option value="Za">Nome Z-a</option>
+            <option value="precoCrescente">Por preço crescente</option>
+            <option value="precoDecrescente">Por preço decrescente</option>
+        </select>
+    </form>
+
+
+    <p class="mensagem">${mensagem}</p>
+
     <table>
         <thead>
         <tr>
             <th>ID</th>
             <th>Nome</th>
-            <th>Valor (R$)</th>
-            <th>Ações</th>
+            <th>Preco</th>
         </tr>
         </thead>
         <tbody>
-        <% for (Plano p : lista) { %>
-        <tr>
-            <td><%= p.getId() %></td>
-            <td><%= p.getNome() %></td>
-            <td><%= String.format("%.2f", p.getPreco()) %></td>
-
-            <td class="acoes">
-                <form action="<%= request.getContextPath() %>/editarPlano" method="get" style="display:inline;">
-                    <input type="hidden" name="id" value="<%= p.getId() %>">
-                    <button title="Editar"><i class="fa fa-pen"></i></button>
-                </form>
-                <form action="<%= request.getContextPath() %>/excluirPlano" method="post" style="display:inline;">
-                    <input type="hidden" name="id" value="<%= p.getId() %>">
-                    <button title="Excluir" onclick="return confirm('Tem certeza que deseja excluir este plano?');"><i class="fa fa-trash"></i></button>
-                </form>
-            </td>
-        </tr>
-        <% } %>
+        <c:forEach var="p" items="${planos}">
+            <tr>
+                <td>${p.id}</td>
+                <td>${p.nome}</td>
+                <td>${p.preco}</td>
+            </tr>
+        </c:forEach>
         </tbody>
     </table>
-    <%
-    } else {
-    %>
-    <p>Nenhum plano cadastrado no momento.</p>
-    <%
-        }
-    %>
 </div>
 
 </body>

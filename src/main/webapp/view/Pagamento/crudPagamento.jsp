@@ -70,12 +70,41 @@
         </div>
         <a href="<%= request.getContextPath() %>/view/Pagamento/cadastrarPagamento.jsp" class="btn-add">+ Adicionar Pagamento</a>
     </div>
+    <form action="${pageContext.request.contextPath}/BuscarPagamentoServlet" method="get">
+        <label for="id">Buscar por ID:</label>
+        <input type="text" name="id" id="id" placeholder="Digite o ID">
 
-    <%
-        PagamentoDAO dao = new PagamentoDAO();
-        List<Pagamento> pagamentos = dao.listar();
-        if (pagamentos != null && !pagamentos.isEmpty()) {
-    %>
+        <label for="tipoOrdenacao">Ordenar por:</label>
+        <select name="tipoOrdenacao" id="tipoOrdenacao">
+            <option value="">-- Nenhum --</option>
+            <option value="idCrescente">ID Crescente</option>
+            <option value="idDecrescente">ID Decrescente</option>
+            <option value="totalCrescente">Total Crescente</option>
+            <option value="totalDecrescente">Total Decrescente</option>
+            <option value="dataCrescente">Data Crescente</option>
+            <option value="dataDecrescente">Data Decrescente</option>
+        </select>
+
+        <label for="tipos">Tipo de pagamento:</label>
+        <select name="tipos" id="tipos" multiple>
+            <option value="PIX">PIX</option>
+            <option value="Boleto">Boleto</option>
+            <option value="Cartão">Cartão</option>
+            <option value="Transferência">Transferência</option>
+        </select>
+
+        <label for="inicio">Data início:</label>
+        <input type="date" name="inicio" id="inicio" placeholder="dd/MM/yyyy">
+
+        <label for="fim">Data fim:</label>
+        <input type="date" name="fim" id="fim" placeholder="dd/MM/yyyy">
+
+        <button type="submit">Filtrar</button>
+    </form>
+
+
+    <p class="mensagem">${mensagem}</p>
+
     <table>
         <thead>
         <tr>
@@ -83,36 +112,21 @@
             <th>Tipo</th>
             <th>Total</th>
             <th>Data</th>
-            <th>Empresa</th>
-            <th>Ações</th>
+            <th>ID Empresa</th>
         </tr>
         </thead>
         <tbody>
-        <% for (Pagamento p : pagamentos) { %>
-        <tr>
-            <td><%= p.getId() %></td>
-            <td><%= p.getTipoPagto() %></td>
-            <td><%= p.getTotal() %></td>
-            <td><%= p.getData() %></td>
-            <td><%= p.getIdEmpresa() %></td>
-            <td><%= p.getComprovante() %></td>
-            <td class="acoes">
-                <form action="<%= request.getContextPath() %>/view/Pagamento/atualizarPagamento.jsp" method="get" style="display:inline;">
-                    <input type="hidden" name="id" value="<%= p.getId() %>">
-                    <button title="Editar"><i class="fa fa-pen"></i></button>
-                </form>
-                <form action="<%= request.getContextPath() %>/excluirPagamento" method="post" style="display:inline;">
-                    <input type="hidden" name="id" value="<%= p.getId() %>">
-                    <button title="Excluir" onclick="return confirm('Tem certeza que deseja excluir este pagamento?');"><i class="fa fa-trash"></i></button>
-                </form>
-            </td>
-        </tr>
-        <% } %>
+        <c:forEach var="p" items="${pagamentos}">
+            <tr>
+                <td>${p.id}</td>
+                <td>${p.idTipoPagto}</td>
+                <td>${p.total}</td>
+                <td>${p.data}</td>
+                <td>${p.idEmpresa}</td>
+            </tr>
+        </c:forEach>
         </tbody>
     </table>
-    <% } else { %>
-    <p>Nenhum pagamento cadastrado no momento.</p>
-    <% } %>
 </div>
 
 </body>
