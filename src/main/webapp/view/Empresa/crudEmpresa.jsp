@@ -10,35 +10,88 @@
     <meta charset="UTF-8">
     <title>Empresas - Área Restrita</title>
     <link rel="icon" href="${pageContext.request.contextPath}/img/logo%20azul%20bonito%20sem%20fundo%202%20(1).png">
+
+    <!-- fontes / ícones -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { display: flex; background-color: #ffffff; color: #140066; height: 100vh; }
+        /* ======== ESTILIZAÇÃO DO ENTORNO (EXATAMENTE COMO VOCÊ ENVIOU) ======== */
+        :root { --cor_falgadja_1:#1800CC; --cor_falgadja_2:#0C0066; --cor_sair:#b71c1c; --branco:#ffffff; }
+        *{ box-sizing:border-box; margin:0; padding:0; font-family:'Poppins',system-ui,-apple-system,'Segoe UI',Roboto,Arial; }
+        html,body{ height:100%; width:100%; background:var(--branco); color:var(--cor_falgadja_1); }
 
-        .sidebar { width: 250px; background-color: #ffffff; border-right: 2px solid #140066; display: flex; flex-direction: column; align-items: center; padding: 25px 0; }
-        .logo { text-align: center; margin-bottom: 40px; }
-        .logo h2 { font-size: 1.3rem; color: #140066; }
-        .logo small { color: #777; }
-        .menu { width: 100%; display: flex; flex-direction: column; gap: 10px; padding: 0 20px; }
-        .menu a { text-decoration: none; color: #140066; border: 1.5px solid #140066; border-radius: 8px; padding: 10px; text-align: left; font-weight: 500; display: flex; align-items: center; transition: 0.2s; }
-        .menu a.active, .menu a:hover { background-color: #140066; color: white; }
-        .logout { margin-top: auto; background-color: #d60000; color: white; border: none; border-radius: 6px; padding: 12px 30px; cursor: pointer; font-weight: 600; transition: 0.3s; }
-        .logout:hover { background-color: #a30000; }
+        .esquerda{ display:flex; height:100vh; width:100%; overflow:hidden; }
+        .sidebar{ width:255px; padding:28px 20px; display:flex; flex-direction:column; gap:18px; }
+        .aplicativo{ display:flex; gap:15px; align-items:center; }
+        .logo{ width:56px; height:56px; border-radius:10px; border:2px solid var(--cor_falgadja_1); display:flex; align-items:center; justify-content:center; overflow:hidden; }
+        .logo img{ max-width:100%; max-height:100%; display:block; }
+        .titulo_app{ font-weight:700; color:var(--cor_falgadja_1); font-size:20px; }
+        .subtitulo_app{ font-size:12px; color:grey; margin-top:2px; }
 
-        .content { flex: 1; padding: 40px; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-        .header h1 { color: #140066; font-size: 1.7rem; }
-        .btn-add { background-color: #140066; color: white; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: 500; transition: 0.3s; }
-        .btn-add:hover { background-color: #0a0044; }
+        .linha{ height:6px; border-radius:30px; background:linear-gradient(90deg,var(--cor_falgadja_1),var(--cor_falgadja_2)); width:80%; margin:6px 0; }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; border: 1.5px solid #140066; border-radius: 12px; overflow: hidden; }
-        th, td { text-align: left; padding: 14px 16px; border-bottom: 1px solid #ddd; }
-        th { background-color: #f8f8ff; color: #140066; text-transform: uppercase; font-size: 0.85rem; }
-        td { font-size: 0.95rem; color: #333; }
-        tr:hover { background-color: #f0f0ff; }
-        .acoes { display: flex; gap: 10px; }
-        .acoes button { background: none; border: 1.5px solid #140066; border-radius: 6px; padding: 6px; cursor: pointer; transition: 0.2s; }
-        .acoes button:hover { background-color: #140066; color: white; }
-        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css');
+        .nav{ display:flex; flex-direction:column; gap:12px; margin-top:10px; }
+        .botao{ display:flex; align-items:center; gap:12px; padding:12px 18px; border-radius:10px; border:2px solid var(--cor_falgadja_1); background:transparent; color:var(--cor_falgadja_1); font-weight:600; width:190px; cursor:pointer; text-decoration:none; }
+        .botao.selecionado{ background:linear-gradient(180deg,var(--cor_falgadja_1),var(--cor_falgadja_2)); color:#fff; border-color:transparent; box-shadow:0 6px 18px rgba(12,0,102,0.25); }
+
+        .separator{ width:4px; background:var(--cor_falgadja_1); }
+
+        .main{ flex:1; padding:36px 48px; overflow:auto; }
+
+        .titulos{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
+        #AR{ font-size:30px; font-weight:800; color:var(--cor_falgadja_1); }
+        #CRUD{ color:grey; font-weight:600; margin-top:-10px; }
+
+        .pesquisar{ width:480px; height:44px; border-radius:10px; border:2px solid var(--cor_falgadja_1); display:flex; align-items:center; padding:8px 12px; gap:10px; }
+        .pesquisar input{ border:0; outline:0; flex:1; font-size:14px; color:var(--cor_falgadja_1); }
+        .pesquisar input::placeholder{ color: rgba(24,0,204,0.45); }
+
+        .adicionador{ margin-top:28px; }
+        .botao-add{ padding:12px 18px; border-radius:12px; background:linear-gradient(180deg,var(--cor_falgadja_1),var(--cor_falgadja_2)); color:#fff; font-weight:700; border:0; cursor:pointer; display:inline-flex; align-items:center; gap:10px; text-decoration:none; }
+
+        .sair{ margin-top:auto;}
+        .botao-sair{padding:12px 18px; border-radius:12px; background:var(--cor_sair); color:white; border:0; cursor:pointer; font-weight:700; width:100%; display:inline-flex; align-items:center; gap:10px;}
+
+        /* ======== ESTILO DA TABELA (mantido) ======== */
+        .tabela {
+            margin-top:20px;
+            border:3px solid rgba(24,0,204,0.95);
+            border-radius:14px;
+            padding:10px;
+            width: calc(100% - 32px);
+            max-width:1180px;
+            margin-left:auto; margin-right:auto;
+            box-shadow:0 10px 22px rgba(12,0,102,0.08);
+            position:relative;
+            background:#fff;
+        }
+
+        .tabela-container {
+            width:100%;
+            max-height:calc(100vh - 260px);
+            overflow-y:auto;
+            overflow-x:auto;
+            padding:10px;
+        }
+        .tabela-container::-webkit-scrollbar{ height:10px; width:10px; }
+        .tabela-container::-webkit-scrollbar-thumb{ background: linear-gradient(180deg, rgba(24,0,204,0.2), rgba(12,0,102,0.2)); border-radius:10px; }
+
+        .empresa-style table { width:auto; table-layout:auto; border-collapse:collapse; font-size:14px; white-space:nowrap; }
+        .empresa-style thead th, .empresa-style tbody td {
+            padding:14px 16px; overflow:visible; text-overflow:clip; white-space:nowrap;
+            font-weight:600; text-align:center;
+        }
+        .empresa-style tbody tr:nth-child(even){ background:#fafaff; }
+        .empresa-style tbody tr:hover{ background:rgba(24,0,204,0.04); }
+
+        .empresa-style th.acoes-col, .empresa-style td.acoes {
+            position:sticky; right:0; background:#fff; box-shadow:-8px 0 12px rgba(12,0,102,0.06);
+            min-width:170px; padding:0 8px; vertical-align:middle; text-align:center; overflow:visible; white-space:nowrap;
+        }
+
+        .btn{ display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:8px; border:1.4px solid rgba(24,0,204,0.9); background:#fff; cursor:pointer; transition:.15s; }
+        .btn:hover{ transform:translateY(-2px); box-shadow:0 6px 12px rgba(12,0,102,0.06); }
     </style>
 </head>
 <body>
@@ -66,7 +119,6 @@
             <h1>Empresas Cadastrados</h1>
             <p>Visualize, edite ou exclua empresas registrados.</p>
         </div>
-        <a href="<%= request.getContextPath() %>/view/Empresa/cadastrarEmpresa.jsp" class="btn-add">+ Adicionar Empresa</a>
     </div>
     <form action="${pageContext.request.contextPath}/BuscarEmpresaServlet" method="get">
         <label for="nome">Buscar por ID:</label>
