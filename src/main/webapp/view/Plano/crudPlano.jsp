@@ -191,6 +191,7 @@
             <th>ID</th>
             <th>Nome</th>
             <th>Preco</th>
+            <th>Ações</th>
         </tr>
         </thead>
         <tbody>
@@ -199,6 +200,20 @@
                 <td>${p.id}</td>
                 <td>${p.nome}</td>
                 <td>${p.preco}</td>
+                <td class="acoes">
+                    <!-- Botão para Editar: redireciona para atualizarPlano.jsp -->
+                    <button onclick="window.location.href='<%= request.getContextPath() %>/view/Plano//atualizarPlano.jsp?id=${p.id}'" title="Editar">
+                        <i class="fa fa-pen"></i>
+                    </button>
+
+                    <!-- Botão para Excluir: chama o servlet com confirmação -->
+                    <form action="<%= request.getContextPath() %>/DeletarPlanoServlet" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="${p.id}">
+                        <button title="Excluir" onclick="return confirm('Tem certeza que deseja excluir este plano?');">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </form>
+                </td>
             </tr>
         </c:forEach>
         </tbody>

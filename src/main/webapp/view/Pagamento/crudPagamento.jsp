@@ -121,6 +121,7 @@
             <th>Total</th>
             <th>Data</th>
             <th>ID Empresa</th>
+            <th>Ações</th>
         </tr>
         </thead>
         <tbody>
@@ -131,6 +132,15 @@
                 <td>${p.total}</td>
                 <td>${p.data}</td>
                 <td>${p.idEmpresa}</td>
+                <td class="acoes">
+                    <!-- Botão para Excluir: chama o servlet com confirmação -->
+                    <form action="<%= request.getContextPath() %>/DeletarPagamentoServlet" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="${p.id}">
+                        <button title="Excluir" onclick="return confirm('Tem certeza que deseja excluir este pagamento?');">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </form>
+                </td>
             </tr>
         </c:forEach>
         </tbody>

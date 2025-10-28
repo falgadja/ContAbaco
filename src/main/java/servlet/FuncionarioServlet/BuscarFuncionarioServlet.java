@@ -44,7 +44,7 @@ public class BuscarFuncionarioServlet extends HttpServlet {
                 }
                 // Verifica se existe funcionários com esse nome ou nome e sobrenome
                 if (funcionarios == null || funcionarios.isEmpty()) {
-                    request.setAttribute("mensagem", "Não foi encontrado nenhum Funcionario com esse nome, digite novamente.");
+                    request.setAttribute("mensagem", "Não foi encontrado nenhum Funcionário com esse nome, digite novamente.");
                 }
             } else {
 
@@ -85,8 +85,8 @@ public class BuscarFuncionarioServlet extends HttpServlet {
                         funcionarios = funcionarioFiltro.OrdenarNomeZa(funcionarios);
                     }
                 }
-                request.setAttribute("funcionarios", funcionarios);
             }
+            request.setAttribute("funcionarios", funcionarios);
         } catch(NumberFormatException nfe){
             // Caso o ID seja inválido, retorna uma mensagem ao JSP
             request.setAttribute("mensagem", "ID inválido, digite apenas números inteiros.");

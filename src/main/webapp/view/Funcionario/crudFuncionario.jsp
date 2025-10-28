@@ -197,6 +197,7 @@
             <th>Senha</th>
             <th>ID do setor</th>
             <th>ID da empresa</th>
+            <th>Ações</th>
         </tr>
         </thead>
         <tbody>
@@ -210,6 +211,20 @@
                 <td>${f.senha}</td>
                 <td>${f.idSetor}</td>
                 <td>${f.idEmpresa}</td>
+                <td class="acoes">
+                    <!-- Botão para Editar: redireciona para atualizarFuncionario.jsp -->
+                    <button onclick="window.location.href='<%= request.getContextPath() %>/view/Funcionario//atualizarFuncionario.jsp?id=${f.id}'" title="Editar">
+                        <i class="fa fa-pen"></i>
+                    </button>
+
+                    <!-- Botão para Excluir: chama o servlet com confirmação -->
+                    <form action="<%= request.getContextPath() %>/DeletarFuncionarioServlet" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="${f.id}">
+                        <button title="Excluir" onclick="return confirm('Tem certeza que deseja excluir este funcionario?');">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </form>
+                </td>
             </tr>
         </c:forEach>
         </tbody>

@@ -108,6 +108,7 @@
             <th>Senha</th>
             <th>ID do plano</th>
             <th>Quantidade de funcionários</th>
+            <th>Ações</th>
         </tr>
         </thead>
         <tbody>
@@ -120,6 +121,20 @@
                 <td>${e.senha}</td>
                 <td>${e.idPlano}</td>
                 <td>${e.qntdFuncionarios}</td>
+                <td class="acoes">
+                    <!-- Botão para Editar: redireciona para atualizarEmpresa.jsp -->
+                    <button onclick="window.location.href='<%= request.getContextPath() %>/view/Empresa//atualizarEmpresa.jsp?id=${e.id}'" title="Editar">
+                        <i class="fa fa-pen"></i>
+                    </button>
+
+                    <!-- Botão para Excluir: chama o servlet com confirmação -->
+                    <form action="<%= request.getContextPath() %>/DeletarEmpresaServlet" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="${e.id}">
+                        <button title="Excluir" onclick="return confirm('Tem certeza que deseja excluir esta empresa?');">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </form>
+                </td>
             </tr>
         </c:forEach>
         </tbody>

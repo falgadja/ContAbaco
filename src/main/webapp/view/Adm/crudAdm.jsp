@@ -237,6 +237,7 @@
             <th>ID</th>
             <th>Email</th>
             <th>Senha</th>
+            <th>Ações</th>
         </tr>
         </thead>
         <tbody>
@@ -245,6 +246,20 @@
                 <td>${a.id}</td>
                 <td>${a.email}</td>
                 <td>${a.senha}</td>
+                <td class="acoes">
+                    <!-- Botão para Editar: redireciona para atualizarAdm.jsp -->
+                    <button onclick="window.location.href='<%= request.getContextPath() %>/view/Plano//atualizarAdm.jsp?id=${a.id}'" title="Editar">
+                        <i class="fa fa-pen"></i>
+                    </button>
+
+                    <!-- Botão para Excluir: chama o servlet com confirmação -->
+                    <form action="<%= request.getContextPath() %>/DeletarAdmServlet" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="${a.id}">
+                        <button title="Excluir" onclick="return confirm('Tem certeza que deseja excluir este Administrador?');">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </form>
+                </td>
             </tr>
         </c:forEach>
         </tbody>
