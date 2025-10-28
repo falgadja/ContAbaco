@@ -2,6 +2,8 @@
 <%@ page import="java.util.List" %>
 <%@ page import="model.Empresa" %>
 <%@ page import="dao.EmpresaDAO" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -76,7 +78,7 @@
             <option value="Az">Nome das empresas em ordem crescente</option>
             <option value="Za">Nome das empresas em ordem crescente</option>
             <option value="qtndFuncionarioCrescente">Quantidade de funcionarios em ordem crescente</option>
-            <option value="qtndFuncionarioCrescente">Quantidade de funcionarios em ordem decrescente</option>
+            <option value="qtndFuncionarioDecrescente">Quantidade de funcionarios em ordem decrescente</option>
 
         </select>
 
@@ -114,8 +116,8 @@
                 <td>${e.nome}</td>
                 <td>${e.email}</td>
                 <td>${e.senha}</td>
-                <td>${p.idPlano}</td>
-                <td>${p.qntdFuncionarios}</td>
+                <td>${e.idPlano}</td>
+                <td>${e.qntdFuncionarios}</td>
             </tr>
         </c:forEach>
         </tbody>

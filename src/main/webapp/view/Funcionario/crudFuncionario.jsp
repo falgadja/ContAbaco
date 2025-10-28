@@ -2,6 +2,9 @@
 <%@ page import="java.util.List" %>
 <%@ page import="model.Funcionario" %>
 <%@ page import="dao.FuncionarioDAO" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>

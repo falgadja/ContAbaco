@@ -2,6 +2,8 @@
 <%@ page import="java.util.List" %>
 <%@ page import="model.Administrador" %>
 <%@ page import="dao.AdmDAO" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -202,14 +204,15 @@
 <div class="content">
     <div class="header">
         <div>
-            <h1>Empresas Cadastrados</h1>
-            <p>Visualize, edite ou exclua empresas registrados.</p>
+            <h1>Administradores Cadastrados</h1>
+            <p>Visualize, edite ou exclua administradores registrados.</p>
         </div>
-        <a href="<%= request.getContextPath() %>/view/Adm/cadastrarAdm.jsp" class="btn-add">+ Adicionar Empresa</a>
+        <a href="<%= request.getContextPath() %>/view/Adm/cadastrarAdm.jsp" class="btn-add">+ Adicionar Administrador</a>
     </div>
     <form action="${pageContext.request.contextPath}/BuscarAdmServlet" method="get">
-        <label for="id">Buscar por ID:</label>
-        <input type="text" name="id" id="id" placeholder="Digite o ID">
+        <label for="email">Buscar por Email:</label>
+        <input type="text" name="email" id="email" placeholder="Digite o email do administrador">
+
 
         <label for="tipoOrdenacao">Ordenar por:</label>
         <select name="tipoOrdenacao" id="tipoOrdenacao">
@@ -235,9 +238,9 @@
         <tbody>
         <c:forEach var="a" items="${adms}">
             <tr>
-                <td>${e.id}</td>
-                <td>${e.email}</td>
-                <td>${e.senha}</td>
+                <td>${a.id}</td>
+                <td>${a.email}</td>
+                <td>${a.senha}</td>
             </tr>
         </c:forEach>
         </tbody>

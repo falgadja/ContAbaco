@@ -2,6 +2,8 @@
 <%@ page import="java.util.List" %>
 <%@ page import="model.Plano" %>
 <%@ page import="dao.PlanoDAO" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -154,17 +156,15 @@
 <div class="content">
     <div class="header">
         <div>
-            <h1>Funcionários Cadastrados</h1>
-            <p>Visualize, edite ou exclua funcionários registrados.</p>
+            <h1>Planos Cadastrados</h1>
+            <p>Visualize, edite ou exclua planos registrados.</p>
         </div>
-        <a href="<%= request.getContextPath() %>/view/Funcionario/cadastrarFuncionario.jsp" class="btn-add">+ Adicionar Funcionário</a>
+        <a href="<%= request.getContextPath() %>/view/Plano/cadastrarPlano.jsp" class="btn-add">+ Adicionar Plano</a>
     </div>
-    <form action="${pageContext.request.contextPath}/BuscarFuncionarioServlet" method="get">
+    <form action="${pageContext.request.contextPath}/BuscarPlanoServlet" method="get">
         <label for="id">Buscar por ID:</label>
         <input type="text" name="id" id="id" placeholder="Digite o ID">
 
-        <label for="id">Buscar por ID da empresa:</label>
-        <input type="text" name="idEmpresa" id="idEmpresa" placeholder="Digite o ID da empresa do funcionário:">
 
         <label for="tipoOrdenacao">Ordenar por:</label>
         <select name="tipoOrdenacao" id="tipoOrdenacao">

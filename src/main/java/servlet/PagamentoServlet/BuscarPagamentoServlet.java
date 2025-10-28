@@ -123,7 +123,7 @@ public class BuscarPagamentoServlet extends HttpServlet {
             }
 
             // Encaminha para o JSP
-            request.getRequestDispatcher("/view/pagamento/crudPagamento.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/Pagamento/crudPagamento.jsp").forward(request, response);
         }
 
     @Override

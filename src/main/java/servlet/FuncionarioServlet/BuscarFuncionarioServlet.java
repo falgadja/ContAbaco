@@ -42,7 +42,7 @@ public class BuscarFuncionarioServlet extends HttpServlet {
                 if (funcionario == null) {
                     request.setAttribute("mensagem", "Não foi encontrado nenhum Funcionario com esse id, digite novamente.");
                 } else {
-                    request.setAttribute("mensagem", "Funcionario encontrado.");
+                    request.setAttribute("mensagem", "Funcionário encontrado.");
                     request.setAttribute("funcionario", funcionario);
                 }
 

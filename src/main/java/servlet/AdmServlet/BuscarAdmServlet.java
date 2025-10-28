@@ -77,6 +77,6 @@ public class BuscarAdmServlet extends HttpServlet {
         }
 
         // Encaminha para o JSP
-        request.getRequestDispatcher("../CadastrarEmpresa.jsp").forward(request, response);
+        request.getRequestDispatcher("../CrudAdm.jsp").forward(request, response);
     }
 }

@@ -4,6 +4,8 @@
 <%@ page import="model.Empresa" %>
 <%@ page import="dao.PagamentoDAO" %>
 <%@ page import="dao.EmpresaDAO" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -73,8 +75,8 @@
         </div>
         <a href="<%= request.getContextPath() %>/view/Pagamento/cadastrarPagamento.jsp" class="btn-add">+ Adicionar Pagamento</a>
     </div>
-    <form action="${pageContext.request.contextPath}/BuscarPagamentoServlet" method="get">
-        <label for="id">Buscar por ID:</label>
+    <form action="<%= request.getContextPath() %>/BuscarPagamentoServlet" method="get">
+    <label for="id">Buscar por ID:</label>
         <input type="text" name="id" id="id" placeholder="Digite o ID">
 
         <label for="tipoOrdenacao">Ordenar por:</label>

@@ -94,11 +94,11 @@ public class BuscarEmpresaServlet extends HttpServlet {
         } catch (Exception e) {
             // Qualquer outro erro inesperado
             e.printStackTrace();
-            request.setAttribute("mensagemBusca", "Erro inesperado ao acessar o banco de dados.");
+            request.setAttribute("mensagem", "Erro inesperado ao acessar o banco de dados.");
         }
 
         // Encaminha para o JSP
-        request.getRequestDispatcher("../CrudEmpresa.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/Empresa/crudEmpresa.jsp").forward(request, response);
     }
 
     @Override
