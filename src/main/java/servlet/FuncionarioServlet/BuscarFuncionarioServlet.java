@@ -10,7 +10,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import model.Funcionario;
 
 import java.io.IOException;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +20,7 @@ public class BuscarFuncionarioServlet extends HttpServlet {
             throws ServletException, IOException {
 
         // Recebendo as variaveis de filtragem do JSP
-        String id = request.getParameter("id");
+        String nome = request.getParameter("nome");
         String idEmpresa  = request.getParameter("idEmpresa");
         String tipoOrdenacao = request.getParameter("tipoOrdenacao");
 
@@ -31,21 +30,22 @@ public class BuscarFuncionarioServlet extends HttpServlet {
 
         try {
 
-            //verifica se aconteceu uma pesquisa por id
-            if (id != null && !id.trim().isEmpty()) {
+            //verifica se aconteceu uma pesquisa por nome
+            if (nome != null && !nome.trim().isEmpty()) {
 
-                // Busca o Funcionario pelo id
-                // Valida o ID passado, transformando de String para Int, se for inválido cai em exceção
-                int idNum = Integer.parseInt(id);
-                Funcionario funcionario = funcionarioDAO.buscarPorId(idNum);
-                // Verifica se existe um funcionario com esse id
-                if (funcionario == null) {
-                    request.setAttribute("mensagem", "Não foi encontrado nenhum Funcionario com esse id, digite novamente.");
+                String[] partes = nome.split(" ");
+
+                if (partes.length == 1) {
+                    // Somente nome
+                    funcionarios = funcionarioDAO.buscarPorNome(partes[0]);
                 } else {
-                    request.setAttribute("mensagem", "Funcionário encontrado.");
-                    request.setAttribute("funcionario", funcionario);
+                    // Nome + sobrenome
+                    funcionarios = funcionarioDAO.buscarPorNomeESobrenome(partes[0], partes[1]);
                 }
-
+                // Verifica se existe funcionários com esse nome ou nome e sobrenome
+                if (funcionarios == null || funcionarios.isEmpty()) {
+                    request.setAttribute("mensagem", "Não foi encontrado nenhum Funcionario com esse nome, digite novamente.");
+                }
             } else {
 
                 // Lista as funcionarios

@@ -3,14 +3,17 @@ package servlet;
 import dao.AdmDAO;
 import dao.EmpresaDAO;
 import dao.FuncionarioDAO;
+import dao.PagamentoDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.Pagamento;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
@@ -33,9 +36,13 @@ public class LoginServlet extends HttpServlet {
             String hashEmpresa = empresaDAO.buscarHashPorEmail(email);
 
             if (hashAdm != null && BCrypt.checkpw(senha, hashAdm)) {
-                request.getRequestDispatcher("/view/Empresa/crudEmpresa.jsp").forward(request, response);
+                // Carregar lista de pagamentos também, se desejar
+                PagamentoDAO pagamentoDAO = new PagamentoDAO();
+                List<Pagamento> pagamentos = pagamentoDAO.listar();
+                request.setAttribute("pagamentos", pagamentos);
+                request.getRequestDispatcher("/view/Pagamento/crudPagamento.jsp").forward(request, response);
             } else if (hashFunc != null && BCrypt.checkpw(senha, hashFunc)) {
-                request.getRequestDispatcher("/view/Funcionario/crudFuncionario.jsp").forward(request, response);
+                request.getRequestDispatcher("/view/Erros/erro.jsp").forward(request, response);
             } else if (hashEmpresa != null && BCrypt.checkpw(senha, hashEmpresa)) {
                 request.getRequestDispatcher("/view/Erros/erro.jsp").forward(request, response);
             } else {

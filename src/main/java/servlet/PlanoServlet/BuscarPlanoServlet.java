@@ -10,6 +10,7 @@ import model.Plano;
 import filtros.PlanoFiltro;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/BuscarPlanoServlet")
@@ -23,6 +24,7 @@ public class BuscarPlanoServlet extends HttpServlet {
         
         PlanoDAO planoDAO = new PlanoDAO();
         PlanoFiltro planoFiltro = new PlanoFiltro();
+        List<Plano> planos = new ArrayList<>();
 
         try {
             //verifica se aconteceu uma pesquisa por nome
@@ -34,14 +36,18 @@ public class BuscarPlanoServlet extends HttpServlet {
                 if ( plano == null) {
                     request.setAttribute("mensagem", "Não foi encontrado nenhum plano com esse nome, digite novamente.");
                 } else {
+                    // transforma em lista com 1 elemento
+                    List<Plano> lista = new ArrayList<>();
+                    lista.add(plano);
+                    planos = lista;
                     request.setAttribute("mensagem", "Plano encontrado.");
-                    request.setAttribute("plano", plano);
+                    request.setAttribute("planos", planos);
                 }
 
             }  else {
 
                 // Lista os planos
-                List<Plano> planos = planoDAO.listar();
+                planos = planoDAO.listar();
 
                 // Verifica se existem planos registrados
                 if (planos == null || planos.isEmpty()) {

@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Pagamento;
 import filtros.PagamentoFiltro;
-
+import model.Plano;
 
 
 import java.io.IOException;
@@ -50,8 +50,11 @@ public class BuscarPagamentoServlet extends HttpServlet {
                 if (pagamento == null) {
                     request.setAttribute("mensagem", "Não foi encontrado nenhum pagamento com esse id, digite novamente.");
                 } else {
-                    request.setAttribute("mensagem", "pagamento encontrado.");
-                    request.setAttribute("pagamento", pagamento);
+                    List<Pagamento> lista = new ArrayList<>();
+                    lista.add(pagamento);
+                    pagamentos = lista;
+                    request.setAttribute("mensagem", "Pagamento encontrado.");
+                    request.setAttribute("pagamentos", pagamentos);
                 }
 
             } else {

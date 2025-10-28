@@ -1,6 +1,7 @@
 package servlet.AdmServlet;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import dao.AdmDAO;
@@ -29,6 +30,7 @@ public class BuscarAdmServlet extends HttpServlet {
 
         AdmDAO admDAO = new AdmDAO();
         AdministradorFiltro administradorFiltro = new AdministradorFiltro();
+        List<Administrador> adms = new ArrayList<>();
 
         try {
             //verifica se aconteceu uma pesquisa por e-mail
@@ -40,14 +42,18 @@ public class BuscarAdmServlet extends HttpServlet {
                 if (adm == null) {
                     request.setAttribute("mensagem", "Não foi encontrado nenhum administrador com esse email, digite novamente.");
                 } else {
-                    request.setAttribute("mensagem", "Administrador encontrada.");
-                    request.setAttribute("adm", adm);
+                    // transforma em lista com 1 elemento
+                    List<Administrador> lista = new ArrayList<>();
+                    lista.add(adm);
+                    adms = lista;
+                    request.setAttribute("mensagem", "Administrador encontrado.");
+                    request.setAttribute("adms", adms);
                 }
 
             }  else {
 
                 // Lista os administradores
-                List<Administrador> adms = admDAO.listar();
+                adms = admDAO.listar();
 
                 // Verifica se existem administradores
                 if (adms == null || adms.isEmpty()) {
@@ -77,6 +83,6 @@ public class BuscarAdmServlet extends HttpServlet {
         }
 
         // Encaminha para o JSP
-        request.getRequestDispatcher("../CrudAdm.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/Adm/crudAdm.jsp").forward(request, response);
     }
 }

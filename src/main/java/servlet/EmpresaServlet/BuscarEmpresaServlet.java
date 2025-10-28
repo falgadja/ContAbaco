@@ -8,8 +8,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Empresa;
 import filtros.EmpresaFiltro;
+import model.Funcionario;
+import model.Plano;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/BuscarEmpresaServlet")
@@ -24,6 +27,8 @@ public class BuscarEmpresaServlet extends HttpServlet {
         String tipoOrdenacao = request.getParameter("tipoOrdenacao");
         EmpresaDAO empresaDAO = new EmpresaDAO();
         EmpresaFiltro empresaFiltro = new EmpresaFiltro();
+        List<Empresa> empresas = new ArrayList<>();
+
 
         try {
             //verifica se aconteceu uma pesquisa por nome
@@ -35,14 +40,18 @@ public class BuscarEmpresaServlet extends HttpServlet {
                 if (empresa == null) {
                     request.setAttribute("mensagemBusca", "Não foi encontrado nenhuma empresa com esse nome, digite novamente.");
                 } else {
-                    request.setAttribute("mensagemBusca", "Empresa encontrada.");
-                    request.setAttribute("empresa", empresa);
+                    // transforma em lista com 1 elemento
+                    List<Empresa> lista = new ArrayList<>();
+                    lista.add(empresa);
+                    empresas = lista;
+                    request.setAttribute("mensagem", "Empresa encontrada.");
+                    request.setAttribute("empresas", empresas);
                 }
 
             } else {
 
                 // Lista as empresas
-                List<Empresa> empresas = empresaDAO.listar();
+                empresas = empresaDAO.listar();
 
                 // Verifica se existem empresas registradas
                 if (empresas == null || empresas.isEmpty()) {

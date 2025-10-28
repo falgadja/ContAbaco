@@ -79,20 +79,20 @@ public class FuncionarioDAO {
     }
 
     // READ - BUSCAR FUNCIONARIO PELO NOME E SOBRENOME
-    public Funcionario buscarPorNomeESobrenome(String nome, String sobrenome) {
+    public List<Funcionario> buscarPorNomeESobrenome(String nome, String sobrenome) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
-        Funcionario funcionario = null;
-        String sql = "SELECT * FROM FUNCIONARIO WHERE nome = ? AND sobrenome = ?";
+        List<Funcionario> funcionarios = new ArrayList<>();
+        String sql = "SELECT * FROM funcionario WHERE nome LIKE ? OR sobrenome LIKE ?";
 
         try {
             PreparedStatement pst = con.prepareStatement(sql);
-            pst.setString(1, nome);
-            pst.setString(2, sobrenome);
+            pst.setString(1, "%" + nome + "%");
+            pst.setString(2, "%" + sobrenome + "%");
             ResultSet rs = pst.executeQuery();
 
-            if (rs.next()) {
-                funcionario = new Funcionario(
+            while (rs.next()) {
+                funcionarios.add( new Funcionario(
                         rs.getInt("id"),
                         rs.getString("nome"),
                         rs.getString("sobrenome"),
@@ -101,7 +101,7 @@ public class FuncionarioDAO {
                         rs.getString("senha"),
                         rs.getInt("id_empresa"),
                         rs.getInt("id_setor")
-                );
+                ));
             }
         } catch (SQLException sqle) {
             sqle.printStackTrace();
@@ -109,23 +109,23 @@ public class FuncionarioDAO {
             conexao.desconectar(con);
         }
 
-        return funcionario;
+        return funcionarios;
     }
 
     // READ - BUSCAR FUNCIONARIO PELO NOME E SOBRENOME
-    public Funcionario buscarPorNome(String nome) {
+    public List<Funcionario> buscarPorNome(String nome) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
-        Funcionario funcionario = null;
-        String sql = "SELECT * FROM FUNCIONARIO WHERE nome = ?";
+        List<Funcionario> funcionarios = new ArrayList<>();
+        String sql = "SELECT * FROM FUNCIONARIO WHERE nome LIKE ?";
 
         try {
             PreparedStatement pst = con.prepareStatement(sql);
-            pst.setString(1, nome);
+            pst.setString(1, "%" + nome + "%");
             ResultSet rs = pst.executeQuery();
 
-            if (rs.next()) {
-                funcionario = new Funcionario(
+            while (rs.next()) {
+                funcionarios.add( new Funcionario(
                         rs.getInt("id"),
                         rs.getString("nome"),
                         rs.getString("sobrenome"),
@@ -134,7 +134,7 @@ public class FuncionarioDAO {
                         rs.getString("senha"),
                         rs.getInt("id_empresa"),
                         rs.getInt("id_setor")
-                );
+                ));
             }
         } catch (SQLException sqle) {
             sqle.printStackTrace();
@@ -142,7 +142,7 @@ public class FuncionarioDAO {
             conexao.desconectar(con);
         }
 
-        return funcionario;
+        return funcionarios;
     }
     //BUSCAR PELO EMAIL E RETORNAR A SENHA
     public String buscarHashPorEmail(String email) {

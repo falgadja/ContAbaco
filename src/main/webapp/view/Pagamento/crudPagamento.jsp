@@ -57,11 +57,14 @@
     </div>
 
     <div class="menu">
-        <a href="<%= request.getContextPath() %>/view/Adm/crudAdm.jsp">Adm</a>
-        <a href="<%= request.getContextPath() %>/view/Empresa/crudEmpresa.jsp">Empresas</a>
-        <a href="<%= request.getContextPath() %>/view/Funcionario/crudFuncionario.jsp">Funcionários</a>
-        <a href="<%= request.getContextPath() %>/view/Plano/crudPlano.jsp">Planos</a>
-        <a href="<%= request.getContextPath() %>/view/Pagamento/crudPagamento.jsp" class="active">Pagamentos</a>
+        <div class="menu">
+            <a href="<%= request.getContextPath() %>/BuscarAdmServlet" class="active-link">Adm</a>
+            <a href="<%= request.getContextPath() %>/BuscarEmpresaServlet">Empresas</a>
+            <a href="<%= request.getContextPath() %>/BuscarFuncionarioServlet">Funcionários</a>
+            <a href="<%= request.getContextPath() %>/BuscarPlanoServlet">Planos</a>
+            <a href="<%= request.getContextPath() %>/BuscarPagamentoServlet" class="active">Pagamentos</a>
+        </div>
+
     </div>
 
     <button class="logout">Sair</button>
@@ -124,7 +127,7 @@
         <c:forEach var="p" items="${pagamentos}">
             <tr>
                 <td>${p.id}</td>
-                <td>${p.idTipoPagto}</td>
+                <td>${p.tipoPagto}</td>
                 <td>${p.total}</td>
                 <td>${p.data}</td>
                 <td>${p.idEmpresa}</td>

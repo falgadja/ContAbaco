@@ -190,12 +190,14 @@
         <small>adm</small>
     </div>
 
-    <div class="menu">
-        <a href="<%= request.getContextPath() %>/view/Adm/crudAdm.jsp" class="active">Adm</a>
-        <a href="<%= request.getContextPath() %>/view/Empresa/crudEmpresa.jsp">Empresas</a>
-        <a href="<%= request.getContextPath() %>/view/Funcionario/crudFuncionario.jsp">Funcionários</a>
-        <a href="<%= request.getContextPath() %>/view/Plano/crudPlano.jsp">Planos</a>
-        <a href="<%= request.getContextPath() %>/view/Pagamento/crudPagamento.jsp">Pagamentos</a>
+    <div class="menu"><div class="menu">
+        <a href="<%= request.getContextPath() %>/BuscarAdmServlet" class="active-link">Adm</a>
+        <a href="<%= request.getContextPath() %>/BuscarEmpresaServlet">Empresas</a>
+        <a href="<%= request.getContextPath() %>/BuscarFuncionarioServlet">Funcionários</a>
+        <a href="<%= request.getContextPath() %>/BuscarPlanoServlet">Planos</a>
+        <a href="<%= request.getContextPath() %>/BuscarPagamentoServlet" class="active">Pagamentos</a>
+    </div>
+
     </div>
 
     <button class="logout">Sair</button>
@@ -222,6 +224,8 @@
             <option value="Az">Email dos administradores em ordem crescente</option>
             <option value="Za">Email dos administradores em ordem decrescente</option>
         </select>
+
+        <button type="submit">Filtrar</button>
     </form>
 
 

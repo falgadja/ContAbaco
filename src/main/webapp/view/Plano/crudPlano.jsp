@@ -143,11 +143,13 @@
     </div>
 
     <div class="menu">
-        <a href="<%= request.getContextPath() %>/view/Adm/crudAdm.jsp">Adm</a>
-        <a href="<%= request.getContextPath() %>/view/Empresa/crudEmpresa.jsp">Empresas</a>
-        <a href="<%= request.getContextPath() %>/view/Funcionario/crudFuncionario.jsp">Funcionários</a>
-        <a href="<%= request.getContextPath() %>/view/Plano/crudPlano.jsp" class="active">Planos</a>
-        <a href="<%= request.getContextPath() %>/view/Pagamento/crudPagamento.jsp">Pagamentos</a>
+        <div class="menu">
+            <a href="<%= request.getContextPath() %>/BuscarAdmServlet" class="active-link">Adm</a>
+            <a href="<%= request.getContextPath() %>/BuscarEmpresaServlet">Empresas</a>
+            <a href="<%= request.getContextPath() %>/BuscarFuncionarioServlet">Funcionários</a>
+            <a href="<%= request.getContextPath() %>/BuscarPlanoServlet">Planos</a>
+            <a href="<%= request.getContextPath() %>/BuscarPagamentoServlet" class="active">Pagamentos</a>
+        </div>
     </div>
 
     <button class="logout">Sair</button>
@@ -162,8 +164,8 @@
         <a href="<%= request.getContextPath() %>/view/Plano/cadastrarPlano.jsp" class="btn-add">+ Adicionar Plano</a>
     </div>
     <form action="${pageContext.request.contextPath}/BuscarPlanoServlet" method="get">
-        <label for="id">Buscar por ID:</label>
-        <input type="text" name="id" id="id" placeholder="Digite o ID">
+        <label for="nome">Buscar por nome do plano:</label>
+        <input type="text" name="nome" id="nome" placeholder="Digite o nome do plano:">
 
 
         <label for="tipoOrdenacao">Ordenar por:</label>
@@ -176,6 +178,8 @@
             <option value="precoCrescente">Por preço crescente</option>
             <option value="precoDecrescente">Por preço decrescente</option>
         </select>
+
+        <button type="submit">Filtrar</button>
     </form>
 
 
