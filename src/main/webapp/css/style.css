@@ -600,6 +600,12 @@ section {
     display: block;
 }
 
+#colab:checked ~ .parte3,
+#gestor:checked ~ .parte3,
+#web:checked ~ .parte3 {
+    display: grid;
+}
+
 /* O mesmo para o gestor */
 #gestor:checked ~ .parte3 {
     display: grid;
@@ -1251,13 +1257,11 @@ section {
 
 .parte3 {
     padding-top: 10px;
-    padding-bottom: 20px;
     display: none;
     grid-template-columns: 1fr 1fr;
     align-items: center;
     max-width: 1200px;
     margin: 0 auto;
-    gap: 60px;
 }
 
 .texto {
@@ -1335,4 +1339,32 @@ section {
     .marca img {
         width: 180px;
     }
+}
+
+.imagem-modo-container {
+    grid-column: 2 / 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.imagem-modo {
+    display: none; 
+    width: 100%;
+    max-width: 950px; 
+    height: auto;
+    border-radius: 12px;
+}
+
+
+#colab:checked ~ .parte3 #img-colab {
+    display: block;
+}
+
+#gestor:checked ~ .parte3 #img-gestor {
+    display: block;
+}
+
+#web:checked ~ .parte3 #img-web {
+    display: block;
 }

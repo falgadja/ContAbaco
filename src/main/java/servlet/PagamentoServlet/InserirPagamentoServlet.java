@@ -13,10 +13,15 @@ import model.Pagamento;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException; // Importado
+import java.util.regex.Pattern; // Importado
 
 @WebServlet("/InserirPagamento")
 @MultipartConfig // Necessário para upload de arquivo (comprovante)
 public class InserirPagamentoServlet extends HttpServlet {
+
+    // Regex para Data (YYYY-MM-DD): Garante o formato exato
+    private static final String DATE_REGEX = "^\\d{4}-\\d{2}-\\d{2}$";
 
     @Override
     public void init() throws ServletException {
@@ -47,8 +52,16 @@ public class InserirPagamentoServlet extends HttpServlet {
             System.out.println("IdEmpresa: " + idEmpresa);
 
 
+            // --- INÍCIO DA VALIDAÇÃO DE DATA ---
 
-            // Conversão de data
+            // 1. Validação de formato de Data com Regex
+            if (dataStr == null || !Pattern.matches(DATE_REGEX, dataStr)) {
+                request.setAttribute("mensagem", "O formato da data deve ser AAAA-MM-DD (ex: 2025-10-27)!");
+                request.getRequestDispatcher("/view/Pagamento/cadastrarPagamento.jsp").forward(request, response);
+                return;
+            }
+
+            // Conversão de data (agora mais segura)
             LocalDate data = LocalDate.parse(dataStr);
 
             // Cria o objeto Pagamento
@@ -72,6 +85,12 @@ public class InserirPagamentoServlet extends HttpServlet {
         } catch (NumberFormatException e) {
             e.printStackTrace();
             request.setAttribute("mensagem", "Erro: valores numéricos inválidos!");
+            request.getRequestDispatcher("/view/Pagamento/cadastrarPagamento.jsp").forward(request, response);
+        } catch (DateTimeParseException e) { // <-- NOVO CATCH
+            // Ocorre se o formato (Regex) estiver certo, mas a data for impossível
+            // Exemplo: "2025-02-30"
+            e.printStackTrace();
+            request.setAttribute("mensagem", "Erro: A data de pagamento fornecida é inválida!");
             request.getRequestDispatcher("/view/Pagamento/cadastrarPagamento.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();

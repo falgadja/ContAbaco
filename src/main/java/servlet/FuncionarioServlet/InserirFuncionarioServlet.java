@@ -11,9 +11,19 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException; // Import necessário
+import java.util.regex.Pattern; // Import necessário
 
 @WebServlet("/InserirFuncionario")
 public class InserirFuncionarioServlet extends HttpServlet {
+
+    // --- Padrões de Regex ---
+    // Regex para email: Padrão comum que aceita a maioria dos emails válidos
+    private static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
+
+    // Regex para Data (YYYY-MM-DD): Garante o formato exato
+    private static final String DATE_REGEX = "^\\d{4}-\\d{2}-\\d{2}$";
+
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -54,6 +64,25 @@ public class InserirFuncionarioServlet extends HttpServlet {
                 return;
             }
 
+            // --- INÍCIO DAS NOVAS VALIDAÇÕES ---
+
+            // 1. Validação de formato de Email com Regex
+            if (!Pattern.matches(EMAIL_REGEX, email)) {
+                request.setAttribute("mensagem", "O formato do email é inválido!");
+                request.getRequestDispatcher("/view/Funcionario/cadastrarFuncionario.jsp").forward(request, response);
+                return;
+            }
+
+            // 2. Validação de formato de Data com Regex
+            if (!Pattern.matches(DATE_REGEX, dataNascimentoStr)) {
+                request.setAttribute("mensagem", "O formato da data deve ser AAAA-MM-DD (ex: 1990-05-15)!");
+                request.getRequestDispatcher("/view/Funcionario/cadastrarFuncionario.jsp").forward(request, response);
+                return;
+            }
+
+            // --- FIM DAS NOVAS VALIDAÇÕES ---
+
+
             // Transformar o id em int
             int idSetor = Integer.parseInt(idSetorStr);
             int idEmpresa = Integer.parseInt(idEmpresaStr);
@@ -65,8 +94,15 @@ public class InserirFuncionarioServlet extends HttpServlet {
                 return;
             }
 
-            // Conversão da data de nascimento
+            // Conversão da data de nascimento (agora sabemos que o formato está correto)
             LocalDate dataNascimento = LocalDate.parse(dataNascimentoStr);
+
+            // 3. Validação lógica da data (Não pode ser no futuro)
+            if (dataNascimento.isAfter(LocalDate.now())) {
+                request.setAttribute("mensagem", "A data de nascimento não pode ser uma data futura!");
+                request.getRequestDispatcher("/view/Funcionario/cadastrarFuncionario.jsp").forward(request, response);
+                return;
+            }
 
             // Cria objeto Funcionario
             Funcionario funcionario = new Funcionario();
@@ -95,7 +131,13 @@ public class InserirFuncionarioServlet extends HttpServlet {
 
         } catch (NumberFormatException e) {
             e.printStackTrace();
-            request.setAttribute("mensagem", "Erro: valores numéricos inválidos!");
+            request.setAttribute("mensagem", "Erro: ID do setor ou empresa deve ser um número válido!");
+            request.getRequestDispatcher("/view/Funcionario/cadastrarFuncionario.jsp").forward(request, response);
+        } catch (DateTimeParseException e) { // NOVO CATCH
+            // Ocorre se o formato (Regex) estiver certo, mas a data for impossível
+            // Exemplo: "2025-02-30"
+            e.printStackTrace();
+            request.setAttribute("mensagem", "Erro: A data de nascimento fornecida é inválida!");
             request.getRequestDispatcher("/view/Funcionario/cadastrarFuncionario.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
@@ -104,4 +146,3 @@ public class InserirFuncionarioServlet extends HttpServlet {
         }
     }
 }
-
