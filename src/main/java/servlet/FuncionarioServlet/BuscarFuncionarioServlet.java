@@ -1,6 +1,7 @@
 package servlet.FuncionarioServlet;
 
 import dao.FuncionarioDAO;
+import filtros.FuncionarioFiltro;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -9,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import model.Funcionario;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/BuscarFuncionarioServlet")
@@ -17,63 +19,86 @@ public class BuscarFuncionarioServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        // Recebendo as variaveis de filtragem do JSP
         String nome = request.getParameter("nome");
+        String idEmpresa  = request.getParameter("idEmpresa");
+        String tipoOrdenacao = request.getParameter("tipoOrdenacao");
+
         FuncionarioDAO funcionarioDAO = new FuncionarioDAO();
+        FuncionarioFiltro funcionarioFiltro = new FuncionarioFiltro();
+        List<Funcionario> funcionarios = new ArrayList<>();
 
         try {
+
             //verifica se aconteceu uma pesquisa por nome
-            if (nome != null && !nome.isEmpty()) {
+            if (nome != null && !nome.trim().isEmpty()) {
 
-                // Retirar qualquer espaço antes ou depois
-                nome = nome.trim();
+                String[] partes = nome.split(" ");
 
-                if (nome.contains(" ")) {
-                    // Busca o funcionário pelo nome e sobrenome
-                    int ultimoEspaco = nome.lastIndexOf(" ");
-                    Funcionario funcionario = funcionarioDAO.buscarPorNomeESobrenome(nome.substring(0, ultimoEspaco), nome.substring(ultimoEspaco + 1));
-
-                    // Verifica se existe um funcionário com esse nome
-                    if (funcionario == null) {
-                        request.setAttribute("mensagemBusca", "Não foi encontrado nenhum funcionário com esse nome, digite novamente.");
-                    } else {
-                        request.setAttribute("mensagemBusca", "Funcionário encontrado.");
-                        request.setAttribute("funcionario", funcionario);
-                    }
+                if (partes.length == 1) {
+                    // Somente nome
+                    funcionarios = funcionarioDAO.buscarPorNome(partes[0]);
                 } else {
-                    // Busca o funcionário pelo nome
-                    Funcionario funcionario = funcionarioDAO.buscarPorNome(nome);
-
-                    // Verifica se existe um funcionário com esse nome
-                    if (funcionario == null) {
-                        request.setAttribute("mensagemBusca", "Não foi encontrado nenhum funcionário com esse nome, digite novamente.");
-                    } else {
-                        request.setAttribute("mensagemBusca", "Funcionário encontrado.");
-                        request.setAttribute("funcionario", funcionario);
-                    }
+                    // Nome + sobrenome
+                    funcionarios = funcionarioDAO.buscarPorNomeESobrenome(partes[0], partes[1]);
                 }
-
+                // Verifica se existe funcionários com esse nome ou nome e sobrenome
+                if (funcionarios == null || funcionarios.isEmpty()) {
+                    request.setAttribute("mensagem", "Não foi encontrado nenhum Funcionario com esse nome, digite novamente.");
+                }
             } else {
 
-                // Lista os funcionários
-                List<Funcionario> funcionarios = funcionarioDAO.listar();
+                // Lista as funcionarios
+                funcionarios = funcionarioDAO.listar();
 
-                // Verifica se existem funcionários registrados
+                // Verifica se existem funcionarios registrados
                 if (funcionarios == null || funcionarios.isEmpty()) {
-                    request.setAttribute("mensagemLista", "Não foi encontrado nenhum funcionário");
+                    request.setAttribute("mensagem", "Não foi encontrado nenhum funcionário");
                 } else {
                     request.setAttribute("funcionarios", funcionarios);
                 }
+
+                //verifica se aconteceu uma pesquisa pelo id da empresa do funcionário
+                if (idEmpresa!= null && !idEmpresa.isEmpty()) {
+
+                    // Valida o ID da empresa passado, transformando de String para Int, se for inválido cai em exceção
+                    int idEmpresaNum = Integer.parseInt(idEmpresa);
+                    funcionarios = funcionarioFiltro.filtrarPorIdEmpresa(funcionarios, idEmpresaNum);
+
+                    // Verifica se existe um funcionario com esse ID de empresa
+                    if (funcionarios.isEmpty()) {
+                        request.setAttribute("mensagem", "Não foram encontrados funcionarios com esse ID de empresa, digite novamente.");
+                    } else {
+                        request.setAttribute("mensagem", "funcionarios encontrados.");
+                    }
+                }
+
+                // Ordenação da lista de funcionarios
+                if (tipoOrdenacao != null && !tipoOrdenacao.isEmpty() && funcionarios != null && !funcionarios.isEmpty()) {
+                    if (tipoOrdenacao.equals("idCrescente")) {
+                        funcionarios = funcionarioFiltro.OrdenarIdCrece(funcionarios);
+                    } else if (tipoOrdenacao.equals("idDecrescente")) {
+                        funcionarios = funcionarioFiltro.OrdenarIdDecre(funcionarios);
+                    } else if (tipoOrdenacao.equals("Az")) {
+                        funcionarios = funcionarioFiltro.OrdenarNomeAz(funcionarios);
+                    } else if (tipoOrdenacao.equals("Za")) {
+                        funcionarios = funcionarioFiltro.OrdenarNomeZa(funcionarios);
+                    }
+                }
+                request.setAttribute("funcionarios", funcionarios);
             }
-        } catch (Exception e) {
+        } catch(NumberFormatException nfe){
+            // Caso o ID seja inválido, retorna uma mensagem ao JSP
+            request.setAttribute("mensagem", "ID inválido, digite apenas números inteiros.");
+        } catch(Exception e){
             // Qualquer outro erro inesperado
             e.printStackTrace();
-            request.setAttribute("mensagemBusca", "Erro inesperado ao acessar o banco de dados.");
+            request.setAttribute("mensagem", "Erro inesperado ao acessar o banco de dados.");
         }
 
         // Encaminha para o JSP
-        request.getRequestDispatcher("../CadastrarEmpresa.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/Funcionario/crudFuncionario.jsp").forward(request, response);
     }
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

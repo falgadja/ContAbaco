@@ -1,7 +1,9 @@
 package filtros;
 
 import model.Funcionario;
+import model.Pagamento;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FuncionarioFiltro {
@@ -73,6 +75,20 @@ public class FuncionarioFiltro {
         }
         // Retorna a lista ordenada
         return funcionarios;
+    }
+
+    public List<Funcionario> filtrarPorIdEmpresa(List<Funcionario> funcionarios, int IdEmpresa) {
+        // Instancia a lista que será retornada
+        List<Funcionario> filtrados = new ArrayList<>();
+
+        // Verifica quais funcionarios correspondem com o id da empressa
+        for (Funcionario f : funcionarios) {
+            if (f.getIdEmpresa() == IdEmpresa) {
+                // Se corresponder adiciona na lista que será retornada
+                filtrados.add(f);
+            }
+        }
+        return filtrados;
     }
 
 }

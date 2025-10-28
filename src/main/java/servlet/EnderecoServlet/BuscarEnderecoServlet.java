@@ -7,8 +7,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Endereco;
+import model.Funcionario;
+import model.Plano;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/BuscarEnderecoServlet")
@@ -19,6 +22,7 @@ public class BuscarEnderecoServlet extends HttpServlet {
 
         String id = request.getParameter("id");
         EnderecoDAO enderecoDAO = new EnderecoDAO();
+        List<Funcionario> funcionarios = new ArrayList<>();
 
         try {
             //verifica se aconteceu uma pesquisa por id

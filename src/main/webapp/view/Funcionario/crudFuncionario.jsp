@@ -2,6 +2,9 @@
 <%@ page import="java.util.List" %>
 <%@ page import="model.Funcionario" %>
 <%@ page import="dao.FuncionarioDAO" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -141,80 +144,76 @@
   </div>
 
   <div class="menu">
-    <a href="<%= request.getContextPath() %>/view/Adm/crudAdm.jsp">Adm</a>
-    <a href="<%= request.getContextPath() %>/view/Empresa/crudEmpresa.jsp">Empresas</a>
-    <a href="<%= request.getContextPath() %>/view/Funcionario/crudFuncionario.jsp" class="active">Funcionários</a>
-    <a href="<%= request.getContextPath() %>/view/Plano/crudPlano.jsp">Planos</a>
-    <a href="<%= request.getContextPath() %>/view/Pagamento/crudPagamento.jsp">Pagamentos</a>
+      <div class="menu">
+          <a href="<%= request.getContextPath() %>/BuscarAdmServlet" class="active-link">Adm</a>
+          <a href="<%= request.getContextPath() %>/BuscarEmpresaServlet">Empresas</a>
+          <a href="<%= request.getContextPath() %>/BuscarFuncionarioServlet">Funcionários</a>
+          <a href="<%= request.getContextPath() %>/BuscarPlanoServlet">Planos</a>
+          <a href="<%= request.getContextPath() %>/BuscarPagamentoServlet" class="active">Pagamentos</a>
+      </div>
   </div>
 
   <button class="logout">Sair</button>
 </div>
 
 <div class="content">
-  <div class="header">
-    <div>
-      <h1>Funcionários Cadastrados</h1>
-      <p>Visualize, edite ou exclua funcionários registrados.</p>
+    <div class="header">
+        <div>
+            <h1>Funcionários Cadastrados</h1>
+            <p>Visualize, edite ou exclua funcionários registrados.</p>
+        </div>
+        <a href="<%= request.getContextPath() %>/view/Funcionario/cadastrarFuncionario.jsp" class="btn-add">+ Adicionar Funcionário</a>
     </div>
-    <a href="<%= request.getContextPath() %>/view/Funcionario/cadastrarFuncionario.jsp" class="btn-add">+ Adicionar Funcionário</a>
-  </div>
+    <form action="${pageContext.request.contextPath}/BuscarFuncionarioServlet" method="get">
+        <label for="nome">Buscar por nome:</label>
+        <input type="text" name="nome" id="nome" placeholder="Digite o nome do fúncionário:">
 
-  <!-- ===== TABELA DINÂMICA ===== -->
-  <%
-    FuncionarioDAO dao = new FuncionarioDAO();
-    List<Funcionario> lista = dao.listar();
+        <label for="id">Buscar por ID da empresa:</label>
+        <input type="text" name="idEmpresa" id="idEmpresa" placeholder="Digite o ID da empresa do funcionário:">
 
-    if (lista != null && !lista.isEmpty()) {
-  %>
-  <table>
-    <thead>
-    <tr>
-      <th>ID</th>
-      <th>Nome</th>
-      <th>Email</th>
-      <th>Cargo</th>
-      <th>Setor</th>
-      <th>Empresa</th>
-      <th>Ações</th>
-    </tr>
-    </thead>
-    <tbody>
-    <% for (Funcionario f : lista) { %>
-    <tr>
-      <td><%= f.getId() %></td>
-      <td><%= f.getNome() %></td>
-      <td><%= f.getSobrenome() %></td>
-      <td><%= f.getEmail() %></td>
-      <td><%= f.getDataNascimento()%></td>
-      <td><%= f.getSenha() %></td>
-      <td class="acoes">
-        <!-- Botão de Editar -->
-        <button onclick="window.location.href='<%= request.getContextPath() %>/view/Funcionario/atualizarFuncionario.jsp?id=<%= f.getId() %>'" title="Editar">
-          <i class="fa fa-pen"></i>
-        </button>
+        <label for="tipoOrdenacao">Ordenar por:</label>
+        <select name="tipoOrdenacao" id="tipoOrdenacao">
+            <option value="">-- Nenhum --</option>
+            <option value="idCrescente">ID Crescente</option>
+            <option value="idDecrescente">ID Decrescente</option>
+            <option value="Az">Nome A-z</option>
+            <option value="Za">Nome Z-a</option>
+        </select>
+
+        <button type="submit">Filtrar</button>
+    </form>
 
 
-        <!-- Botão de Excluir -->
-        <form action="<%= request.getContextPath() %>/DeletarFuncionarioServlet" method="post" style="display:inline;">
-          <input type="hidden" name="id" value="<%= f.getId() %>">
-          <button title="Excluir" onclick="return confirm('Tem certeza que deseja excluir este funcionário?');">
-            <i class="fa fa-trash"></i>
-          </button>
-        </form>
+    <p class="mensagem">${mensagem}</p>
 
-      </td>
-    </tr>
-    <% } %>
-    </tbody>
-  </table>
-  <%
-  } else {
-  %>
-  <p>Nenhum funcionário cadastrado no momento.</p>
-  <%
-    }
-  %>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Sobrenome</th>
+            <th>Data de nascimento</th>
+            <th>Email</th>
+            <th>Senha</th>
+            <th>ID do setor</th>
+            <th>ID da empresa</th>
+        </tr>
+        </thead>
+        <tbody>
+        <c:forEach var="f" items="${funcionarios}">
+            <tr>
+                <td>${f.id}</td>
+                <td>${f.nome}</td>
+                <td>${f.sobrenome}</td>
+                <td>${f.dataNascimento}</td>
+                <td>${f.email}</td>
+                <td>${f.senha}</td>
+                <td>${f.idSetor}</td>
+                <td>${f.idEmpresa}</td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
 </div>
 
 </body>

@@ -2,6 +2,8 @@
 <%@ page import="java.util.List" %>
 <%@ page import="model.Plano" %>
 <%@ page import="dao.PlanoDAO" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -141,11 +143,13 @@
     </div>
 
     <div class="menu">
-        <a href="<%= request.getContextPath() %>/view/Adm/crudAdm.jsp">Adm</a>
-        <a href="<%= request.getContextPath() %>/view/Empresa/crudEmpresa.jsp">Empresas</a>
-        <a href="<%= request.getContextPath() %>/view/Funcionario/crudFuncionario.jsp">Funcionários</a>
-        <a href="<%= request.getContextPath() %>/view/Plano/crudPlano.jsp" class="active">Planos</a>
-        <a href="<%= request.getContextPath() %>/view/Pagamento/crudPagamento.jsp">Pagamentos</a>
+        <div class="menu">
+            <a href="<%= request.getContextPath() %>/BuscarAdmServlet" class="active-link">Adm</a>
+            <a href="<%= request.getContextPath() %>/BuscarEmpresaServlet">Empresas</a>
+            <a href="<%= request.getContextPath() %>/BuscarFuncionarioServlet">Funcionários</a>
+            <a href="<%= request.getContextPath() %>/BuscarPlanoServlet">Planos</a>
+            <a href="<%= request.getContextPath() %>/BuscarPagamentoServlet" class="active">Pagamentos</a>
+        </div>
     </div>
 
     <button class="logout">Sair</button>
@@ -155,60 +159,50 @@
     <div class="header">
         <div>
             <h1>Planos Cadastrados</h1>
-            <p>Visualize, edite ou exclua planos disponíveis.</p>
+            <p>Visualize, edite ou exclua planos registrados.</p>
         </div>
         <a href="<%= request.getContextPath() %>/view/Plano/cadastrarPlano.jsp" class="btn-add">+ Adicionar Plano</a>
     </div>
+    <form action="${pageContext.request.contextPath}/BuscarPlanoServlet" method="get">
+        <label for="nome">Buscar por nome do plano:</label>
+        <input type="text" name="nome" id="nome" placeholder="Digite o nome do plano:">
 
-    <!-- ===== TABELA DINÂMICA ===== -->
-    <%
-        PlanoDAO dao = new PlanoDAO();
-        List<Plano> lista = dao.listar();
 
-        if (lista != null && !lista.isEmpty()) {
-    %>
+        <label for="tipoOrdenacao">Ordenar por:</label>
+        <select name="tipoOrdenacao" id="tipoOrdenacao">
+            <option value="">-- Nenhum --</option>
+            <option value="idCrescente">ID Crescente</option>
+            <option value="idDecrescente">ID Decrescente</option>
+            <option value="Az">Nome A-z</option>
+            <option value="Za">Nome Z-a</option>
+            <option value="precoCrescente">Por preço crescente</option>
+            <option value="precoDecrescente">Por preço decrescente</option>
+        </select>
+
+        <button type="submit">Filtrar</button>
+    </form>
+
+
+    <p class="mensagem">${mensagem}</p>
+
     <table>
         <thead>
         <tr>
             <th>ID</th>
             <th>Nome</th>
-            <th>Valor (R$)</th>
-            <th>Ações</th>
+            <th>Preco</th>
         </tr>
         </thead>
         <tbody>
-        <% for (Plano p : lista) { %>
-        <tr>
-            <td><%= p.getId() %></td>
-            <td><%= p.getNome() %></td>
-            <td><%= String.format("%.2f", p.getPreco()) %></td>
-
-            <td class="acoes">
-                <!-- Botão para Editar: redireciona para atualizarPlano.jsp -->
-                <button onclick="window.location.href='<%= request.getContextPath() %>/view/Plano//atualizarPlano.jsp?id=<%= p.getId() %>'" title="Editar">
-                    <i class="fa fa-pen"></i>
-                </button>
-
-                <!-- Botão para Excluir: chama o servlet com confirmação -->
-                <form action="<%= request.getContextPath() %>/DeletarPlanoServlet" method="post" style="display:inline;">
-                    <input type="hidden" name="id" value="<%= p.getId() %>">
-                    <button title="Excluir" onclick="return confirm('Tem certeza que deseja excluir este plano?');">
-                        <i class="fa fa-trash"></i>
-                    </button>
-                </form>
-
-            </td>
-        </tr>
-        <% } %>
+        <c:forEach var="p" items="${planos}">
+            <tr>
+                <td>${p.id}</td>
+                <td>${p.nome}</td>
+                <td>${p.preco}</td>
+            </tr>
+        </c:forEach>
         </tbody>
     </table>
-    <%
-    } else {
-    %>
-    <p>Nenhum plano cadastrado no momento.</p>
-    <%
-        }
-    %>
 </div>
 
 </body>

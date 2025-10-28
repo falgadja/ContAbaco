@@ -1,15 +1,17 @@
 package servlet.AdmServlet;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import dao.AdmDAO;
-import model.Administrador;
+import filtros.AdministradorFiltro;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
-import java.util.List;
+import model.Administrador;
 
 @WebServlet("/BuscarAdmServlet")
 public class BuscarAdmServlet extends HttpServlet {
@@ -24,33 +26,55 @@ public class BuscarAdmServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String email = request.getParameter("email");
+        String tipoOrdenacao = request.getParameter("tipoOrdenacao");
+
         AdmDAO admDAO = new AdmDAO();
+        AdministradorFiltro administradorFiltro = new AdministradorFiltro();
+        List<Administrador> adms = new ArrayList<>();
 
         try {
             //verifica se aconteceu uma pesquisa por e-mail
             if (email != null && !email.trim().isEmpty()) {
-                // Busca o adm pelo email
+                // Busca o administrador pelo email
                 Administrador adm = admDAO.buscarPorEmail(email);
 
                 // Verifica se existe um administrador com esse e-mail
                 if (adm == null) {
-                    request.setAttribute("mensagemBusca", "Não foi encontrado nenhum administrador com esse email, digite novamente.");
+                    request.setAttribute("mensagem", "Não foi encontrado nenhum administrador com esse email, digite novamente.");
                 } else {
-                    request.setAttribute("mensagemBusca", "Empresa encontrada.");
-                    request.setAttribute("adm", adm);
+                    // transforma em lista com 1 elemento
+                    List<Administrador> lista = new ArrayList<>();
+                    lista.add(adm);
+                    adms = lista;
+                    request.setAttribute("mensagem", "Administrador encontrado.");
+                    request.setAttribute("adms", adms);
                 }
 
             }  else {
 
                 // Lista os administradores
-                List<Administrador> adms = admDAO.listar();
+                adms = admDAO.listar();
 
-                // Verifica se existem empresas registradas
+                // Verifica se existem administradores
                 if (adms == null || adms.isEmpty()) {
-                    request.setAttribute("mensagemLista", "Não foi encontrado nenhum administrador");
+                    request.setAttribute("mensagem", "Não foi encontrado nenhum administrador");
                 } else {
                     request.setAttribute("adms", adms);
                 }
+
+                // Ordenação da lista de empresa
+                if (tipoOrdenacao != null && !tipoOrdenacao.isEmpty() && adms != null && !adms.isEmpty()) {
+                    if (tipoOrdenacao.equals("idCrescente")) {
+                        adms = administradorFiltro.OrdenarIdCrece(adms);
+                    } else if (tipoOrdenacao.equals("idDecrescente")) {
+                        adms = administradorFiltro.OrdenarIdDecre(adms);
+                    } else if (tipoOrdenacao.equals("Az")) {
+                        adms = administradorFiltro.OrdenarEmailAz(adms);
+                    } else if (tipoOrdenacao.equals("Za")) {
+                        adms = administradorFiltro.OrdenarEmailZa(adms);
+                    }
+                }
+                request.setAttribute("adms", adms);
             }
         } catch (Exception e) {
             // Qualquer outro erro inesperado
@@ -59,6 +83,6 @@ public class BuscarAdmServlet extends HttpServlet {
         }
 
         // Encaminha para o JSP
-        request.getRequestDispatcher("../CadastrarEmpresa.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/Adm/crudAdm.jsp").forward(request, response);
     }
 }

@@ -4,6 +4,8 @@
 <%@ page import="model.Empresa" %>
 <%@ page import="dao.PagamentoDAO" %>
 <%@ page import="dao.EmpresaDAO" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -55,11 +57,14 @@
     </div>
 
     <div class="menu">
-        <a href="<%= request.getContextPath() %>/view/Adm/crudAdm.jsp">Adm</a>
-        <a href="<%= request.getContextPath() %>/view/Empresa/crudEmpresa.jsp">Empresas</a>
-        <a href="<%= request.getContextPath() %>/view/Funcionario/crudFuncionario.jsp">Funcionários</a>
-        <a href="<%= request.getContextPath() %>/view/Plano/crudPlano.jsp">Planos</a>
-        <a href="<%= request.getContextPath() %>/view/Pagamento/crudPagamento.jsp" class="active">Pagamentos</a>
+        <div class="menu">
+            <a href="<%= request.getContextPath() %>/BuscarAdmServlet" class="active-link">Adm</a>
+            <a href="<%= request.getContextPath() %>/BuscarEmpresaServlet">Empresas</a>
+            <a href="<%= request.getContextPath() %>/BuscarFuncionarioServlet">Funcionários</a>
+            <a href="<%= request.getContextPath() %>/BuscarPlanoServlet">Planos</a>
+            <a href="<%= request.getContextPath() %>/BuscarPagamentoServlet" class="active">Pagamentos</a>
+        </div>
+
     </div>
 
     <button class="logout">Sair</button>
@@ -73,17 +78,41 @@
         </div>
         <a href="<%= request.getContextPath() %>/view/Pagamento/cadastrarPagamento.jsp" class="btn-add">+ Adicionar Pagamento</a>
     </div>
+    <form action="<%= request.getContextPath() %>/BuscarPagamentoServlet" method="get">
+    <label for="id">Buscar por ID:</label>
+        <input type="text" name="id" id="id" placeholder="Digite o ID">
 
-    <!-- ===== TABELA DINÂMICA ===== -->
-    <%
-        PagamentoDAO pagamentoDAO = new PagamentoDAO();
-        List<Pagamento> lista = pagamentoDAO.listar();
+        <label for="tipoOrdenacao">Ordenar por:</label>
+        <select name="tipoOrdenacao" id="tipoOrdenacao">
+            <option value="">-- Nenhum --</option>
+            <option value="idCrescente">ID Crescente</option>
+            <option value="idDecrescente">ID Decrescente</option>
+            <option value="totalCrescente">Total Crescente</option>
+            <option value="totalDecrescente">Total Decrescente</option>
+            <option value="dataCrescente">Data Crescente</option>
+            <option value="dataDecrescente">Data Decrescente</option>
+        </select>
 
-        EmpresaDAO empresaDAO = new EmpresaDAO();
-        List<Empresa> empresas = empresaDAO.listar();
+        <label for="tipos">Tipo de pagamento:</label>
+        <select name="tipos" id="tipos" multiple>
+            <option value="PIX">PIX</option>
+            <option value="Boleto">Boleto</option>
+            <option value="Cartão">Cartão</option>
+            <option value="Transferência">Transferência</option>
+        </select>
 
-        if (lista != null && !lista.isEmpty()) {
-    %>
+        <label for="inicio">Data início:</label>
+        <input type="date" name="inicio" id="inicio" placeholder="dd/MM/yyyy">
+
+        <label for="fim">Data fim:</label>
+        <input type="date" name="fim" id="fim" placeholder="dd/MM/yyyy">
+
+        <button type="submit">Filtrar</button>
+    </form>
+
+
+    <p class="mensagem">${mensagem}</p>
+
     <table>
         <thead>
         <tr>
@@ -91,43 +120,21 @@
             <th>Tipo de Pagamento</th>
             <th>Total</th>
             <th>Data</th>
-            <th>Empresa</th>
-            <th>Ações</th>
+            <th>ID Empresa</th>
         </tr>
         </thead>
         <tbody>
-        <% for (Pagamento p : lista) { %>
-        <tr>
-            <td><%= p.getId() %></td>
-            <td><%= p.getTipoPagto() %></td>
-            <td>R$ <%= String.format("%.2f", p.getTotal()) %></td>
-            <td><%= p.getData() %></td>
-            </td>
-            <td class="acoes">
-                <!-- Botão Editar -->
-                <button onclick="window.location.href='<%= request.getContextPath() %>/view/Pagamento/atualizarPagamento.jsp?id=<%= p.getId() %>'" title="Editar">
-                    <i class="fa fa-pen"></i>
-                </button>
-
-                <!-- Botão Excluir -->
-                <form action="<%= request.getContextPath() %>/DeletarPagamentoServlet" method="post" style="display:inline;">
-                    <input type="hidden" name="id" value="<%= p.getId() %>">
-                    <button title="Excluir" onclick="return confirm('Tem certeza que deseja excluir este pagamento?');">
-                        <i class="fa fa-trash"></i>
-                    </button>
-                </form>
-            </td>
-        </tr>
-        <% } %>
+        <c:forEach var="p" items="${pagamentos}">
+            <tr>
+                <td>${p.id}</td>
+                <td>${p.tipoPagto}</td>
+                <td>${p.total}</td>
+                <td>${p.data}</td>
+                <td>${p.idEmpresa}</td>
+            </tr>
+        </c:forEach>
         </tbody>
     </table>
-    <%
-    } else {
-    %>
-    <p>Nenhum pagamento cadastrado no momento.</p>
-    <%
-        }
-    %>
 </div>
 </body>
 </html>

@@ -2,6 +2,8 @@
 <%@ page import="java.util.List" %>
 <%@ page import="model.Empresa" %>
 <%@ page import="dao.EmpresaDAO" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -93,121 +95,89 @@
     </style>
 </head>
 <body>
-<div class="esquerda">
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="aplicativo">
-            <div class="logo">
-                <img src="${pageContext.request.contextPath}/img/CelularFotoContabaco.png" alt="logo">
-            </div>
-            <div>
-                <div class="titulo_app">Contábaco</div>
-                <div class="subtitulo_app">adm</div>
-            </div>
-        </div>
 
-        <div class="linha"></div>
-
-        <div class="nav">
-            <a href="<%= request.getContextPath() %>/view/Adm/crudAdm.jsp" class="botao"><i class="fa-solid fa-crown"></i> Adm</a>
-            <a href="<%= request.getContextPath() %>/view/Empresa/crudEmpresa.jsp" class="botao selecionado"><i class="fa-solid fa-building"></i> Empresas</a>
-            <a href="<%= request.getContextPath() %>/view/Funcionario/crudFuncionario.jsp" class="botao"><i class="fa-solid fa-user-tie"></i> Funcionários</a>
-            <a href="<%= request.getContextPath() %>/view/Plano/crudPlano.jsp" class="botao"><i class="fa-solid fa-clipboard-list"></i> Planos</a>
-            <a href="<%= request.getContextPath() %>/view/Pagamento/crudPagamento.jsp" class="botao"><i class="fa-solid fa-credit-card"></i> Pagamento</a>
-        </div>
-
-        <div class="sair">
-            <button class="botao-sair" onclick="location.href='${pageContext.request.contextPath}/LogoutServlet'">
-                <i class="fa-solid fa-right-from-bracket"></i> Sair
-            </button>
-        </div>
+<div class="sidebar">
+    <div class="logo">
+        <h2>ContÁbaco</h2>
+        <small>adm</small>
+    </div>
+    <div class="menu"><div class="menu">
+        <a href="<%= request.getContextPath() %>/BuscarAdmServlet" class="active-link">Adm</a>
+        <a href="<%= request.getContextPath() %>/BuscarEmpresaServlet">Empresas</a>
+        <a href="<%= request.getContextPath() %>/BuscarFuncionarioServlet">Funcionários</a>
+        <a href="<%= request.getContextPath() %>/BuscarPlanoServlet">Planos</a>
+        <a href="<%= request.getContextPath() %>/BuscarPagamentoServlet" class="active">Pagamentos</a>
     </div>
 
-    <div class="separator"></div>
-
-    <!-- Main -->
-    <div class="main">
-        <div class="titulos">
-            <div>
-                <div id="AR">Área Restrita</div>
-                <div id="CRUD">CRUD</div>
-            </div>
-            <div class="pesquisar">
-                <i class="fa fa-search"></i>
-                <input type="text" placeholder="Buscar por id, nome, email...">
-            </div>
-        </div>
-
-        <div class="adicionador">
-            <a class="botao-add" href="<%= request.getContextPath() %>/view/Empresa/cadastrarEmpresa.jsp">
-                <i class="fa-solid fa-plus"></i> Adicionar Novo
-            </a>
-        </div>
-
-        <!-- Tabela de Empresas -->
-        <div class="tabela empresa-style">
-            <div class="tabela-container">
-                <%
-                    EmpresaDAO dao = new EmpresaDAO();
-                    List<Empresa> lista = dao.listar();
-                    if (lista != null && !lista.isEmpty()) {
-                %>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>id_empresa</th>
-                        <th>nome</th>
-                        <th>cnpj</th>
-                        <th>email</th>
-                        <th>qtd_funcionários</th>
-                        <th>plano</th>
-                        <th class="acoes-col">Ações</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <%
-                        for (Empresa e : lista) {
-                            String plano;
-                            switch(e.getIdPlano()) {
-                                case 1: plano = "Mensal"; break;
-                                case 2: plano = "Anual"; break;
-                                case 3: plano = "Premium"; break;
-                                default: plano = "Teste";
-                            }
-                    %>
-                    <tr>
-                        <td><%= e.getId() %></td>
-                        <td><%= e.getNome() %></td>
-                        <td><%= e.getCnpj() %></td>
-                        <td><%= e.getEmail() %></td>
-                        <td><%= e.getQntdFuncionarios() %></td>
-                        <td><%= plano %></td>
-                        <td class="acoes">
-                            <button class="btn" title="Visualizar"
-                                    onclick="window.location.href='<%= request.getContextPath() %>/view/Empresa/detalhesEmpresa.jsp?id=<%= e.getId() %>'">
-                                <i class="fa-regular fa-eye"></i>
-                            </button>
-                            <button class="btn" title="Editar"
-                                    onclick="window.location.href='<%= request.getContextPath() %>/view/Empresa/atualizarEmpresa.jsp?id=<%= e.getId() %>'">
-                                <i class="fa-solid fa-pen"></i>
-                            </button>
-                            <button class="btn" title="Excluir"
-                                    onclick="if(confirm('Deseja excluir esta empresa?')) window.location.href='<%= request.getContextPath() %>/DeletarEmpresaServlet?id=<%= e.getId() %>'">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    <% } %>
-                    </tbody>
-                </table>
-                <%
-                } else {
-                %>
-                <p style="padding:10px 6px; color:#666;">Nenhuma empresa cadastrada no momento.</p>
-                <% } %>
-            </div>
-        </div>
     </div>
+    <button class="logout">Sair</button>
 </div>
+
+<div class="content">
+    <div class="header">
+        <div>
+            <h1>Empresas Cadastrados</h1>
+            <p>Visualize, edite ou exclua empresas registrados.</p>
+        </div>
+    </div>
+    <form action="${pageContext.request.contextPath}/BuscarEmpresaServlet" method="get">
+        <label for="nome">Buscar por ID:</label>
+        <input type="text" name="nome" id="nome" placeholder="Digite o nome da empresa:">
+
+        <label for="tipoOrdenacao">Ordenar por:</label>
+        <select name="tipoOrdenacao" id="tipoOrdenacao">
+            <option value="">-- Nenhum --</option>
+            <option value="idCrescente">ID Crescente</option>
+            <option value="idDecrescente">ID Decrescente</option>
+            <option value="Az">Nome das empresas em ordem crescente</option>
+            <option value="Za">Nome das empresas em ordem crescente</option>
+            <option value="qtndFuncionarioCrescente">Quantidade de funcionarios em ordem crescente</option>
+            <option value="qtndFuncionarioDecrescente">Quantidade de funcionarios em ordem decrescente</option>
+
+        </select>
+
+
+
+        <label for="min">Número mínimo de funcionários da empresa:</label>
+        <input type="text" name="min" id="min" placeholder="Digite o mínimo de funcionários da empresa">
+
+        <label for="max">Número maxímo de funcionários da empresa:</label>
+        <input type="text" name="max" id="max" placeholder="Digite o maxímo de funcionários da empresa">
+
+        <button type="submit">Filtrar</button>
+    </form>
+
+
+    <p class="mensagem">${mensagem}</p>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>CNPJ</th>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Senha</th>
+            <th>ID do plano</th>
+            <th>Quantidade de funcionários</th>
+        </tr>
+        </thead>
+        <tbody>
+        <c:forEach var="e" items="${empresas}">
+            <tr>
+                <td>${e.id}</td>
+                <td>${e.cnpj}</td>
+                <td>${e.nome}</td>
+                <td>${e.email}</td>
+                <td>${e.senha}</td>
+                <td>${e.idPlano}</td>
+                <td>${e.qntdFuncionarios}</td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
+</div>
+
+
 </body>
 </html>

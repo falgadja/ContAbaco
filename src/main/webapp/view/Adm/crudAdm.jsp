@@ -2,7 +2,8 @@
 <%@ page import="java.util.List" %>
 <%@ page import="model.Administrador" %>
 <%@ page import="dao.AdmDAO" %>
-<%@ page import="java.lang.reflect.Field" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -404,7 +405,15 @@
         </div>
     </div>
 
-    <div class="separator"></div>
+    <div class="menu"><div class="menu">
+        <a href="<%= request.getContextPath() %>/BuscarAdmServlet" class="active-link">Adm</a>
+        <a href="<%= request.getContextPath() %>/BuscarEmpresaServlet">Empresas</a>
+        <a href="<%= request.getContextPath() %>/BuscarFuncionarioServlet">Funcionários</a>
+        <a href="<%= request.getContextPath() %>/BuscarPlanoServlet">Planos</a>
+        <a href="<%= request.getContextPath() %>/BuscarPagamentoServlet" class="active">Pagamentos</a>
+    </div>
+
+    </div>
 
     <div class="main">
         <div class="titulos">
@@ -476,21 +485,53 @@
     </div>
 </div>
 
-<script>
-    function abrirModalEditar(id) {
-        const modal = document.getElementById('inTableModal');
-        const frame = document.getElementById('modalFrame');
-        const ctx = '<%= request.getContextPath() %>';
-        frame.src = ctx + '/view/Adm/atualizarAdm.jsp?modal=1&id=' + encodeURIComponent(id);
-        modal.classList.add('open');
-        modal.setAttribute('aria-hidden', 'false');
-    }
+<div class="content">
+    <div class="header">
+        <div>
+            <h1>Administradores Cadastrados</h1>
+            <p>Visualize, edite ou exclua administradores registrados.</p>
+        </div>
+        <a href="<%= request.getContextPath() %>/view/Adm/cadastrarAdm.jsp" class="btn-add">+ Adicionar Administrador</a>
+    </div>
+    <form action="${pageContext.request.contextPath}/BuscarAdmServlet" method="get">
+        <label for="email">Buscar por Email:</label>
+        <input type="text" name="email" id="email" placeholder="Digite o email do administrador">
 
-    (function () {
-        const openBtn = document.getElementById('openModal');
-        const modal = document.getElementById('inTableModal');
-        const closeBtn = document.getElementById('modalClose');
-        const frame = document.getElementById('modalFrame');
+
+        <label for="tipoOrdenacao">Ordenar por:</label>
+        <select name="tipoOrdenacao" id="tipoOrdenacao">
+            <option value="">-- Nenhum --</option>
+            <option value="idCrescente">ID Crescente</option>
+            <option value="idDecrescente">ID Decrescente</option>
+            <option value="Az">Email dos administradores em ordem crescente</option>
+            <option value="Za">Email dos administradores em ordem decrescente</option>
+        </select>
+
+        <button type="submit">Filtrar</button>
+    </form>
+
+
+    <p class="mensagem">${mensagem}</p>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Email</th>
+            <th>Senha</th>
+        </tr>
+        </thead>
+        <tbody>
+        <c:forEach var="a" items="${adms}">
+            <tr>
+                <td>${a.id}</td>
+                <td>${a.email}</td>
+                <td>${a.senha}</td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
+</div>
 
         openBtn.addEventListener('click', function () {
             frame.src = '<%= request.getContextPath() %>/view/Adm/cadastrarAdm.jsp?modal=1';
