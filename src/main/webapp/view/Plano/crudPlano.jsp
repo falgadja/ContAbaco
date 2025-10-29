@@ -278,6 +278,61 @@
             </div>
         </div>
     </div>
+    <form action="${pageContext.request.contextPath}/BuscarPlanoServlet" method="get">
+        <label for="nome">Buscar por nome do plano:</label>
+        <input type="text" name="nome" id="nome" placeholder="Digite o nome do plano:">
+
+
+        <label for="tipoOrdenacao">Ordenar por:</label>
+        <select name="tipoOrdenacao" id="tipoOrdenacao">
+            <option value="">-- Nenhum --</option>
+            <option value="idCrescente">ID Crescente</option>
+            <option value="idDecrescente">ID Decrescente</option>
+            <option value="Az">Nome A-z</option>
+            <option value="Za">Nome Z-a</option>
+            <option value="precoCrescente">Por preço crescente</option>
+            <option value="precoDecrescente">Por preço decrescente</option>
+        </select>
+
+        <button type="submit">Filtrar</button>
+    </form>
+
+
+    <p class="mensagem">${mensagem}</p>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Preco</th>
+            <th>Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <c:forEach var="p" items="${planos}">
+            <tr>
+                <td>${p.id}</td>
+                <td>${p.nome}</td>
+                <td>${p.preco}</td>
+                <td class="acoes">
+                    <!-- Botão para Editar: redireciona para atualizarPlano.jsp -->
+                    <button onclick="window.location.href='<%= request.getContextPath() %>/view/Plano//atualizarPlano.jsp?id=${p.id}'" title="Editar">
+                        <i class="fa fa-pen"></i>
+                    </button>
+
+                    <!-- Botão para Excluir: chama o servlet com confirmação -->
+                    <form action="<%= request.getContextPath() %>/DeletarPlanoServlet" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="${p.id}">
+                        <button title="Excluir" onclick="return confirm('Tem certeza que deseja excluir este plano?');">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
 </div>
 
 <script>

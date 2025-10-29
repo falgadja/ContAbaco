@@ -121,36 +121,6 @@ public class AdmDAO {
         return adm;
     }
 
-    // READ - BUSCAR Administrador PELO EMAIL E SENHA
-    public Administrador buscarPorEmailSenha(String email, String senha) {
-        Conexao conexao = new Conexao();
-        Connection con = conexao.conectar();
-        Administrador adm = null;
-        String sql = "SELECT * FROM administrador WHERE email = ? AND senha = ?";
-
-        try {
-            PreparedStatement pst = con.prepareStatement(sql);
-            pst.setString(1, email);
-            pst.setString(2, senha);
-            ResultSet rs = pst.executeQuery();
-
-            if (rs.next()) {
-                adm = new Administrador(
-                        rs.getInt("id"),
-                        rs.getString("email"),
-                        rs.getString("senha")
-                );
-            }
-
-        } catch (SQLException sqle) {
-            sqle.printStackTrace();
-        } finally {
-            conexao.desconectar(con);
-        }
-
-        return adm;
-    }
-
     // READ - LISTAR TODOS OS Administradores
     public List<Administrador> listar() {
         Conexao conexao = new Conexao();

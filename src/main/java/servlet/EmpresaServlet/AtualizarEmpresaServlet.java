@@ -43,7 +43,6 @@ public class AtualizarEmpresaServlet extends HttpServlet {
                     cnpj == null || cnpj.trim().isEmpty() ||
                     nome == null || nome.trim().isEmpty() ||
                     email == null || email.trim().isEmpty() ||
-                    senha == null || senha.trim().isEmpty() ||
                     idPlanoParametro == null || idPlanoParametro.isEmpty() ||
                     qntdFuncionariosParametro == null || qntdFuncionariosParametro.isEmpty()) {
 
@@ -55,6 +54,7 @@ public class AtualizarEmpresaServlet extends HttpServlet {
                 int id = Integer.parseInt(idParametro);
                 int idPlano = Integer.parseInt(idPlanoParametro);
                 int qntdFuncionarios = Integer.parseInt(qntdFuncionariosParametro);
+                String senhaBd;
 
                 // Criando o objeto do modelo
                 empresa.setId(id);
@@ -63,10 +63,17 @@ public class AtualizarEmpresaServlet extends HttpServlet {
                 empresa.setEmail(email.trim());
                 empresa.setIdPlano(idPlano);
                 empresa.setQntdFuncionarios(qntdFuncionarios);
+                //Buscar empresa pelo id
+                Empresa empresaExistente = empresaDAO.buscarPorId(id);
 
-                //Hash da senha
-                String senhaHash = BCrypt.hashpw(senha, BCrypt.gensalt());
-                empresa.setSenha(senhaHash.trim());
+                // Só gera novo hash se o usuário alterou a senha
+                if (senha != null && !senha.trim().isEmpty()) {
+                    empresa.setSenha(BCrypt.hashpw(senha, BCrypt.gensalt()));
+                } else {
+                    empresa.setSenha(empresaExistente.getSenha());
+                }
+
+
 
 
                 // Chama o metodo atualizar do dao

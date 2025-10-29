@@ -296,79 +296,47 @@
           // 1. Tenta pegar a lista "empresas" que o servlet de filtro (BuscarEmpresaServlet) pode ter enviado.
           List<Empresa> lista = (List<Empresa>) request.getAttribute("empresas");
 
-          // 2. Se o servlet NÃO enviou a lista (ex: primeiro acesso à página),
-          //    então nós mesmos buscamos a lista completa.
-          if (lista == null) {
-            EmpresaDAO dao = new EmpresaDAO();
-            lista = dao.listar();
-          }
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>CNPJ</th>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Senha</th>
+            <th>ID do plano</th>
+            <th>Quantidade de funcionários</th>
+            <th>Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <c:forEach var="e" items="${empresas}">
+            <tr>
+                <td>${e.id}</td>
+                <td>${e.cnpj}</td>
+                <td>${e.nome}</td>
+                <td>${e.email}</td>
+                <td>${e.senha}</td>
+                <td>${e.idPlano}</td>
+                <td>${e.qntdFuncionarios}</td>
+                <td class="acoes">
+                    <!-- Botão para Editar: redireciona para atualizarEmpresa.jsp -->
+                    <button onclick="window.location.href='<%= request.getContextPath() %>/view/Empresa//atualizarEmpresa.jsp?id=${e.id}'" title="Editar">
+                        <i class="fa fa-pen"></i>
+                    </button>
 
-          // 3. Agora, itera sobre a lista (seja ela a filtrada ou a completa)
-          if (lista != null && !lista.isEmpty()) {
-        %>
-        <table>
-          <thead>
-          <tr>
-            <th>id_empresa</th>
-            <th>nome</th>
-            <th>cnpj</th>
-            <th>email</th>
-            <th>qtd_funcionários</th>
-            <th>plano</th>
-            <th class="acoes-col">Ações</th>
-          </tr>
-          </thead>
-          <tbody>
-          <%
-            for (Empresa e : lista) {
-              String plano;
-              switch(e.getIdPlano()) {
-                case 1: plano = "Mensal"; break;
-                case 2: plano = "Anual"; break;
-                case 3: plano = "Premium"; break;
-                default: plano = "Teste";
-              }
-          %>
-          <tr>
-            <td><%= e.getId() %></td>
-            <td><%= e.getNome() %></td>
-            <td><%= e.getCnpj() %></td>
-            <td><%= e.getEmail() %></td>
-            <td><%= e.getQntdFuncionarios() %></td>
-            <td><%= plano %></td>
-            <td class="acoes">
-
-              <button class="btn" title="Editar"
-                      onclick="abrirModalEditar(<%= e.getId() %>)">
-                <i class="fa-solid fa-pen"></i>
-              </button>
-
-              <button class="btn" title="Excluir"
-                      onclick="if(confirm('Deseja excluir esta empresa?')) window.location.href='<%= request.getContextPath() %>/DeletarEmpresaServlet?id=<%= e.getId() %>'">
-                <i class="fa-solid fa-trash"></i>
-              </button>
-            </td>
-          </tr>
-          <% } // Fim do for %>
-          </tbody>
-        </table>
-        <%
-        } else { // Fim do if (lista não está vazia)
-        %>
-        <p style="padding:10px 6px; color:#666;">Nenhuma empresa cadastrada (ou encontrada no filtro).</p>
-        <% } %>
-      </div>
-
-      <div class="in-table-modal" id="inTableModal" role="dialog" aria-hidden="true"
-           aria-label="Formulário da Empresa">
-        <button class="modal-close" id="modalClose" title="Fechar"><i
-                class="fa-solid fa-xmark"></i></button>
-        <iframe id="modalFrame" src="" name="modalFrame"
-                title="Formulário Cadastrar/Atualizar Empresa"></iframe>
-      </div>
-
-    </div>
-  </div>
+                    <!-- Botão para Excluir: chama o servlet com confirmação -->
+                    <form action="<%= request.getContextPath() %>/DeletarEmpresaServlet" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="${e.id}">
+                        <button title="Excluir" onclick="return confirm('Tem certeza que deseja excluir esta empresa?');">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
 </div>
 
 <script>
