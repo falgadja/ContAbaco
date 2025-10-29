@@ -255,14 +255,13 @@ section {
 
 
 .celular-conteudo {
-    text-align: center;
     color: white;
     margin-top: -100px;
 
 }
 
 .celular-conteudo img{
-    width: 100%;
+    width: 120%;
     height: 100%;
     object-fit: cover;
     border-radius: 20px;
@@ -649,8 +648,8 @@ section {
     justify-content: center;
     gap: 10px;
     margin-bottom: 50px;
-    /* margin-right: 600px; */ /* REMOVIDO */
-    margin-top: 10px; /* Ajustado */
+    margin-top: 10px;
+    align-items: center;
 }
 
 

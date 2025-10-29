@@ -211,6 +211,8 @@
 
         <form action="<%= request.getContextPath() %>/BuscarPagamentoServlet" method="get" class="filtros">
 
+            <label for="id">Buscar por ID:</label>
+            <input type="text" name="id" id="id" placeholder="Digite o ID" style="width: 120px;">
             <label for="tipoOrdenacao">Ordenar por:</label>
             <select name="tipoOrdenacao" id="tipoOrdenacao">
                 <option value="">-- Nenhum --</option>
@@ -239,7 +241,6 @@
 
             <button type="submit">Filtrar</button>
         </form>
-
         <c:if test="${not empty mensagem}">
             <p class="mensagem">${mensagem}</p>
         </c:if>
@@ -306,77 +307,7 @@
                         title="Formulário Cadastrar/Atualizar Pagamento"></iframe>
             </div>
         </div>
-    </div>
-    <form action="<%= request.getContextPath() %>/BuscarPagamentoServlet" method="get">
-    <label for="id">Buscar por ID:</label>
-        <input type="text" name="id" id="id" placeholder="Digite o ID">
-
-        <label for="tipoOrdenacao">Ordenar por:</label>
-        <select name="tipoOrdenacao" id="tipoOrdenacao">
-            <option value="">-- Nenhum --</option>
-            <option value="idCrescente">ID Crescente</option>
-            <option value="idDecrescente">ID Decrescente</option>
-            <option value="totalCrescente">Total Crescente</option>
-            <option value="totalDecrescente">Total Decrescente</option>
-            <option value="dataCrescente">Data Crescente</option>
-            <option value="dataDecrescente">Data Decrescente</option>
-        </select>
-
-        <label for="tipos">Tipo de pagamento:</label>
-        <select name="tipos" id="tipos" multiple>
-            <option value="PIX">PIX</option>
-            <option value="Boleto">Boleto</option>
-            <option value="Cartão">Cartão</option>
-            <option value="Transferência">Transferência</option>
-        </select>
-
-        <label for="inicio">Data início:</label>
-        <input type="date" name="inicio" id="inicio" placeholder="dd/MM/yyyy">
-
-        <label for="fim">Data fim:</label>
-        <input type="date" name="fim" id="fim" placeholder="dd/MM/yyyy">
-
-        <button type="submit">Filtrar</button>
-    </form>
-
-
-    <p class="mensagem">${mensagem}</p>
-
-    <table>
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Tipo de Pagamento</th>
-            <th>Total</th>
-            <th>Data</th>
-            <th>ID Empresa</th>
-            <th>Ações</th>
-        </tr>
-        </thead>
-        <tbody>
-        <c:forEach var="p" items="${pagamentos}">
-            <tr>
-                <td>${p.id}</td>
-                <td>${p.tipoPagto}</td>
-                <td>${p.total}</td>
-                <td>${p.data}</td>
-                <td>${p.idEmpresa}</td>
-                <td class="acoes">
-                    <!-- Botão para Excluir: chama o servlet com confirmação -->
-                    <form action="<%= request.getContextPath() %>/DeletarPagamentoServlet" method="post" style="display:inline;">
-                        <input type="hidden" name="id" value="${p.id}">
-                        <button title="Excluir" onclick="return confirm('Tem certeza que deseja excluir este pagamento?');">
-                            <i class="fa fa-trash"></i>
-                        </button>
-                    </form>
-                </td>
-            </tr>
-        </c:forEach>
-        </tbody>
-    </table>
-</div>
-
-<script>
+    </div> </div> <script>
     (function () {
         const modal = document.getElementById('inTableModal');
         const frame = document.getElementById('modalFrame');

@@ -478,8 +478,19 @@
         <c:if test="${not empty mensagem}">
             <p class="mensagem">${mensagem}</p>
         </c:if>
+
         <div class="tabela tabela-adm adm-style" id="tabelaContainer">
             <div class="tabela-container">
+                <%
+                    List<Administrador> lista = (List<Administrador>) request.getAttribute("adms");
+
+                    if (lista == null) {
+                        AdmDAO dao = new AdmDAO();
+                        lista = dao.listar();
+                    }
+
+                    if (lista != null && !lista.isEmpty()) {
+                %>
                 <table>
                     <thead>
                     <tr>
@@ -491,14 +502,6 @@
                     </thead>
                     <tbody>
                     <%
-                        List<Administrador> lista = (List<Administrador>) request.getAttribute("adms");
-
-
-                        if (lista == null) {
-                            AdmDAO dao = new AdmDAO();
-                            lista = dao.listar();
-                        }
-
                         for (Administrador a : lista) {
                     %>
                     <tr>
@@ -508,15 +511,14 @@
                         <td>
                             <%= a.getEmail() %>
                         </td>
+
                         <td>
                             <%= a.getSenha() %>
                         </td>
                         <td class="acoes">
-
                             <button class="btn" title="Editar" onclick="abrirModalEditar(<%= a.getId() %>)">
                                 <i class="fa-solid fa-pen"></i>
                             </button>
-
                             <button class="btn" title="Excluir"
                                     onclick="if(confirm('Deseja excluir este administrador?')) window.location.href='<%= request.getContextPath() %>/DeletarAdmServlet?id=<%= a.getId() %>';"><i
                                     class="fa-solid fa-trash"></i></button>
@@ -527,6 +529,13 @@
                     %>
                     </tbody>
                 </table>
+                <%
+                } else { // Fim do if (lista não está vazia)
+                %>
+                <p style="padding:10px 6px; color:#666;">Nenhum administrador cadastrado (ou encontrado no filtro).</p>
+                <%
+                    } // Fim do else
+                %>
             </div>
 
             <div class="in-table-modal" id="inTableModal" role="dialog" aria-hidden="true"
@@ -537,59 +546,18 @@
                         title="Formulário Cadastrar Administrador"></iframe>
             </div>
         </div>
-    </div>
-</div>
+    </div> </div> <%-- ***** SCRIPT NO LUGAR CORRETO (antes de </body>) ***** --%>
+<script>
+    (function () {
+        const modal = document.getElementById('inTableModal');
+        const frame = document.getElementById('modalFrame');
+        const openBtn = document.getElementById('openModal');
+        const closeBtn = document.getElementById('modalClose');
 
-
-        <label for="tipoOrdenacao">Ordenar por:</label>
-        <select name="tipoOrdenacao" id="tipoOrdenacao">
-            <option value="">-- Nenhum --</option>
-            <option value="idCrescente">ID Crescente</option>
-            <option value="idDecrescente">ID Decrescente</option>
-            <option value="Az">Email dos administradores em ordem crescente</option>
-            <option value="Za">Email dos administradores em ordem decrescente</option>
-        </select>
-
-        <button type="submit">Filtrar</button>
-    </form>
-
-
-    <p class="mensagem">${mensagem}</p>
-
-    <table>
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Email</th>
-            <th>Senha</th>
-            <th>Ações</th>
-        </tr>
-        </thead>
-        <tbody>
-        <c:forEach var="a" items="${adms}">
-            <tr>
-                <td>${a.id}</td>
-                <td>${a.email}</td>
-                <td>${a.senha}</td>
-                <td class="acoes">
-                    <!-- Botão para Editar: redireciona para atualizarAdm.jsp -->
-                    <button onclick="window.location.href='<%= request.getContextPath() %>/view/Plano//atualizarAdm.jsp?id=${a.id}'" title="Editar">
-                        <i class="fa fa-pen"></i>
-                    </button>
-
-                    <!-- Botão para Excluir: chama o servlet com confirmação -->
-                    <form action="<%= request.getContextPath() %>/DeletarAdmServlet" method="post" style="display:inline;">
-                        <input type="hidden" name="id" value="${a.id}">
-                        <button title="Excluir" onclick="return confirm('Tem certeza que deseja excluir este Administrador?');">
-                            <i class="fa fa-trash"></i>
-                        </button>
-                    </form>
-                </td>
-            </tr>
-        </c:forEach>
-        </tbody>
-    </table>
-</div>
+        if (!modal || !frame || !openBtn || !closeBtn) {
+            console.error('Elementos do modal não encontrados.');
+            return;
+        }
 
         openBtn.addEventListener('click', function () {
             frame.src = '<%= request.getContextPath() %>/view/Adm/cadastrarAdm.jsp?modal=1';
@@ -601,7 +569,8 @@
             modal.classList.remove('open');
             modal.setAttribute('aria-hidden', 'true');
             frame.src = 'about:blank';
-
+            // Descomente a linha abaixo para recarregar a tabela ao fechar
+            // window.location.reload();
         }
 
         closeBtn.addEventListener('click', closeModal);
@@ -614,9 +583,7 @@
 
         window.abrirModalEditar = function (id) {
             if (!id) return;
-
             frame.src = '<%= request.getContextPath() %>/view/Adm/atualizarAdm.jsp?id=' + id + '&modal=1';
-
             modal.classList.add('open');
             modal.setAttribute('aria-hidden', 'false');
         };

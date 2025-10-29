@@ -216,53 +216,81 @@
                 <option value="Az">Nome (A-Z)</option>
                 <option value="Za">Nome (Z-A)</option>
             </select>
+            
+            <button type="submit">Filtrar</button>
+        </form>
 
-    <table>
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Sobrenome</th>
-            <th>Data de nascimento</th>
-            <th>Email</th>
-            <th>Senha</th>
-            <th>ID do setor</th>
-            <th>ID da empresa</th>
-            <th>Ações</th>
-        </tr>
-        </thead>
-        <tbody>
-        <c:forEach var="f" items="${funcionarios}">
-            <tr>
-                <td>${f.id}</td>
-                <td>${f.nome}</td>
-                <td>${f.sobrenome}</td>
-                <td>${f.dataNascimento}</td>
-                <td>${f.email}</td>
-                <td>${f.senha}</td>
-                <td>${f.idSetor}</td>
-                <td>${f.idEmpresa}</td>
-                <td class="acoes">
-                    <!-- Botão para Editar: redireciona para atualizarFuncionario.jsp -->
-                    <button onclick="window.location.href='<%= request.getContextPath() %>/view/Funcionario//atualizarFuncionario.jsp?id=${f.id}'" title="Editar">
-                        <i class="fa fa-pen"></i>
-                    </button>
+        <c:if test="${not empty mensagem}">
+            <p class="mensagem">${mensagem}</p>
+        </c:if>
 
-                    <!-- Botão para Excluir: chama o servlet com confirmação -->
-                    <form action="<%= request.getContextPath() %>/DeletarFuncionarioServlet" method="post" style="display:inline;">
-                        <input type="hidden" name="id" value="${f.id}">
-                        <button title="Excluir" onclick="return confirm('Tem certeza que deseja excluir este funcionario?');">
-                            <i class="fa fa-trash"></i>
-                        </button>
-                    </form>
-                </td>
-            </tr>
-        </c:forEach>
-        </tbody>
-    </table>
-</div>
+        <div class="tabela func-style">
+            <div class="tabela-container">
+                <%
+                    List<Funcionario> lista = (List<Funcionario>) request.getAttribute("funcionarios");
+                    if (lista == null) {
+                        FuncionarioDAO dao = new FuncionarioDAO();
+                        lista = dao.listar(); // Assumindo que seu DAO tem o método listar()
+                    }
 
-<script>
+                    if (lista != null && !lista.isEmpty()) {
+                %>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Sobrenome</th>
+                        <th>Data Nasc.</th>
+                        <th>Email</th>
+                        <th>ID Setor</th>
+                        <th>ID Empresa</th>
+                        <th class="acoes-col">Ações</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <%
+                        for (Funcionario f : lista) {
+                    %>
+                    <tr>
+                        <td><%= f.getId() %></td>
+                        <td><%= f.getNome() %></td>
+                        <td><%= f.getSobrenome() %></td>
+                        <td><%= f.getDataNascimento() %></td>
+                        <td><%= f.getEmail() %></td>
+                        <td><%= f.getIdSetor() %></td>
+                        <td><%= f.getIdEmpresa() %></td>
+                        <td class="acoes">
+                            <button class="btn" title="Editar"
+                                    onclick="abrirModalEditar(<%= f.getId() %>)">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+
+                            <button class="btn" title="Excluir"
+                                    onclick="if(confirm('Deseja excluir este funcionário?')) window.location.href='<%= request.getContextPath() %>/DeletarFuncionarioServlet?id=<%= f.getId() %>'">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <% } // Fim do for %>
+                    </tbody>
+                </table>
+                <%
+                } else { // Fim do if (lista não está vazia)
+                %>
+                <p style="padding:10px 6px; color:#666;">Nenhum funcionário cadastrado (ou encontrado no filtro).</p>
+                <% } %>
+            </div>
+
+            <div class="in-table-modal" id="inTableModal" role="dialog" aria-hidden="true"
+                 aria-label="Formulário do Funcionário">
+                <button class="modal-close" id="modalClose" title="Fechar"><i
+                        class="fa-solid fa-xmark"></i></button>
+                <iframe id="modalFrame" src="" name="modalFrame"
+                        title="Formulário Cadastrar/Atualizar Funcionário"></iframe>
+            </div>
+        </div>
+        </div> </div> <script>
     (function () {
         const modal = document.getElementById('inTableModal');
         const frame = document.getElementById('modalFrame');
