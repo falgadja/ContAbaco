@@ -90,34 +90,6 @@ public class PlanoDAO {
         return plano;
     }
 
-    // READ - BUSCAR PLANO PELO PREÇO
-    public Plano buscarPorPreco(double preco) {
-        Conexao conexao = new Conexao();
-        Connection conn = conexao.conectar();
-        Plano plano = null;
-
-        try {
-            String sql = "SELECT * FROM PLANO WHERE PRECO = ?";
-            PreparedStatement pst = conn.prepareStatement(sql);
-            pst.setDouble(1, preco);
-            ResultSet rs = pst.executeQuery();
-
-            if (rs.next()) {
-                plano = new Plano(
-                        rs.getInt("ID"),
-                        rs.getString("NOME"),
-                        rs.getDouble("PRECO")
-                );
-            }
-        } catch (SQLException sqle) {
-            sqle.printStackTrace();
-        } finally {
-            conexao.desconectar(conn);
-        }
-
-        return plano;
-    }
-
     // READ - LISTAR TODOS OS PLANOS
     public List<Plano> listar() {
         Conexao conexao = new Conexao();

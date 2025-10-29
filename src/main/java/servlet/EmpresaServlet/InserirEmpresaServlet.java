@@ -71,8 +71,8 @@ public class InserirEmpresaServlet extends HttpServlet {
             empresa.setCnpj(cnpjNumeros);
             empresa.setEmail(email);
             empresa.setSenha(senhaHash);
-            empresa.setIdPlano(1);
-            empresa.setQntdFuncionarios(0);
+            empresa.setIdPlano(idPlano);
+            empresa.setQntdFuncionarios(qntdFuncionarios);
 
             // Insere no banco
             EmpresaDAO dao = new EmpresaDAO();

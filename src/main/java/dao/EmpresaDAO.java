@@ -75,38 +75,6 @@ public class EmpresaDAO {
         return empresa; // retorna null se não encontrar
     }
 
-    // READ - BUSCAR EMPRESA PELO CNPJ
-    public Empresa buscarPorCnpj(String cnpj) {
-        Conexao conexao = new Conexao();
-        Connection con = conexao.conectar();
-        Empresa empresa = null;
-        String sql = "SELECT * FROM EMPRESA WHERE cnpj = ?";
-
-        try {
-            PreparedStatement pst = con.prepareStatement(sql);
-            pst.setString(1, cnpj);
-            ResultSet rs = pst.executeQuery();
-
-            if (rs.next()) {
-                empresa = new Empresa(
-                        rs.getInt("id"),
-                        rs.getString("cnpj"),
-                        rs.getString("nome"),
-                        rs.getString("email"),
-                        rs.getString("senha"),
-                        rs.getInt("id_plano"),
-                        rs.getInt("qntd_funcionarios")
-                );
-            }
-        } catch (SQLException sqle) {
-            sqle.printStackTrace();
-        } finally {
-            conexao.desconectar(con);
-        }
-
-        return empresa;
-    }
-
     // READ - BUSCAR EMPRESA PELO NOME
     public Empresa buscarPorNome(String nome) {
         Conexao conexao = new Conexao();
@@ -138,71 +106,29 @@ public class EmpresaDAO {
 
         return empresa;
     }
-
-    // READ - BUSCAR EMPRESA PELO EMAIL
-    public Empresa buscarPorEmail(String email) {
+    //READ - BUSCAR PELO EMAIL E RETORNAR O HASH
+    public String buscarHashPorEmail(String email) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
-        Empresa empresa = null;
-        String sql = "SELECT * FROM EMPRESA WHERE email = ?";
+        String sql = "SELECT senha FROM empresa WHERE email = ?";
+        String hash = null;
 
-        try {
-            PreparedStatement pst = con.prepareStatement(sql);
-            pst.setString(1, email);
-            ResultSet rs = pst.executeQuery();
-
-            if (rs.next()) {
-                empresa = new Empresa(
-                        rs.getInt("id"),
-                        rs.getString("cnpj"),
-                        rs.getString("nome"),
-                        rs.getString("email"),
-                        rs.getString("senha"),
-                        rs.getInt("id_plano"),
-                        rs.getInt("qntd_funcionarios")
-                );
-            }
-        } catch (SQLException sqle) {
-            sqle.printStackTrace();
-        } finally {
-            conexao.desconectar(con);
-        }
-
-        return empresa;
-    }
-
-    // READ - BUSCAR EMPRESA PELO EMAIL E SENHA
-    public Empresa buscarPorEmailESenha(String email, String senha) {
-        Conexao conexao = new Conexao();
-        Connection con = conexao.conectar();
-        Empresa empresa = null;
-        String sql = "SELECT * FROM EMPRESA WHERE email = ? AND senha = ?";
-
-        try {
-            PreparedStatement pst = con.prepareStatement(sql);
-            pst.setString(1, email);
-            pst.setString(2, senha);
-            ResultSet rs = pst.executeQuery();
+        try (
+                PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                empresa = new Empresa(
-                        rs.getInt("id"),
-                        rs.getString("cnpj"),
-                        rs.getString("nome"),
-                        rs.getString("email"),
-                        rs.getString("senha"),
-                        rs.getInt("id_plano"),
-                        rs.getInt("qntd_funcionarios")
-                );
+                hash = rs.getString("senha");
             }
-        } catch (SQLException sqle) {
-            sqle.printStackTrace();
-        } finally {
-            conexao.desconectar(con);
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao buscar hash do administrador: " + e.getMessage());
         }
 
-        return empresa;
+        return hash;
     }
+
 
     // READ - LISTAR TODAS AS EMPRESAS
     public List<Empresa> listar() {
@@ -235,28 +161,6 @@ public class EmpresaDAO {
 
 
         return empresas;
-    }
-    //READ - BUSCAR PELO EMAIL E RETORNAR O HASH
-    public String buscarHashPorEmail(String email) {
-        Conexao conexao = new Conexao();
-        Connection con = conexao.conectar();
-        String sql = "SELECT senha FROM empresa WHERE email = ?";
-        String hash = null;
-
-        try (
-                PreparedStatement stmt = con.prepareStatement(sql)) {
-            stmt.setString(1, email);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                hash = rs.getString("senha");
-            }
-
-        } catch (SQLException e) {
-            System.out.println("Erro ao buscar hash do administrador: " + e.getMessage());
-        }
-
-        return hash;
     }
 
     // UPDATE - ATUALIZAR EMPRESA
