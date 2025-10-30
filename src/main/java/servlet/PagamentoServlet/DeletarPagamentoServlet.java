@@ -43,6 +43,6 @@ public class DeletarPagamentoServlet extends HttpServlet {
         }
 
         // Caminho absoluto para o JSP de CRUD do pagamento
-        request.getRequestDispatcher("/view/Pagamento/crudPagamento.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/view/Pagamento/crudPagamento.jsp").forward(request, response);
     }
 }

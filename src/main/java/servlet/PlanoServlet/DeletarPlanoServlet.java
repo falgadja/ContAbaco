@@ -43,6 +43,6 @@ public class DeletarPlanoServlet extends HttpServlet {
         }
 
         // Caminho absoluto para o JSP de CRUD do plano
-        request.getRequestDispatcher("/view/Plano/crudPlano.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/view/Plano/crudPlano.jsp").forward(request, response);
     }
 }

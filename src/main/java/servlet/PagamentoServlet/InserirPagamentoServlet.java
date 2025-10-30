@@ -76,26 +76,26 @@ public class InserirPagamentoServlet extends HttpServlet {
             int idPagamento = pagamentoDAO.inserir(pagamento);
 
             if (idPagamento > 0) {
-                response.sendRedirect(request.getContextPath()+"/view/Pagamento/crudPagamento.jsp"); // sucesso
+                response.sendRedirect(request.getContextPath()+"/WEB-INF/view/Pagamento/crudPagamento.jsp"); // sucesso
             } else {
                 request.setAttribute("mensagem", "Não foi possível cadastrar o pagamento. Tente novamente!");
-                request.getRequestDispatcher("/view/Pagamento/cadastrarPagamento.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/view/Pagamento/cadastrarPagamento.jsp").forward(request, response);
             }
 
         } catch (NumberFormatException e) {
             e.printStackTrace();
             request.setAttribute("mensagem", "Erro: valores numéricos inválidos!");
-            request.getRequestDispatcher("/view/Pagamento/cadastrarPagamento.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/view/Pagamento/cadastrarPagamento.jsp").forward(request, response);
         } catch (DateTimeParseException e) { // <-- NOVO CATCH
             // Ocorre se o formato (Regex) estiver certo, mas a data for impossível
             // Exemplo: "2025-02-30"
             e.printStackTrace();
             request.setAttribute("mensagem", "Erro: A data de pagamento fornecida é inválida!");
-            request.getRequestDispatcher("/view/Pagamento/cadastrarPagamento.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/view/Pagamento/cadastrarPagamento.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("mensagem", "Erro ao cadastrar pagamento!");
-            request.getRequestDispatcher("/view/Pagamento/cadastrarPagamento.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/view/Pagamento/cadastrarPagamento.jsp").forward(request, response);
         }
     }
 

@@ -39,7 +39,7 @@ public class InserirEnderecoServlet extends HttpServlet {
             if (pais.isBlank() || estado.isBlank() || cidade.isBlank() || bairro.isBlank() ||
                     rua.isBlank() || cep.isBlank() || numeroStr.isBlank() || idEmpresaStr.isBlank()) {
                 request.setAttribute("mensagem", "Todos os campos são obrigatórios!");
-                request.getRequestDispatcher("/view/Endereco/cadastrarEndereco.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/view/Endereco/cadastrarEndereco.jsp").forward(request, response);
                 return;
             }
 
@@ -54,15 +54,15 @@ public class InserirEnderecoServlet extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/view/Empresa/crudEmpresa.jsp  ");
             } else {
                 request.setAttribute("mensagem", "Não foi possível cadastrar o endereço. Tente novamente!");
-                request.getRequestDispatcher("/view/Endereco/cadastrarEndereco.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/view/Endereco/cadastrarEndereco.jsp").forward(request, response);
             }
 
         } catch (NumberFormatException e) {
             request.setAttribute("mensagem", "Erro: número inválido informado!");
-            request.getRequestDispatcher("/view/Endereco/cadastrarEndereco.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/view/Endereco/cadastrarEndereco.jsp").forward(request, response);
         } catch (Exception e) {
             request.setAttribute("mensagem", "Erro ao processar o cadastro de endereço!");
-            request.getRequestDispatcher("/view/Endereco/cadastrarEndereco.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/view/Endereco/cadastrarEndereco.jsp").forward(request, response);
         }
     }
 

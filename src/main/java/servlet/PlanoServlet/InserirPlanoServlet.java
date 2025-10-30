@@ -21,7 +21,7 @@ public class InserirPlanoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        request.getRequestDispatcher("/view/crud.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/view/crud.jsp").forward(request, response);
     }
 
     @Override
@@ -35,7 +35,7 @@ public class InserirPlanoServlet extends HttpServlet {
             preco = Double.parseDouble(precoStr);
         } catch (NumberFormatException e) {
             request.setAttribute("mensagem", "Preço inválido. Digite um número válido.");
-            request.getRequestDispatcher("/view/crud.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/view/crud.jsp").forward(request, response);
             return;
         }
         //Objeto de plano
@@ -50,17 +50,17 @@ public class InserirPlanoServlet extends HttpServlet {
             int idGerado = planoDAO.inserir(plano);
             if (idGerado > 0) {
                 // Redireciona para a página de listagem
-                response.sendRedirect(request.getContextPath() + "/view/Plano/crudPlano.jsp");
+                response.sendRedirect(request.getContextPath() + "/WEB-INF/view/Plano/crudPlano.jsp");
                 return;
             } else {
                 request.setAttribute("mensagem", "Não foi possível inserir, tente novamente mais tarde.");
-                request.getRequestDispatcher("/view/crud.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/view/crud.jsp").forward(request, response);
                 return;
             }
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("mensagem", "Erro inesperado. Contate o administrador.");
-            request.getRequestDispatcher("/view/crud.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/view/crud.jsp").forward(request, response);
         }
 
     }

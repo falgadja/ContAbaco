@@ -153,14 +153,32 @@ public class AdmDAO {
     public int atualizar(Administrador adm) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
-        int retorno;
-        String sql = "UPDATE administrador SET email = ?, senha = ? WHERE id = ?";
+        int retorno = -1;
+
+        // Vamos construir o SQL dinamicamente
+        StringBuilder sql = new StringBuilder("UPDATE administrador SET email = ?");
+
+        // Verificamos se a senha foi fornecida (o servlet vai passar o hash)
+        boolean senhaFoiAtualizada = (adm.getSenha() != null && !adm.getSenha().isEmpty());
+
+        if (senhaFoiAtualizada) {
+            sql.append(", senha = ?"); // Adiciona a senha ao SQL
+        }
+
+        sql.append(" WHERE id = ?"); // Adiciona o WHERE
 
         try {
-            PreparedStatement pst = con.prepareStatement(sql);
+            PreparedStatement pst = con.prepareStatement(sql.toString());
+
+            // Define os parâmetros na ordem correta
             pst.setString(1, adm.getEmail());
-            pst.setString(2, adm.getSenha());
-            pst.setInt(3, adm.getId());
+
+            if (senhaFoiAtualizada) {
+                pst.setString(2, adm.getSenha());
+                pst.setInt(3, adm.getId()); // Posição 3 se a senha existir
+            } else {
+                pst.setInt(2, adm.getId()); // Posição 2 se a senha NÃO existir
+            }
 
             retorno = pst.executeUpdate();
 

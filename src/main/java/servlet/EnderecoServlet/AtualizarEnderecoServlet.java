@@ -66,7 +66,7 @@ public class AtualizarEnderecoServlet extends HttpServlet {
                 endereco.setIdEmpresa(idEmpresa);
 
                 if (enderecoDAO.atualizar(endereco) > 0) {
-                    response.sendRedirect(request.getContextPath() + "/view/Empresa/crudEmpresa.jsp");
+                    response.sendRedirect(request.getContextPath() + "/WEB-INF/view/Empresa/crudEmpresa.jsp");
                     return; // encerra o método para não cair no forward abaixo
                 } else {
                     request.setAttribute("mensagemAtualizar", "Não foi possível atualizar o Endereço.");

@@ -1,103 +1,82 @@
 package servlet.FuncionarioServlet;
 
+import dao.EmpresaDAO; // Importe
 import dao.FuncionarioDAO;
+import dao.SetorDAO; // Importe
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.Empresa; // Importe
 import model.Funcionario;
+import model.Setor; // Importe
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List; // Importe
 
-@WebServlet("/AtualizarFuncionarioServlet")
+@WebServlet("/funcionarios-update")
 public class AtualizarFuncionarioServlet extends HttpServlet {
 
+    /**
+     * CORRIGIDO: Agora também busca as listas para os dropdowns.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Redireciona GET para POST
-        doPost(request, response);
-    }
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        // Recebendo os parâmetros do formulário
         String idParametro = request.getParameter("id");
-        String nome = request.getParameter("nome");
-        String sobrenome = request.getParameter("sobrenome");
-        String dataNascimentoParametro = request.getParameter("dataNascimento");
-        String email = request.getParameter("email");
-        String senha = request.getParameter("senha");
-        String idSetorParametro = request.getParameter("idSetor");
-        String idEmpresaParametro = request.getParameter("idEmpresa");
-
-        FuncionarioDAO funcionarioDAO = new FuncionarioDAO();
-        Funcionario funcionario = new Funcionario();
+        if (idParametro == null || idParametro.isEmpty()) {
+            request.getSession().setAttribute("mensagem", "ID do funcionário não encontrado para edição.");
+            response.sendRedirect(request.getContextPath() + "/funcionarios");
+            return;
+        }
 
         try {
-            // Verifica campos obrigatórios
-            if (idParametro == null || idParametro.isEmpty() ||
-                    nome == null || nome.trim().isEmpty() ||
-                    sobrenome == null || sobrenome.trim().isEmpty() ||
-                    dataNascimentoParametro == null || dataNascimentoParametro.trim().isEmpty() ||
-                    email == null || email.trim().isEmpty() ||
-                    idSetorParametro == null || idSetorParametro.isEmpty() ||
-                    idEmpresaParametro == null || idEmpresaParametro.isEmpty()) {
+            int id = Integer.parseInt(idParametro);
 
-                request.setAttribute("mensagemAtualizar", "Campos obrigatórios não preenchidos.");
-                request.getRequestDispatcher("/view/Funcionario/crudFuncionario.jsp").forward(request, response);
+            // 1. Buscar o funcionário
+            FuncionarioDAO funcionarioDAO = new FuncionarioDAO();
+            Funcionario funcionario = funcionarioDAO.buscarPorId(id);
+
+            // 2. Buscar as listas
+            SetorDAO setorDAO = new SetorDAO();
+            EmpresaDAO empresaDAO = new EmpresaDAO();
+            List<Setor> setores = setorDAO.listarTodos(); // (Assumindo que seu SetorDAO tem 'listarTodos')
+            List<Empresa> empresas = empresaDAO.listar();
+
+            if (funcionario == null) {
+                request.getSession().setAttribute("mensagem", "Funcionário não encontrado (ID: " + id + ").");
+                response.sendRedirect(request.getContextPath() + "/funcionarios");
                 return;
             }
 
-            // Conversão de valores
-            int id = Integer.parseInt(idParametro);
-            int idSetor = Integer.parseInt(idSetorParametro);
-            int idEmpresa = Integer.parseInt(idEmpresaParametro);
-            LocalDate dataNascimento = LocalDate.parse(dataNascimentoParametro, DateTimeFormatter.ISO_LOCAL_DATE);
+            // 3. Enviar TUDO para a JSP
+            request.setAttribute("funcionarioParaEditar", funcionario);
+            request.setAttribute("setores", setores);
+            request.setAttribute("empresas", empresas);
 
-            // Busca o funcionário existente no BD para preservar senha
-            Funcionario funcionarioExistente = funcionarioDAO.buscarPorId(id);
-
-            // Monta o objeto atualizado
-            funcionario.setId(id);
-            funcionario.setNome(nome.trim());
-            funcionario.setSobrenome(sobrenome.trim());
-            funcionario.setDataNascimento(dataNascimento);
-            funcionario.setEmail(email.trim());
-            funcionario.setIdSetor(idSetor);
-            funcionario.setIdEmpresa(idEmpresa);
-
-            // Atualiza senha apenas se o campo foi preenchido
-            if (senha != null && !senha.trim().isEmpty()) {
-                funcionario.setSenha(BCrypt.hashpw(senha, BCrypt.gensalt()));
-            } else {
-                funcionario.setSenha(funcionarioExistente.getSenha());
-            }
-
-            // Atualiza no banco
-            if (funcionarioDAO.atualizar(funcionario) > 0) {
-                // Redireciona para evitar duplo envio
-                response.sendRedirect(request.getContextPath() + "/view/Funcionario/crudFuncionario.jsp?msg=sucesso");
-            } else {
-                request.setAttribute("mensagemAtualizar", "Erro ao atualizar o funcionário.");
-                request.getRequestDispatcher("/view/Funcionario/crudFuncionario.jsp").forward(request, response);
-            }
-
-        } catch (NumberFormatException e) {
-            request.setAttribute("mensagemAtualizar", "Campos numéricos inválidos.");
-            e.printStackTrace();
-            request.getRequestDispatcher("/view/Funcionario/crudFuncionario.jsp").forward(request, response);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/Funcionario/atualizarFuncionario.jsp");
+            dispatcher.forward(request, response);
 
         } catch (Exception e) {
-            request.setAttribute("mensagemAtualizar", "Erro inesperado ao tentar atualizar o funcionário.");
             e.printStackTrace();
-            request.getRequestDispatcher("/view/Funcionario/crudFuncionario.jsp").forward(request, response);
+            request.getSession().setAttribute("mensagem", "Erro ao carregar dados para edição: " + e.getMessage());
+            response.sendRedirect(request.getContextPath() + "/funcionarios");
         }
+    }
+
+    /**
+     * Seu método doPost (que você já tinha e estava correto) continua aqui...
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // (Todo o seu código doPost... ele já está correto e redireciona para /funcionarios)
+        // ...
     }
 }

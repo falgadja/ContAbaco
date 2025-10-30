@@ -45,7 +45,7 @@ public class AtualizarPagamentoServlet extends HttpServlet {
                     idEmpresaParam == null || idEmpresaParam.isEmpty()) {
 
                 request.setAttribute("mensagemAtualizar", "Preencha todos os campos.");
-                request.getRequestDispatcher("/view/Pagamento/atualizarPagamento.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/view/Pagamento/atualizarPagamento.jsp").forward(request, response);
                 return;
             }
 
@@ -67,25 +67,25 @@ public class AtualizarPagamentoServlet extends HttpServlet {
 
             if (linhasAfetadas > 0) {
                 request.setAttribute("mensagemAtualizar", "Pagamento atualizado com sucesso.");
-                response.sendRedirect(request.getContextPath() + "/view/Pagamento/crudPagamento.jsp");
+                response.sendRedirect(request.getContextPath() + "/WEB-INF/view/Pagamento/crudPagamento.jsp");
             } else {
                 request.setAttribute("pagamento", pagamento);
                 request.setAttribute("mensagemAtualizar", "Não foi possível atualizar o pagamento.");
-                request.getRequestDispatcher("/view/Pagamento/atualizarPagamento.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/view/Pagamento/atualizarPagamento.jsp").forward(request, response);
             }
 
         } catch (NumberFormatException e) {
             request.setAttribute("pagamento", pagamento);
             request.setAttribute("mensagemAtualizar", "Valores numéricos inválidos.");
-            request.getRequestDispatcher("/view/Pagamento/atualizarPagamento.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/view/Pagamento/atualizarPagamento.jsp").forward(request, response);
         } catch (DateTimeParseException e) {
             request.setAttribute("pagamento", pagamento);
             request.setAttribute("mensagemAtualizar", "Data inválida.");
-            request.getRequestDispatcher("/view/Pagamento/atualizarPagamento.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/view/Pagamento/atualizarPagamento.jsp").forward(request, response);
         } catch (Exception e) {
             request.setAttribute("pagamento", pagamento);
             request.setAttribute("mensagemAtualizar", "Erro inesperado ao atualizar o pagamento.");
-            request.getRequestDispatcher("/view/Pagamento/atualizarPagamento.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/view/Pagamento/atualizarPagamento.jsp").forward(request, response);
         }
     }
 }

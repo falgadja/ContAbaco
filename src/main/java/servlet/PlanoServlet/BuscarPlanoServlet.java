@@ -81,7 +81,7 @@ public class BuscarPlanoServlet extends HttpServlet {
         }
 
         // Encaminha para o JSP
-        request.getRequestDispatcher("/view/Plano/crudPlano.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/view/Plano/crudPlano.jsp").forward(request, response);
     }
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)

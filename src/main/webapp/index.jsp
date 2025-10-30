@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ContÁbaco - Simples & Rápido</title>
@@ -33,8 +34,8 @@
                     </nav>
                     
                     <div class="botoes-acesso">
-                        <a href="view/Login/login.jsp" target="_blank" class="botao-secundario">Entrar</a>
-                        <a href="view/erro.jsp" target="_blank" class="botao-principal">Cadastrar</a>
+                        <a href="${pageContext.request.contextPath}/login" target="_blank" class="botao-secundario">Entrar</a>
+                        <a href="/WEB-INF/view/Erros/erro.jsp" target="_blank" class="botao-principal">Cadastrar</a>
                     </div>
                 </div>
             </div>

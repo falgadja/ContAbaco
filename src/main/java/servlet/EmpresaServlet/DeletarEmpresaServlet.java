@@ -9,12 +9,17 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet("/DeletarEmpresaServlet")
+// 1. URL "limpa"
+@WebServlet("/empresas-delete")
 public class DeletarEmpresaServlet extends HttpServlet {
+
+    /**
+     * 2. CORREÇÃO: doGet agora redireciona para a lista (Evita delete por GET)
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doPost(request, response);
+        response.sendRedirect(request.getContextPath() + "/empresas");
     }
 
     @Override
@@ -26,23 +31,24 @@ public class DeletarEmpresaServlet extends HttpServlet {
 
         try {
             if (idParametro == null || idParametro.isEmpty()) {
-                request.setAttribute("mensagemDeletar", "ID da empresa não foi encontrado.");
+                request.getSession().setAttribute("mensagem", "ID da empresa não foi encontrado.");
             } else {
                 int id = Integer.parseInt(idParametro);
 
-                if (empresaDAO.deletar(id) > 0) {
-                    request.setAttribute("mensagemDeletar", "Empresa deletada com sucesso!");
+                if (empresaDAO.deletar(id) > 0) { // (Seu DAO precisa do método 'deletar')
+                    request.getSession().setAttribute("mensagem", "Empresa deletada com sucesso!");
                 } else {
-                    request.setAttribute("mensagemDeletar", "Não foi possível deletar.");
+                    request.getSession().setAttribute("mensagem", "Não foi possível deletar a empresa.");
                 }
             }
         } catch (NumberFormatException nfe) {
-            request.setAttribute("mensagemDeletar", "ID inválido.");
+            request.getSession().setAttribute("mensagem", "ID inválido.");
         } catch (Exception e) {
-            request.setAttribute("mensagemDeletar", "Erro inesperado ao tentar deletar.");
+            e.printStackTrace();
+            request.getSession().setAttribute("mensagem", "Erro inesperado ao tentar deletar.");
         }
 
-        // Caminho absoluto para o JSP de CRUD da empresa
-        response.sendRedirect(request.getContextPath() + "/view/Empresa/crudEmpresa.jsp");
+        // 3. CORREÇÃO: REDIRECIONA para o servlet de listagem
+        response.sendRedirect(request.getContextPath() + "/empresas");
     }
 }

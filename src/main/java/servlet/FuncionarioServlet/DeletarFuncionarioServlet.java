@@ -9,12 +9,17 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet("/DeletarFuncionarioServlet")
+// 1. URL "limpa"
+@WebServlet("/funcionarios-delete")
 public class DeletarFuncionarioServlet extends HttpServlet {
+
+    /**
+     * 2. CORREÇÃO: doGet agora redireciona (Evita delete por GET)
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doPost(request, response);
+        response.sendRedirect(request.getContextPath() + "/funcionarios");
     }
 
     @Override
@@ -26,23 +31,24 @@ public class DeletarFuncionarioServlet extends HttpServlet {
 
         try {
             if (idParametro == null || idParametro.isEmpty()) {
-                request.setAttribute("mensagemDeletar", "ID do funcionário não foi encontrado.");
+                request.getSession().setAttribute("mensagemDeletar", "ID do funcionário não foi encontrado.");
             } else {
                 int id = Integer.parseInt(idParametro);
 
-                if (funcionarioDAO.deletar(id) > 0) {
-                    request.setAttribute("mensagemDeletar", "Funcionário deletado com sucesso!");
+                if (funcionarioDAO.deletar(id) > 0) { // (Seu DAO precisa ter 'deletar')
+                    request.getSession().setAttribute("mensagemDeletar", "Funcionário deletado com sucesso!");
                 } else {
-                    request.setAttribute("mensagemDeletar", "Não foi possível deletar.");
+                    request.getSession().setAttribute("mensagemDeletar", "Não foi possível deletar.");
                 }
             }
         } catch (NumberFormatException nfe) {
-            request.setAttribute("mensagemDeletar", "ID inválido.");
+            request.getSession().setAttribute("mensagemDeletar", "ID inválido.");
         } catch (Exception e) {
-            request.setAttribute("mensagemDeletar", "Erro inesperado ao tentar deletar.");
+            e.printStackTrace();
+            request.getSession().setAttribute("mensagemDeletar", "Erro inesperado ao tentar deletar.");
         }
 
-        // Caminho absoluto para o JSP de CRUD do funcionário
-        request.getRequestDispatcher("/view/Funcionario/crudFuncionario.jsp").forward(request, response);
+        // 3. CORREÇÃO: REDIRECIONA para o servlet de listagem
+        response.sendRedirect(request.getContextPath() + "/funcionarios");
     }
 }

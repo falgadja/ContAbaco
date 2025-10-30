@@ -9,14 +9,25 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet("/DeletarAdmServlet")
+// 1. URL "limpa" para a ação de deletar
+@WebServlet("/adm-delete")
 public class DeletarAdmServlet extends HttpServlet {
+
+    /**
+     * Ações de exclusão NUNCA devem ser feitas com GET.
+     * Este método redireciona para a lista principal para evitar
+     * que alguém delete dados acidentalmente por um link.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doPost(request, response);
+        // Redireciona para o servlet de listagem
+        response.sendRedirect(request.getContextPath() + "/adm");
     }
 
+    /**
+     * Processa a exclusão do administrador.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -26,24 +37,25 @@ public class DeletarAdmServlet extends HttpServlet {
 
         try {
             if (idParametro == null || idParametro.isEmpty()) {
-                request.setAttribute("mensagemDeletar", "ID do administrador não foi encontrado.");
+                request.getSession().setAttribute("mensagemDeletar", "ID do administrador não foi encontrado.");
             } else {
                 int id = Integer.parseInt(idParametro);
 
                 if (admDAO.deletar(id) > 0) {
-                    request.setAttribute("mensagemDeletar", "Administrador deletado com sucesso!");
+                    request.getSession().setAttribute("mensagemDeletar", "Administrador deletado com sucesso!");
                 } else {
-                    request.setAttribute("mensagemDeletar", "Não foi possível deletar.");
+                    request.getSession().setAttribute("mensagemDeletar", "Não foi possível deletar.");
                 }
             }
         } catch (NumberFormatException nfe) {
-            request.setAttribute("mensagemDeletar", "ID Inválido.");
+            request.getSession().setAttribute("mensagemDeletar", "ID Inválido.");
         } catch (Exception e) {
-            request.setAttribute("mensagemDeletar", "Erro inesperado ao tentar deletar.");
+            request.getSession().setAttribute("mensagemDeletar", "Erro inesperado ao tentar deletar.");
         }
 
-        // Caminho absoluto para o JSP de CRUD
-        request.getRequestDispatcher("/view//Adm/crudAdm.jsp").forward(request, response);
-
+        // 2. CORREÇÃO PRINCIPAL (Post-Redirect-Get):
+        // Redireciona de volta para o servlet de LISTAGEM (/adm).
+        // O servlet /adm vai carregar a lista (sem o item deletado) e mostrar a mensagem.
+        response.sendRedirect(request.getContextPath() + "/adm");
     }
 }

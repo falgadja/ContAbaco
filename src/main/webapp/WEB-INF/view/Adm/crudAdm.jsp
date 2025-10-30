@@ -1,19 +1,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.List" %>
-<%@ page import="model.Administrador" %>
-<%@ page import="dao.AdmDAO" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <title>Área Restrita - Administradores</title>
-    <link rel="icon"
-          href="${pageContext.request.contextPath}/img/logo%20azul%20bonito%20sem%20fundo%202%20(1).png">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap"
-          rel="stylesheet">
+
+    <link rel="icon" href="${pageContext.request.contextPath}/img/logo%20azul%20bonito%20sem%20fundo%202%20(1).png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
 
     <style>
@@ -24,6 +19,7 @@
             --branco: #ffffff;
         }
 
+        /* (Seu CSS completo que você enviou antes) */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -425,20 +421,20 @@
         <div class="linha"></div>
 
         <div class="nav">
-            <a href="<%= request.getContextPath() %>/view/Adm/crudAdm.jsp" class="botao selecionado"><i
+            <a href="${pageContext.request.contextPath}/adm" class="botao selecionado"><i
                     class="fa-solid fa-crown"></i> Adm</a>
-            <a href="<%= request.getContextPath() %>/view/Empresa/crudEmpresa.jsp" class="botao"><i
+            <a href="${pageContext.request.contextPath}/empresas" class="botao"><i
                     class="fa-solid fa-building"></i> Empresas</a>
-            <a href="<%= request.getContextPath() %>/view/Funcionario/crudFuncionario.jsp" class="botao"><i
+            <a href="${pageContext.request.contextPath}/funcionarios" class="botao"><i
                     class="fa-solid fa-user-tie"></i> Funcionários</a>
-            <a href="<%= request.getContextPath() %>/view/Plano/crudPlano.jsp" class="botao"><i
+            <a href="${pageContext.request.contextPath}/planos" class="botao"><i
                     class="fa-solid fa-clipboard-list"></i> Plano</a>
-            <a href="<%= request.getContextPath() %>/view/Pagamento/crudPagamento.jsp" class="botao"><i
+            <a href="${pageContext.request.contextPath}/pagamento" class="botao"><i
                     class="fa-solid fa-credit-card"></i> Pagamento</a>
         </div>
 
         <div class="sair">
-            <button class="botao-sair" onclick="location.href='${pageContext.request.contextPath}/view/Login/login.jsp'">
+            <button class="botao-sair" onclick="location.href='${pageContext.request.contextPath}/logout'">
                 <i class="fa-solid fa-right-from-bracket"></i> Sair
             </button>
         </div>
@@ -450,7 +446,6 @@
                 <div id="AR">Área Restrita</div>
                 <div id="CRUD">CRUD</div>
             </div>
-
         </div>
 
         <div class="adicionador">
@@ -459,7 +454,7 @@
             </button>
         </div>
 
-        <form action="${pageContext.request.contextPath}/BuscarAdmServlet" method="get" class="filtros">
+        <form action="${pageContext.request.contextPath}/adm" method="get" class="filtros">
             <label for="email">Buscar por Email:</label>
             <input type="text" name="email" id="email" placeholder="Digite o email do administrador">
 
@@ -481,61 +476,43 @@
 
         <div class="tabela tabela-adm adm-style" id="tabelaContainer">
             <div class="tabela-container">
-                <%
-                    List<Administrador> lista = (List<Administrador>) request.getAttribute("adms");
 
-                    if (lista == null) {
-                        AdmDAO dao = new AdmDAO();
-                        lista = dao.listar();
-                    }
+                <c:choose>
+                    <c:when test="${not empty adms}">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>id_adm</th>
+                                <th>email</th>
+                                <th>senha</th> <th class="acoes-col">ações</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <c:forEach var="a" items="${adms}">
+                                <tr>
+                                    <td>${a.id}</td>
+                                    <td>${a.email}</td>
+                                    <td>${a.senha}</td> <td class="acoes">
+                                    <button class="btn" title="Editar" onclick="abrirModalEditar(${a.id})">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </button>
 
-                    if (lista != null && !lista.isEmpty()) {
-                %>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>id_adm</th>
-                        <th>email</th>
-                        <th>senha</th>
-                        <th class="acoes-col">ações</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <%
-                        for (Administrador a : lista) {
-                    %>
-                    <tr>
-                        <td>
-                            <%= a.getId() %>
-                        </td>
-                        <td>
-                            <%= a.getEmail() %>
-                        </td>
-
-                        <td>
-                            <%= a.getSenha() %>
-                        </td>
-                        <td class="acoes">
-                            <button class="btn" title="Editar" onclick="abrirModalEditar(<%= a.getId() %>)">
-                                <i class="fa-solid fa-pen"></i>
-                            </button>
-                            <button class="btn" title="Excluir"
-                                    onclick="if(confirm('Deseja excluir este administrador?')) window.location.href='<%= request.getContextPath() %>/DeletarAdmServlet?id=<%= a.getId() %>';"><i
-                                    class="fa-solid fa-trash"></i></button>
-                        </td>
-                    </tr>
-                    <%
-                        } // Fim do for
-                    %>
-                    </tbody>
-                </table>
-                <%
-                } else { // Fim do if (lista não está vazia)
-                %>
-                <p style="padding:10px 6px; color:#666;">Nenhum administrador cadastrado (ou encontrado no filtro).</p>
-                <%
-                    } // Fim do else
-                %>
+                                    <form action="${pageContext.request.contextPath}/adm-delete" method="post" style="display: inline;" onsubmit="return confirm('Deseja realmente excluir este administrador?');">
+                                        <input type="hidden" name="id" value="${a.id}">
+                                        <button class="btn" title="Excluir" type="submit">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                                </tr>
+                            </c:forEach>
+                            </tbody>
+                        </table>
+                    </c:when>
+                    <c:otherwise>
+                        <p style="padding:10px 6px; color:#666;">Nenhum administrador cadastrado (ou encontrado no filtro).</p>
+                    </c:otherwise>
+                </c:choose>
             </div>
 
             <div class="in-table-modal" id="inTableModal" role="dialog" aria-hidden="true"
@@ -546,7 +523,9 @@
                         title="Formulário Cadastrar Administrador"></iframe>
             </div>
         </div>
-    </div> </div> <%-- ***** SCRIPT NO LUGAR CORRETO (antes de </body>) ***** --%>
+    </div>
+</div>
+
 <script>
     (function () {
         const modal = document.getElementById('inTableModal');
@@ -559,8 +538,9 @@
             return;
         }
 
+        // CORRIGIDO: Adicionado "?modal=1"
         openBtn.addEventListener('click', function () {
-            frame.src = '<%= request.getContextPath() %>/view/Adm/cadastrarAdm.jsp?modal=1';
+            frame.src = '${pageContext.request.contextPath}/adm-create?modal=1';
             modal.classList.add('open');
             modal.setAttribute('aria-hidden', 'false');
         });
@@ -569,8 +549,10 @@
             modal.classList.remove('open');
             modal.setAttribute('aria-hidden', 'true');
             frame.src = 'about:blank';
-            // Descomente a linha abaixo para recarregar a tabela ao fechar
-            // window.location.reload();
+
+            // Esta linha é o que atualiza a tabela QUANDO VOCÊ FECHA.
+            // Mas agora, o formulário de "Cadastrar" vai fazer isso sozinho.
+            window.location.reload(); 
         }
 
         closeBtn.addEventListener('click', closeModal);
@@ -581,9 +563,10 @@
             }
         });
 
+        // CORRIGIDO: Adicionado "&modal=1"
         window.abrirModalEditar = function (id) {
             if (!id) return;
-            frame.src = '<%= request.getContextPath() %>/view/Adm/atualizarAdm.jsp?id=' + id + '&modal=1';
+            frame.src = '${pageContext.request.contextPath}/adm-update?id=' + id + '&modal=1';
             modal.classList.add('open');
             modal.setAttribute('aria-hidden', 'false');
         };

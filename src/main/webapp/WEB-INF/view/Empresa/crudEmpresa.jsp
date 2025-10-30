@@ -1,23 +1,21 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.List" %>
-<%@ page import="model.Funcionario" %>
-<%@ page import="dao.FuncionarioDAO" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Funcionários - Área Restrita</title>
+    <title>Empresas - Área Restrita</title>
     <link rel="icon" href="${pageContext.request.contextPath}/img/logo%20azul%20bonito%20sem%20fundo%202%20(1).png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
 
     <style>
-        /* Estilos do layout principal (copiado do crudEmpresa) */
+        /* ======== ESTILIZAÇÃO DO ENTORNO ======== */
         :root { --cor_falgadja_1:#1800CC; --cor_falgadja_2:#0C0066; --cor_sair:#b71c1c; --branco:#ffffff; }
         *{ box-sizing:border-box; margin:0; padding:0; font-family:'Poppins',system-ui,-apple-system,'Segoe UI',Roboto,Arial; }
         html,body{ height:100%; width:100%; background:var(--branco); color:var(--cor_falgadja_1); }
+
         .esquerda{ display:flex; height:100vh; width:100%; overflow:hidden; }
         .sidebar{ width:255px; padding:28px 20px; display:flex; flex-direction:column; gap:18px; }
         .aplicativo{ display:flex; gap:15px; align-items:center; }
@@ -25,20 +23,27 @@
         .logo img{ max-width:100%; max-height:100%; display:block; }
         .titulo_app{ font-weight:700; color:var(--cor_falgadja_1); font-size:20px; }
         .subtitulo_app{ font-size:12px; color:grey; margin-top:2px; }
+
         .linha{ height:6px; border-radius:30px; background:linear-gradient(90deg,var(--cor_falgadja_1),var(--cor_falgadja_2)); width:80%; margin:6px 0; }
+
         .nav{ display:flex; flex-direction:column; gap:12px; margin-top:10px; }
         .botao{ display:flex; align-items:center; gap:12px; padding:12px 18px; border-radius:10px; border:2px solid var(--cor_falgadja_1); background:transparent; color:var(--cor_falgadja_1); font-weight:600; width:190px; cursor:pointer; text-decoration:none; }
         .botao.selecionado{ background:linear-gradient(180deg,var(--cor_falgadja_1),var(--cor_falgadja_2)); color:#fff; border-color:transparent; box-shadow:0 6px 18px rgba(12,0,102,0.25); }
+
+        .separator{ width:4px; background:var(--cor_falgadja_1); }
+
         .main{ flex:1; padding:36px 48px; overflow:auto; }
+
         .titulos{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
         #AR{ font-size:30px; font-weight:800; color:var(--cor_falgadja_1); }
         #CRUD{ color:grey; font-weight:600; margin-top:-10px; }
+
         .adicionador{ margin-top:28px; }
         .botao-add{ padding:12px 18px; border-radius:12px; background:linear-gradient(180deg,var(--cor_falgadja_1),var(--cor_falgadja_2)); color:#fff; font-weight:700; border:0; cursor:pointer; display:inline-flex; align-items:center; gap:10px; text-decoration:none; }
+
         .sair{ margin-top:auto;}
         .botao-sair{padding:12px 18px; border-radius:12px; background:var(--cor_sair); color:white; border:0; cursor:pointer; font-weight:700; width:100%; display:inline-flex; align-items:center; gap:10px;}
 
-        /* Estilos do Filtro */
         .filtros {
             margin-top: 24px;
             margin-bottom: -10px;
@@ -47,7 +52,14 @@
             border-radius: 12px;
             border: 2px solid rgba(24, 0, 204, 0.1);
             display: flex;
-            flex-wrap: wrap;
+
+            /* --- CORREÇÕES AQUI --- */
+            flex-wrap: nowrap;     /* 1. Impede a quebra de linha */
+            overflow-x: auto;      /* 2. Adiciona a barra de rolagem horizontal */
+            overflow-y: hidden;    /* 3. Esconde a barra de rolagem vertical (se aparecer) */
+            padding-bottom: 16px;  /* 4. Dá espaço para a barra de rolagem não cobrir os inputs */
+            /* --- FIM DAS CORREÇÕES --- */
+
             align-items: center;
             gap: 16px;
             width: calc(100% - 32px);
@@ -62,7 +74,7 @@
             margin-right: -8px;
         }
         .filtros input[type="text"],
-        .filtros input[type="number"],
+        .filtros input[type="number"], /* Adicionado */
         .filtros select {
             padding: 10px 14px;
             border-radius: 10px;
@@ -71,8 +83,12 @@
             font-size: 14px;
             color: #222;
         }
-        .filtros input[type="text"] { width: 250px; }
-        .filtros input[type="number"] { width: 180px; }
+        .filtros input[type="text"] {
+            width: 280px;
+        }
+        .filtros input[type="number"] {
+            width: 80px; /* Tamanho para min/max */
+        }
         .filtros button {
             padding: 10px 24px;
             border-radius: 10px;
@@ -96,8 +112,6 @@
             border-radius: 10px;
             text-align: center;
         }
-
-        /* Estilos da Tabela */
         .tabela {
             margin-top:20px;
             border:3px solid rgba(24,0,204,0.95);
@@ -120,43 +134,81 @@
         }
         .tabela-container::-webkit-scrollbar{ height:10px; width:10px; }
         .tabela-container::-webkit-scrollbar-thumb{ background: linear-gradient(180deg, rgba(24,0,204,0.2), rgba(12,0,102,0.2)); border-radius:10px; }
-        .func-style table { width:auto; table-layout:auto; border-collapse:collapse; font-size:14px; white-space:nowrap; }
-        .func-style thead th, .func-style tbody td {
+
+        .empresa-style table { width:auto; table-layout:auto; border-collapse:collapse; font-size:14px; white-space:nowrap; }
+        .empresa-style thead th, .empresa-style tbody td {
             padding:14px 16px; overflow:visible; text-overflow:clip; white-space:nowrap;
             font-weight:600; text-align:center;
         }
-        .func-style tbody tr:nth-child(even){ background:#fafaff; }
-        .func-style tbody tr:hover{ background:rgba(24,0,204,0.04); }
-        .func-style th.acoes-col, .func-style td.acoes {
+        .empresa-style tbody tr:nth-child(even){ background:#fafaff; }
+        .empresa-style tbody tr:hover{ background:rgba(24,0,204,0.04); }
+
+        .empresa-style th.acoes-col, .empresa-style td.acoes {
             position:sticky; right:0; background:#fff; box-shadow:-8px 0 12px rgba(12,0,102,0.06);
             min-width:170px; padding:0 8px; vertical-align:middle; text-align:center; overflow:visible; white-space:nowrap;
         }
-        .func-style td.acoes .btn {
-            display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px;
-            border-radius:6px; border:1.5px solid var(--cor_falgadja_1); background:transparent;
-            color: var(--cor_falgadja_1); cursor:pointer; transition:.2s; margin: 0 4px;
-        }
-        .func-style td.acoes .btn:hover { background: var(--cor_falgadja_1); color: #fff; }
 
-        /* Estilos do Modal */
+        .empresa-style td.acoes .btn {
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            width:32px;
+            height:32px;
+            border-radius:6px;
+            border:1.5px solid var(--cor_falgadja_1);
+            background:transparent;
+            color: var(--cor_falgadja_1);
+            cursor:pointer;
+            transition:.2s;
+            margin: 0 4px;
+        }
+        .empresa-style td.acoes .btn:hover {
+            background: var(--cor_falgadja_1);
+            color: #fff;
+        }
+        /* (CSS do Modal) */
         .in-table-modal {
-            position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%);
-            width: min(80%, 900px); min-height: 460px; max-height: calc(100% - 60px);
-            border-radius: 18px; border: 3px solid rgba(24, 0, 204, 0.95);
-            background: #fff; box-shadow: 0 18px 40px rgba(12, 0, 102, 0.12);
-            z-index: 1000; display: none; overflow: hidden; padding: 24px 36px;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: min(80%, 900px);
+            min-height: 460px;
+            max-height: calc(100% - 60px);
+            border-radius: 18px;
+            border: 3px solid rgba(24, 0, 204, 0.95);
+            background: #fff;
+            box-shadow: 0 18px 40px rgba(12, 0, 102, 0.12);
+            z-index: 1000;
+            display: none;
+            overflow: hidden;
+            padding: 24px 36px;
         }
         .in-table-modal.open { display: block; }
         .in-table-modal .modal-close {
-            position: absolute; top: 10px; right: 10px; width: 44px; height: 44px;
-            border-radius: 50%; background: #fff; border: 2px solid rgba(24, 0, 204, 0.15);
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; z-index: 60; box-shadow: 0 6px 14px rgba(24, 0, 204, 0.08);
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid rgba(24, 0, 204, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 60;
+            box-shadow: 0 6px 14px rgba(24, 0, 204, 0.08);
         }
         .in-table-modal .modal-close i { color: var(--cor_falgadja_1); }
         .in-table-modal iframe {
-            width: 100%; height: 100%; border: 0; display: block;
-            background: transparent; min-height: 460px;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            display: block;
+            background: transparent;
+            min-height: 460px;
         }
     </style>
 </head>
@@ -173,15 +225,17 @@
             </div>
         </div>
         <div class="linha"></div>
+
         <div class="nav">
-            <a href="<%= request.getContextPath() %>/view/Adm/crudAdm.jsp" class="botao"><i class="fa-solid fa-crown"></i> Adm</a>
-            <a href="<%= request.getContextPath() %>/view/Empresa/crudEmpresa.jsp" class="botao"><i class="fa-solid fa-building"></i> Empresas</a>
-            <a href="<%= request.getContextPath() %>/view/Funcionario/crudFuncionario.jsp" class="botao selecionado"><i class="fa-solid fa-user-tie"></i> Funcionários</a>
-            <a href="<%= request.getContextPath() %>/view/Plano/crudPlano.jsp" class="botao"><i class="fa-solid fa-clipboard-list"></i> Planos</a>
-            <a href="<%= request.getContextPath() %>/view/Pagamento/crudPagamento.jsp" class="botao"><i class="fa-solid fa-credit-card"></i> Pagamento</a>
+            <a href="${pageContext.request.contextPath}/adm" class="botao"><i class="fa-solid fa-crown"></i> Adm</a>
+            <a href="${pageContext.request.contextPath}/empresas" class="botao selecionado"><i class="fa-solid fa-building"></i> Empresas</a>
+            <a href="${pageContext.request.contextPath}/funcionarios" class="botao"><i class="fa-solid fa-user-tie"></i> Funcionários</a>
+            <a href="${pageContext.request.contextPath}/planos" class="botao"><i class="fa-solid fa-clipboard-list"></i> Planos</a>
+            <a href="${pageContext.request.contextPath}/pagamento" class="botao"><i class="fa-solid fa-credit-card"></i> Pagamento</a>
         </div>
+
         <div class="sair">
-            <button class="botao-sair" onclick="location.href='${pageContext.request.contextPath}/view/Login/login.jsp'">
+            <button class="botao-sair" onclick="location.href='${pageContext.request.contextPath}/logout'">
                 <i class="fa-solid fa-right-from-bracket"></i> Sair
             </button>
         </div>
@@ -201,22 +255,26 @@
             </button>
         </div>
 
-        <form action="${pageContext.request.contextPath}/BuscarFuncionarioServlet" method="get" class="filtros">
-            <label for="nome">Buscar por nome:</label>
-            <input type="text" name="nome" id="nome" placeholder="Digite o nome do fúncionário">
+        <form action="${pageContext.request.contextPath}/empresas" method="get" class="filtros">
+            <label for="nome">Buscar por Nome:</label>
+            <input type="text" name="nome" id="nome" placeholder="Digite o nome da empresa" value="${param.nome}">
 
-            <label for="idEmpresa">ID da empresa:</label>
-            <input type="number" name="idEmpresa" id="idEmpresa" placeholder="Digite o ID da empresa">
+            <label for="min">Funcionários (min):</label>
+            <input type="number" name="min" id="min" value="${param.min}" style="width: 80px;">
+            <label for="max"> (max):</label>
+            <input type="number" name="max" id="max" value="${param.max}" style="width: 80px;">
 
             <label for="tipoOrdenacao">Ordenar por:</label>
             <select name="tipoOrdenacao" id="tipoOrdenacao">
                 <option value="">-- Nenhum --</option>
-                <option value="idCrescente">ID Crescente</option>
-                <option value="idDecrescente">ID Decrescente</option>
-                <option value="Az">Nome (A-Z)</option>
-                <option value="Za">Nome (Z-A)</option>
+                <option value="idCrescente" ${param.tipoOrdenacao == 'idCrescente' ? 'selected' : ''}>ID Crescente</option>
+                <option value="idDecrescente" ${param.tipoOrdenacao == 'idDecrescente' ? 'selected' : ''}>ID Decrescente</option>
+                <option value="Az" ${param.tipoOrdenacao == 'Az' ? 'selected' : ''}>Nome (A-Z)</option>
+                <option value="Za" ${param.tipoOrdenacao == 'Za' ? 'selected' : ''}>Nome (Z-A)</option>
+                <option value="qtndFuncionarioCrescente" ${param.tipoOrdenacao == 'qtndFuncionarioCrescente' ? 'selected' : ''}>Qtd. Func. Crescente</option>
+                <option value="qtndFuncionarioDecrescente" ${param.tipoOrdenacao == 'qtndFuncionarioDecrescente' ? 'selected' : ''}>Qtd. Func. Decrescente</option>
             </select>
-            
+
             <button type="submit">Filtrar</button>
         </form>
 
@@ -224,73 +282,72 @@
             <p class="mensagem">${mensagem}</p>
         </c:if>
 
-        <div class="tabela func-style">
+        <div class="tabela empresa-style">
             <div class="tabela-container">
-                <%
-                    List<Funcionario> lista = (List<Funcionario>) request.getAttribute("funcionarios");
-                    if (lista == null) {
-                        FuncionarioDAO dao = new FuncionarioDAO();
-                        lista = dao.listar(); // Assumindo que seu DAO tem o método listar()
-                    }
 
-                    if (lista != null && !lista.isEmpty()) {
-                %>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nome</th>
-                        <th>Sobrenome</th>
-                        <th>Data Nasc.</th>
-                        <th>Email</th>
-                        <th>ID Setor</th>
-                        <th>ID Empresa</th>
-                        <th class="acoes-col">Ações</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <%
-                        for (Funcionario f : lista) {
-                    %>
-                    <tr>
-                        <td><%= f.getId() %></td>
-                        <td><%= f.getNome() %></td>
-                        <td><%= f.getSobrenome() %></td>
-                        <td><%= f.getDataNascimento() %></td>
-                        <td><%= f.getEmail() %></td>
-                        <td><%= f.getIdSetor() %></td>
-                        <td><%= f.getIdEmpresa() %></td>
-                        <td class="acoes">
-                            <button class="btn" title="Editar"
-                                    onclick="abrirModalEditar(<%= f.getId() %>)">
-                                <i class="fa-solid fa-pen"></i>
-                            </button>
+                <c:choose>
+                    <c:when test="${not empty empresas}">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>CNPJ</th>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Senha</th>
+                                <th>ID Plano</th>
+                                <th>Qtd. Func.</th>
+                                <th class="acoes-col">Ações</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <c:forEach var="e" items="${empresas}">
+                                <tr>
+                                    <td>${e.id}</td>
+                                    <td>${e.cnpj}</td>
+                                    <td>${e.nome}</td>
+                                    <td>${e.email}</td>
+                                    <td>${e.senha}</td>
+                                    <td>${e.idPlano}</td>
+                                    <td>${e.qntdFuncionarios}</td>
+                                    <td class="acoes">
 
-                            <button class="btn" title="Excluir"
-                                    onclick="if(confirm('Deseja excluir este funcionário?')) window.location.href='<%= request.getContextPath() %>/DeletarFuncionarioServlet?id=<%= f.getId() %>'">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    <% } // Fim do for %>
-                    </tbody>
-                </table>
-                <%
-                } else { // Fim do if (lista não está vazia)
-                %>
-                <p style="padding:10px 6px; color:#666;">Nenhum funcionário cadastrado (ou encontrado no filtro).</p>
-                <% } %>
+                                        <a href="${pageContext.request.contextPath}/view/Empresa/detalhesEmpresa.jsp?id=${e.id}" target="_blank" class="btn" title="Detalhes">
+                                            <i class="fa-solid fa-info"></i>
+                                        </a>
+
+                                        <button class="btn" title="Editar" onclick="abrirModalEditar(${e.id})">
+                                            <i class="fa-solid fa-pen"></i>
+                                        </button>
+
+                                        <form action="${pageContext.request.contextPath}/empresas-delete" method="post" style="display: inline;" onsubmit="return confirm('Deseja realmente excluir esta empresa?');">
+                                            <input type="hidden" name="id" value="${e.id}">
+                                            <button class="btn" title="Excluir" type="submit">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                            </tbody>
+                        </table>
+                    </c:when>
+                    <c:otherwise>
+                        <p style="padding:10px 6px; color:#666;">Nenhuma empresa cadastrada (ou encontrada no filtro).</p>
+                    </c:otherwise>
+                </c:choose>
             </div>
 
-            <div class="in-table-modal" id="inTableModal" role="dialog" aria-hidden="true"
-                 aria-label="Formulário do Funcionário">
-                <button class="modal-close" id="modalClose" title="Fechar"><i
-                        class="fa-solid fa-xmark"></i></button>
-                <iframe id="modalFrame" src="" name="modalFrame"
-                        title="Formulário Cadastrar/Atualizar Funcionário"></iframe>
+            <div class="in-table-modal" id="inTableModal" ... >
+                <button class="modal-close" id="modalClose" title="Fechar"><i class="fa-solid fa-xmark"></i></button>
+                <iframe id="modalFrame" src="" ...></iframe>
             </div>
+
         </div>
-        </div> </div> <script>
+    </div>
+</div>
+
+<script>
     (function () {
         const modal = document.getElementById('inTableModal');
         const frame = document.getElementById('modalFrame');
@@ -302,20 +359,21 @@
             return;
         }
 
-        // Abrir Modal de Adicionar
+        // --- Abrir Modal de Adicionar (aponta para /empresas-create) ---
         openBtn.addEventListener('click', function () {
-            frame.src = '<%= request.getContextPath() %>/view/Funcionario/cadastrarFuncionario.jsp?modal=1';
+            frame.src = '${pageContext.request.contextPath}/empresas-create';
             modal.classList.add('open');
             modal.setAttribute('aria-hidden', 'false');
         });
 
-        // Fechar Modal
+        // --- Fechar o Modal ---
         function closeModal() {
             modal.classList.remove('open');
             modal.setAttribute('aria-hidden', 'true');
             frame.src = 'about:blank';
-            // Descomente a linha abaixo para recarregar a tabela ao fechar
-            // window.location.reload();
+
+            // ATIVADO: Recarrega a página principal para ver mudanças.
+            window.location.reload();
         }
 
         closeBtn.addEventListener('click', closeModal);
@@ -325,10 +383,10 @@
             }
         });
 
-        // Abrir Modal de Editar
+        // --- Abrir Modal de Editar (aponta para /empresas-update) ---
         window.abrirModalEditar = function (id) {
             if (!id) return;
-            frame.src = '<%= request.getContextPath() %>/view/Funcionario/atualizarFuncionario.jsp?id=' + id + '&modal=1';
+            frame.src = '${pageContext.request.contextPath}/empresas-update?id=' + id;
             modal.classList.add('open');
             modal.setAttribute('aria-hidden', 'false');
         };

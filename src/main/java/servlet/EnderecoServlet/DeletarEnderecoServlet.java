@@ -43,6 +43,6 @@ public class DeletarEnderecoServlet extends HttpServlet {
         }
 
         // Caminho absoluto para o JSP de CRUD do endereço
-        request.getRequestDispatcher("/view/Endereco/crudEndereco.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/view/Endereco/crudEndereco.jsp").forward(request, response);
     }
 }
