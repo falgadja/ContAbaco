@@ -72,7 +72,19 @@ public class BuscarEmpresaServlet extends HttpServlet {
                     }
                 }
                 if (tipoOrdenacao != null && !tipoOrdenacao.isEmpty() && empresas != null && !empresas.isEmpty()) {
-                    // ... (sua lógica de ordenação) ...
+                    if (tipoOrdenacao.equals("idCrescente")) {
+                        empresas = empresaFiltro.OrdenarIdCrece(empresas);
+                    } else if (tipoOrdenacao.equals("idDecrescente")) {
+                        empresas = empresaFiltro.OrdenarIdDecre(empresas);
+                    } else if (tipoOrdenacao.equals("Az")) {
+                        empresas = empresaFiltro.OrdenarNomeAz(empresas);
+                    } else if (tipoOrdenacao.equals("Za")) {
+                        empresas = empresaFiltro.OrdenarNomeZa(empresas);
+                    }  else if (tipoOrdenacao.equals("qtndFuncionarioCrescente")) {
+                        empresas = empresaFiltro.OrdenarQntdFuncionarioCrece(empresas);
+                    } else if (tipoOrdenacao.equals("qtndFuncionarioDecrescente")) {
+                        empresas = empresaFiltro.OrdenarQntdFuncionarioDecre(empresas);
+                    }
                 }
                 request.setAttribute("empresas", empresas);
             }

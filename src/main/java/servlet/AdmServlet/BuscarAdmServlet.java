@@ -51,7 +51,15 @@ public class BuscarAdmServlet extends HttpServlet {
                 }
 
                 if (tipoOrdenacao != null && !tipoOrdenacao.isEmpty() && adms != null && !adms.isEmpty()) {
-                    // ... (lógica de ordenação é a mesma) ...
+                    if (tipoOrdenacao.equals("idCrescente")) {
+                        adms = administradorFiltro.OrdenarIdCrece(adms);
+                    } else if (tipoOrdenacao.equals("idDecrescente")) {
+                        adms = administradorFiltro.OrdenarIdDecre(adms);
+                    } else if (tipoOrdenacao.equals("Az")) {
+                        adms = administradorFiltro.OrdenarEmailAz(adms);
+                    } else if (tipoOrdenacao.equals("Za")) {
+                        adms = administradorFiltro.OrdenarEmailZa(adms);
+                    }
                 }
                 request.setAttribute("adms", adms);
             }

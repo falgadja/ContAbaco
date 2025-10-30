@@ -9,12 +9,17 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet("/DeletarPagamentoServlet")
+// 1. URL "limpa"
+@WebServlet("/pagamento-delete")
 public class DeletarPagamentoServlet extends HttpServlet {
+    
+    /**
+     * 2. CORREÇÃO: doGet agora redireciona (Evita delete por GET)
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doPost(request, response);
+        response.sendRedirect(request.getContextPath() + "/pagamento");
     }
 
     @Override
@@ -26,23 +31,24 @@ public class DeletarPagamentoServlet extends HttpServlet {
 
         try {
             if (idParametro == null || idParametro.isEmpty()) {
-                request.setAttribute("mensagemDeletar", "ID do pagamento não foi encontrado.");
+                request.getSession().setAttribute("mensagem", "ID do pagamento não foi encontrado.");
             } else {
                 int id = Integer.parseInt(idParametro);
 
                 if (pagamentoDAO.deletar(id) > 0) {
-                    request.setAttribute("mensagemDeletar", "Pagamento deletado com sucesso!");
+                    request.getSession().setAttribute("mensagem", "Pagamento deletado com sucesso!");
                 } else {
-                    request.setAttribute("mensagemDeletar", "Não foi possível deletar.");
+                    request.getSession().setAttribute("mensagem", "Não foi possível deletar o pagamento.");
                 }
             }
         } catch (NumberFormatException nfe) {
-            request.setAttribute("mensagemDeletar", "ID inválido.");
+            request.getSession().setAttribute("mensagem", "ID inválido.");
         } catch (Exception e) {
-            request.setAttribute("mensagemDeletar", "Erro inesperado ao tentar deletar.");
+            e.printStackTrace();
+            request.getSession().setAttribute("mensagem", "Erro inesperado ao tentar deletar.");
         }
 
-        // Caminho absoluto para o JSP de CRUD do pagamento
-        request.getRequestDispatcher("/WEB-INF/view/Pagamento/crudPagamento.jsp").forward(request, response);
+        // 3. CORREÇÃO: REDIRECIONA para o servlet de listagem
+        response.sendRedirect(request.getContextPath() + "/pagamento");
     }
 }

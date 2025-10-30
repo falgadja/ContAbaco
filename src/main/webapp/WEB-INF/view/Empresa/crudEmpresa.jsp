@@ -312,9 +312,10 @@
                                     <td>${e.qntdFuncionarios}</td>
                                     <td class="acoes">
 
-                                        <a href="${pageContext.request.contextPath}/view/Empresa/detalhesEmpresa.jsp?id=${e.id}" target="_blank" class="btn" title="Detalhes">
+                                        <button class="btn" title="Detalhes" onclick="abrirModalDetalhes(${e.id})">
                                             <i class="fa-solid fa-info"></i>
-                                        </a>
+                                        </button>
+
 
                                         <button class="btn" title="Editar" onclick="abrirModalEditar(${e.id})">
                                             <i class="fa-solid fa-pen"></i>
@@ -383,13 +384,22 @@
             }
         });
 
-        // --- Abrir Modal de Editar (aponta para /empresas-update) ---
+        // --- Abrir Modal de Editar ---
         window.abrirModalEditar = function (id) {
             if (!id) return;
             frame.src = '${pageContext.request.contextPath}/empresas-update?id=' + id;
             modal.classList.add('open');
             modal.setAttribute('aria-hidden', 'false');
         };
+
+        // ---Abrir modal de Detalhes Empresa --
+        window.abrirModalDetalhes = function (id) {
+            if (!id) return;
+            frame.src = '${pageContext.request.contextPath}/detalhesEmpresa?id=' + id;
+            modal.classList.add('open');
+            modal.setAttribute('aria-hidden', 'false');
+        };
+
 
     })();
 </script>

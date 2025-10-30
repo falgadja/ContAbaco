@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%-- Esta taglib fmt não é mais estritamente necessária se você só a usava para essa data --%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <!DOCTYPE html>
@@ -233,6 +234,7 @@
                                 <th>Sobrenome</th>
                                 <th>Data Nasc.</th>
                                 <th>Email</th>
+                                <th>Senha</th>
                                 <th>ID Setor</th>
                                 <th>ID Empresa</th>
                                 <th class="acoes-col">Ações</th>
@@ -245,10 +247,11 @@
                                     <td>${f.nome}</td>
                                     <td>${f.sobrenome}</td>
                                     <td>
-                                            <%-- Formata a data para dd/MM/yyyy --%>
-                                        <fmt:formatDate value="${f.dataNascimento}" pattern="dd/MM/yyyy" />
+                                            <%-- CORREÇÃO APLICADA AQUI --%>
+                                            ${f.dataNascimentoFormatada}
                                     </td>
                                     <td>${f.email}</td>
+                                    <td>${f.senha}</td>
                                     <td>${f.idSetor}</td>
                                     <td>${f.idEmpresa}</td>
                                     <td class="acoes">

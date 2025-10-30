@@ -1,8 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.List" %>
-<%@ page import="model.Plano" %>
-<%@ page import="dao.PlanoDAO" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -14,7 +12,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
 
     <style>
-        /* Estilos do layout principal */
         :root { --cor_falgadja_1:#1800CC; --cor_falgadja_2:#0C0066; --cor_sair:#b71c1c; --branco:#ffffff; }
         *{ box-sizing:border-box; margin:0; padding:0; font-family:'Poppins',system-ui,-apple-system,'Segoe UI',Roboto,Arial; }
         html,body{ height:100%; width:100%; background:var(--branco); color:var(--cor_falgadja_1); }
@@ -37,8 +34,6 @@
         .botao-add{ padding:12px 18px; border-radius:12px; background:linear-gradient(180deg,var(--cor_falgadja_1),var(--cor_falgadja_2)); color:#fff; font-weight:700; border:0; cursor:pointer; display:inline-flex; align-items:center; gap:10px; text-decoration:none; }
         .sair{ margin-top:auto;}
         .botao-sair{padding:12px 18px; border-radius:12px; background:var(--cor_sair); color:white; border:0; cursor:pointer; font-weight:700; width:100%; display:inline-flex; align-items:center; gap:10px;}
-
-        /* Estilos do Filtro */
         .filtros {
             margin-top: 24px;
             margin-bottom: -10px;
@@ -47,7 +42,10 @@
             border-radius: 12px;
             border: 2px solid rgba(24, 0, 204, 0.1);
             display: flex;
-            flex-wrap: wrap;
+            flex-wrap: nowrap; /* Alterado */
+            overflow-x: auto;  /* Adicionado */
+            overflow-y: hidden;
+            padding-bottom: 16px; /* Adicionado */
             align-items: center;
             gap: 16px;
             width: calc(100% - 32px);
@@ -94,8 +92,6 @@
             border-radius: 10px;
             text-align: center;
         }
-
-        /* Estilos da Tabela */
         .tabela {
             margin-top:20px;
             border:3px solid rgba(24,0,204,0.95);
@@ -133,8 +129,6 @@
             color: var(--cor_falgadja_1); cursor:pointer; transition:.2s; margin: 0 4px;
         }
         .plano-style td.acoes .btn:hover { background: var(--cor_falgadja_1); color: #fff; }
-
-        /* Estilos do Modal */
         .in-table-modal {
             position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%);
             width: min(80%, 900px); min-height: 460px; max-height: calc(100% - 60px);
@@ -169,15 +163,17 @@
             </div>
         </div>
         <div class="linha"></div>
+
         <div class="nav">
-            <a href="<%= request.getContextPath() %>/view/Adm/crudAdm.jsp" class="botao"><i class="fa-solid fa-crown"></i> Adm</a>
-            <a href="<%= request.getContextPath() %>/view/Empresa/crudEmpresa.jsp" class="botao"><i class="fa-solid fa-building"></i> Empresas</a>
-            <a href="<%= request.getContextPath() %>/view/Funcionario/crudFuncionario.jsp" class="botao"><i class="fa-solid fa-user-tie"></i> Funcionários</a>
-            <a href="<%= request.getContextPath() %>/view/Plano/crudPlano.jsp" class="botao selecionado"><i class="fa-solid fa-clipboard-list"></i> Planos</a>
-            <a href="<%= request.getContextPath() %>/view/Pagamento/crudPagamento.jsp" class="botao"><i class="fa-solid fa-credit-card"></i> Pagamento</a>
+            <a href="${pageContext.request.contextPath}/adm" class="botao"><i class="fa-solid fa-crown"></i> Adm</a>
+            <a href="${pageContext.request.contextPath}/empresas" class="botao"><i class="fa-solid fa-building"></i> Empresas</a>
+            <a href="${pageContext.request.contextPath}/funcionarios" class="botao"><i class="fa-solid fa-user-tie"></i> Funcionários</a>
+            <a href="${pageContext.request.contextPath}/planos" class="botao selecionado"><i class="fa-solid fa-clipboard-list"></i> Planos</a>
+            <a href="${pageContext.request.contextPath}/pagamento" class="botao"><i class="fa-solid fa-credit-card"></i> Pagamento</a>
         </div>
+
         <div class="sair">
-            <button class="botao-sair" onclick="location.href='${pageContext.request.contextPath}/view/Login/login.jsp'">
+            <button class="botao-sair" onclick="location.href='${pageContext.request.contextPath}/logout'">
                 <i class="fa-solid fa-right-from-bracket"></i> Sair
             </button>
         </div>
@@ -197,19 +193,19 @@
             </button>
         </div>
 
-        <form action="${pageContext.request.contextPath}/BuscarPlanoServlet" method="get" class="filtros">
+        <form action="${pageContext.request.contextPath}/planos" method="get" class="filtros">
             <label for="nome">Buscar por nome do plano:</label>
-            <input type="text" name="nome" id="nome" placeholder="Digite o nome do plano:">
+            <input type="text" name="nome" id="nome" placeholder="Digite o nome do plano:" value="${param.nome}">
 
             <label for="tipoOrdenacao">Ordenar por:</label>
             <select name="tipoOrdenacao" id="tipoOrdenacao">
                 <option value="">-- Nenhum --</option>
-                <option value="idCrescente">ID Crescente</option>
-                <option value="idDecrescente">ID Decrescente</option>
-                <option value="Az">Nome (A-Z)</option>
-                <option value="Za">Nome (Z-A)</option>
-                <option value="precoCrescente">Por preço crescente</option>
-                <option value="precoDecrescente">Por preço decrescente</option>
+                <option value="idCrescente" ${param.tipoOrdenacao == 'idCrescente' ? 'selected' : ''}>ID Crescente</option>
+                <option value="idDecrescente" ${param.tipoOrdenacao == 'idDecrescente' ? 'selected' : ''}>ID Decrescente</option>
+                <option value="Az" ${param.tipoOrdenacao == 'Az' ? 'selected' : ''}>Nome (A-Z)</option>
+                <option value="Za" ${param.tipoOrdenacao == 'Za' ? 'selected' : ''}>Nome (Z-A)</option>
+                <option value="precoCrescente" ${param.tipoOrdenacao == 'precoCrescente' ? 'selected' : ''}>Por preço crescente</option>
+                <option value="precoDecrescente" ${param.tipoOrdenacao == 'precoDecrescente' ? 'selected' : ''}>Por preço decrescente</option>
             </select>
 
             <button type="submit">Filtrar</button>
@@ -221,52 +217,49 @@
 
         <div class="tabela plano-style">
             <div class="tabela-container">
-                <%
-                    List<Plano> lista = (List<Plano>) request.getAttribute("planos");
-                    if (lista == null) {
-                        PlanoDAO dao = new PlanoDAO();
-                        lista = dao.listar(); // Assumindo que seu DAO tem o método listar()
-                    }
 
-                    if (lista != null && !lista.isEmpty()) {
-                %>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nome</th>
-                        <th>Preço (R$)</th>
-                        <th class="acoes-col">Ações</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <%
-                        for (Plano p : lista) {
-                    %>
-                    <tr>
-                        <td><%= p.getId() %></td>
-                        <td><%= p.getNome() %></td>
-                        <td><%= String.format("%.2f", p.getPreco()) %></td>
-                        <td class="acoes">
-                            <button class="btn" title="Editar"
-                                    onclick="abrirModalEditar(<%= p.getId() %>)">
-                                <i class="fa-solid fa-pen"></i>
-                            </button>
+                <c:choose>
+                    <c:when test="${not empty planos}">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Preço (R$)</th>
+                                <th class="acoes-col">Ações</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <c:forEach var="p" items="${planos}">
+                                <tr>
+                                    <td>${p.id}</td>
+                                    <td>${p.nome}</td>
+                                    <td>
+                                            <%-- Formata o número como moeda Brasileira --%>
+                                        <fmt:formatNumber value="${p.preco}" type="currency" currencySymbol="R$" minFractionDigits="2" maxFractionDigits="2"/>
+                                    </td>
+                                    <td class="acoes">
+                                        <button class="btn" title="Editar"
+                                                onclick="abrirModalEditar(${p.id})">
+                                            <i class="fa-solid fa-pen"></i>
+                                        </button>
 
-                            <button class="btn" title="Excluir"
-                                    onclick="if(confirm('Deseja excluir este plano?')) window.location.href='<%= request.getContextPath() %>/DeletarPlanoServlet?id=<%= p.getId() %>'">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    <% } // Fim do for %>
-                    </tbody>
-                </table>
-                <%
-                } else { // Fim do if (lista não está vazia)
-                %>
-                <p style="padding:10px 6px; color:#666;">Nenhum plano cadastrado (ou encontrado no filtro).</p>
-                <% } %>
+                                        <form action="${pageContext.request.contextPath}/planos-delete" method="post" style="display: inline;" onsubmit="return confirm('Deseja realmente excluir este plano?');">
+                                            <input type="hidden" name="id" value="${p.id}">
+                                            <button class="btn" title="Excluir" type="submit">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                            </tbody>
+                        </table>
+                    </c:when>
+                    <c:otherwise>
+                        <p style="padding:10px 6px; color:#666;">Nenhum plano cadastrado (ou encontrado no filtro).</p>
+                    </c:otherwise>
+                </c:choose>
             </div>
 
             <div class="in-table-modal" id="inTableModal" role="dialog" aria-hidden="true"
@@ -277,7 +270,10 @@
                         title="Formulário Cadastrar/Atualizar Plano"></iframe>
             </div>
         </div>
-    </div> </div> <script>
+    </div>
+</div>
+
+<script>
     (function () {
         const modal = document.getElementById('inTableModal');
         const frame = document.getElementById('modalFrame');
@@ -289,9 +285,9 @@
             return;
         }
 
-        // Abrir Modal de Adicionar
+        // Abrir Modal de Adicionar (aponta para /planos-create)
         openBtn.addEventListener('click', function () {
-            frame.src = '<%= request.getContextPath() %>/view/Plano/cadastrarPlano.jsp?modal=1';
+            frame.src = '${pageContext.request.contextPath}/planos-create';
             modal.classList.add('open');
             modal.setAttribute('aria-hidden', 'false');
         });
@@ -301,8 +297,9 @@
             modal.classList.remove('open');
             modal.setAttribute('aria-hidden', 'true');
             frame.src = 'about:blank';
-            // Descomente a linha abaixo para recarregar a tabela ao fechar
-            // window.location.reload();
+
+            // Recarrega a página para mostrar dados atualizados
+            window.location.reload();
         }
 
         closeBtn.addEventListener('click', closeModal);
@@ -312,10 +309,10 @@
             }
         });
 
-        // Abrir Modal de Editar
+        // Abrir Modal de Editar (aponta para /planos-update)
         window.abrirModalEditar = function (id) {
             if (!id) return;
-            frame.src = '<%= request.getContextPath() %>/view/Plano/atualizarPlano.jsp?id=' + id + '&modal=1';
+            frame.src = '${pageContext.request.contextPath}/planos-update?id=' + id;
             modal.classList.add('open');
             modal.setAttribute('aria-hidden', 'false');
         };

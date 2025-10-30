@@ -1,6 +1,8 @@
 package model;
 
 import java.time.LocalDate;
+// IMPORT ADICIONADO
+import java.time.format.DateTimeFormatter;
 
 public class Funcionario {
 
@@ -105,6 +107,19 @@ public class Funcionario {
     public void setIdEmpresa(int idEmpresa) {
         this.idEmpresa = idEmpresa;
     }
+
+    public String getDataNascimentoFormatada() {
+        if (this.dataNascimento == null) {
+            return ""; // Retorna vazio se a data for nula
+        }
+
+        // Define o padrão de formatação
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        // Retorna a data (LocalDate) como uma String formatada
+        return this.dataNascimento.format(formatter);
+    }
+
 
     // TO STRING
     @Override

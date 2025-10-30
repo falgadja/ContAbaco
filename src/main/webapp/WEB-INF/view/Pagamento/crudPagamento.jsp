@@ -1,8 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.List" %>
-<%@ page import="model.Pagamento" %>
-<%@ page import="dao.PagamentoDAO" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%-- CORREÇÃO: URIs atualizadas para o Jakarta EE / Tomcat 11 --%>
+<%@ taglib uri="jakarta.tags.core" prefix="c" %>
+<%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -14,7 +13,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
 
     <style>
-        /* Estilos do layout principal */
         :root { --cor_falgadja_1:#1800CC; --cor_falgadja_2:#0C0066; --cor_sair:#b71c1c; --branco:#ffffff; }
         *{ box-sizing:border-box; margin:0; padding:0; font-family:'Poppins',system-ui,-apple-system,'Segoe UI',Roboto,Arial; }
         html,body{ height:100%; width:100%; background:var(--branco); color:var(--cor_falgadja_1); }
@@ -37,8 +35,6 @@
         .botao-add{ padding:12px 18px; border-radius:12px; background:linear-gradient(180deg,var(--cor_falgadja_1),var(--cor_falgadja_2)); color:#fff; font-weight:700; border:0; cursor:pointer; display:inline-flex; align-items:center; gap:10px; text-decoration:none; }
         .sair{ margin-top:auto;}
         .botao-sair{padding:12px 18px; border-radius:12px; background:var(--cor_sair); color:white; border:0; cursor:pointer; font-weight:700; width:100%; display:inline-flex; align-items:center; gap:10px;}
-
-        /* === ESTILOS DO FILTRO CORRIGIDOS === */
         .filtros {
             margin-top: 24px;
             margin-bottom: -10px;
@@ -47,23 +43,23 @@
             border-radius: 12px;
             border: 2px solid rgba(24, 0, 204, 0.1);
             display: flex;
-            flex-wrap: nowrap; /* <-- MUDANÇA: Força linha única */
+            flex-wrap: nowrap;     /* Força linha única */
             align-items: center;
             gap: 16px;
             width: calc(100% - 32px);
             max-width: 1180px;
             margin-left: auto;
             margin-right: auto;
-            overflow-x: auto; /* <-- MUDANÇA: Adiciona rolagem horizontal se necessário */
-            padding-bottom: 20px; /* Espaço para a barra de rolagem */
+            overflow-x: auto;      /* Adiciona rolagem horizontal */
+            padding-bottom: 20px;  /* Espaço para a barra de rolagem */
         }
         .filtros label {
             font-weight: 600;
             color: var(--cor_falgadja_1);
             font-size: 14px;
             margin-right: -8px;
-            flex-shrink: 0; /* Impede de encolher */
-            white-space: nowrap; /* Impede quebra de linha no label */
+            flex-shrink: 0;
+            white-space: nowrap;
         }
         .filtros input[type="text"],
         .filtros input[type="date"],
@@ -74,7 +70,7 @@
             outline: none;
             font-size: 14px;
             color: #222;
-            flex-shrink: 0; /* Impede de encolher */
+            flex-shrink: 0;
         }
         .filtros select[multiple] {
             height: 100px;
@@ -89,11 +85,9 @@
             border: 0;
             cursor: pointer;
             font-size: 14px;
-            margin-left: auto; /* <-- MUDANÇA: Empurra o botão para o fim */
-            flex-shrink: 0; /* Impede de encolher */
+            margin-left: auto; /* Empurra o botão para o fim */
+            flex-shrink: 0;
         }
-        /* === FIM DOS ESTILOS CORRIGIDOS === */
-
         .mensagem {
             margin: 16px auto 0 auto;
             width: calc(100% - 32px);
@@ -106,8 +100,6 @@
             border-radius: 10px;
             text-align: center;
         }
-
-        /* Estilos da Tabela */
         .tabela {
             margin-top:20px;
             border:3px solid rgba(24,0,204,0.95);
@@ -145,8 +137,6 @@
             color: var(--cor_falgadja_1); cursor:pointer; transition:.2s; margin: 0 4px;
         }
         .pag-style td.acoes .btn:hover { background: var(--cor_falgadja_1); color: #fff; }
-
-        /* Estilos do Modal */
         .in-table-modal {
             position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%);
             width: min(80%, 900px); min-height: 460px; max-height: calc(100% - 60px);
@@ -181,6 +171,7 @@
             </div>
         </div>
         <div class="linha"></div>
+
         <div class="nav">
             <a href="${pageContext.request.contextPath}/adm" class="botao"><i class="fa-solid fa-crown"></i> Adm</a>
             <a href="${pageContext.request.contextPath}/empresas" class="botao"><i class="fa-solid fa-building"></i> Empresas</a>
@@ -188,8 +179,9 @@
             <a href="${pageContext.request.contextPath}/planos" class="botao"><i class="fa-solid fa-clipboard-list"></i> Planos</a>
             <a href="${pageContext.request.contextPath}/pagamento" class="botao selecionado"><i class="fa-solid fa-credit-card"></i> Pagamento</a>
         </div>
+
         <div class="sair">
-            <button class="botao-sair" onclick="location.href='${pageContext.request.contextPath}/view/Login/login.jsp'">
+            <button class="botao-sair" onclick="location.href='${pageContext.request.contextPath}/logout'">
                 <i class="fa-solid fa-right-from-bracket"></i> Sair
             </button>
         </div>
@@ -209,94 +201,98 @@
             </button>
         </div>
 
-        <form action="<%= request.getContextPath() %>/BuscarPagamentoServlet" method="get" class="filtros">
+        <form action="${pageContext.request.contextPath}/pagamento" method="get" class="filtros">
 
             <label for="id">Buscar por ID:</label>
-            <input type="text" name="id" id="id" placeholder="Digite o ID" style="width: 120px;">
+            <input type="text" name="id" id="id" placeholder="Digite o ID" style="width: 120px;" value="${param.id}">
+
             <label for="tipoOrdenacao">Ordenar por:</label>
             <select name="tipoOrdenacao" id="tipoOrdenacao">
                 <option value="">-- Nenhum --</option>
-                <option value="idCrescente">ID Crescente</option>
-                <option value="idDecrescente">ID Decrescente</option>
-                <option value="totalCrescente">Total Crescente</option>
-                <option value="totalDecrescente">Total Decrescente</option>
-                <option value="dataCrescente">Data Crescente</option>
-                <option value="dataDecrescente">Data Decrescente</option>
+                <option value="idCrescente" ${param.tipoOrdenacao == 'idCrescente' ? 'selected' : ''}>ID Crescente</option>
+                <option value="idDecrescente" ${param.tipoOrdenacao == 'idDecrescente' ? 'selected' : ''}>ID Decrescente</option>
+                <option value="totalCrescente" ${param.tipoOrdenacao == 'totalCrescente' ? 'selected' : ''}>Total Crescente</option>
+                <option value="totalDecrescente" ${param.tipoOrdenacao == 'totalDecrescente' ? 'selected' : ''}>Total Decrescente</option>
+                <option value="dataCrescente" ${param.tipoOrdenacao == 'dataCrescente' ? 'selected' : ''}>Data Crescente</option>
+                <option value="dataDecrescente" ${param.tipoOrdenacao == 'dataDecrescente' ? 'selected' : ''}>Data Decrescente</option>
             </select>
 
             <label for="tipos">Tipo de pagamento:</label>
             <select name="tipos" id="tipos">
                 <option value="">-- Todos --</option>
-                <option value="PIX">PIX</option>
-                <option value="Boleto">Boleto</option>
-                <option value="Cartão">Cartão</option>
-                <option value="Transferência">Transferência</option>
+                <option value="PIX" ${param.tipos == 'PIX' ? 'selected' : ''}>PIX</option>
+                <option value="Boleto" ${param.tipos == 'Boleto' ? 'selected' : ''}>Boleto</option>
+                <option value="Cartão" ${param.tipos == 'Cartão' ? 'selected' : ''}>Cartão</option>
+                <option value="Transferência" ${param.tipos == 'Transferência' ? 'selected' : ''}>Transferência</option>
             </select>
 
             <label for="inicio">Data início:</label>
-            <input type="date" name="inicio" id="inicio" placeholder="dd/MM/yyyy">
+            <input type="date" name="inicio" id="inicio" value="${param.inicio}">
 
             <label for="fim">Data fim:</label>
-            <input type="date" name="fim" id="fim" placeholder="dd/MM/yyyy">
+            <input type="date" name="fim" id="fim" value="${param.fim}">
 
             <button type="submit">Filtrar</button>
         </form>
+
         <c:if test="${not empty mensagem}">
             <p class="mensagem">${mensagem}</p>
         </c:if>
 
         <div class="tabela pag-style">
             <div class="tabela-container">
-                <%
-                    List<Pagamento> lista = (List<Pagamento>) request.getAttribute("pagamentos");
-                    if (lista == null) {
-                        PagamentoDAO dao = new PagamentoDAO();
-                        lista = dao.listar();
-                    }
 
-                    if (lista != null && !lista.isEmpty()) {
-                %>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Tipo de Pagamento</th>
-                        <th>Total (R$)</th>
-                        <th>Data</th>
-                        <th>ID Empresa</th>
-                        <th class="acoes-col">Ações</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <%
-                        for (Pagamento p : lista) {
-                    %>
-                    <tr>
-                        <td><%= p.getId() %></td>
-                        <td><%= p.getTipoPagto() %></td>
-                        <td><%= String.format("%.2f", p.getTotal()) %></td>
-                        <td><%= p.getData() %></td>
-                        <td><%= p.getIdEmpresa() %></td>
-                        <td class="acoes">
-                            <button class="btn" title="Editar"
-                                    onclick="abrirModalEditar(<%= p.getId() %>)">
-                                <i class="fa-solid fa-pen"></i>
-                            </button>
+                <c:choose>
+                    <c:when test="${not empty pagamentos}">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tipo de Pagamento</th>
+                                <th>Total (R$)</th>
+                                <th>Data</th>
+                                <th>ID Empresa</th>
+                                <th class="acoes-col">Ações</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <c:forEach var="p" items="${pagamentos}">
+                                <tr>
+                                    <td>${p.id}</td>
+                                    <td>${p.tipoPagto}</td>
+                                    <td>
+                                        <c:if test="${not empty p.total}">
+                                            <fmt:formatNumber value="${p.total}" type="currency" currencySymbol="R$" minFractionDigits="2" maxFractionDigits="2"/>
+                                        </c:if>
+                                    </td>
+                                    <td>
+                                        <c:if test="${not empty p.data}">
+                                            <fmt:formatDate value="${p.data}" pattern="dd/MM/yyyy" />
+                                        </c:if>
+                                    </td>
+                                    <td>${p.idEmpresa}</td>
+                                    <td class="acoes">
+                                        <button class="btn" title="Editar"
+                                                onclick="abrirModalEditar(${p.id})">
+                                            <i class="fa-solid fa-pen"></i>
+                                        </button>
 
-                            <button class="btn" title="Excluir"
-                                    onclick="if(confirm('Deseja excluir este pagamento?')) window.location.href='<%= request.getContextPath() %>/DeletarPagamentoServlet?id=<%= p.getId() %>'">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    <% } // Fim do for %>
-                    </tbody>
-                </table>
-                <%
-                } else { // Fim do if (lista não está vazia)
-                %>
-                <p style="padding:10px 6px; color:#666;">Nenhum pagamento cadastrado (ou encontrado no filtro).</p>
-                <% } %>
+                                        <form action="${pageContext.request.contextPath}/pagamento-delete" method="post" style="display: inline;" onsubmit="return confirm('Deseja realmente excluir este pagamento?');">
+                                            <input type="hidden" name="id" value="${p.id}">
+                                            <button class="btn" title="Excluir" type="submit">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                            </tbody>
+                        </table>
+                    </c:when>
+                    <c:otherwise>
+                        <p style="padding:10px 6px; color:#666;">Nenhum pagamento cadastrado (ou encontrado no filtro).</p>
+                    </c:otherwise>
+                </c:choose>
             </div>
 
             <div class="in-table-modal" id="inTableModal" role="dialog" aria-hidden="true"
@@ -307,7 +303,10 @@
                         title="Formulário Cadastrar/Atualizar Pagamento"></iframe>
             </div>
         </div>
-    </div> </div> <script>
+    </div>
+</div>
+
+<script>
     (function () {
         const modal = document.getElementById('inTableModal');
         const frame = document.getElementById('modalFrame');
@@ -319,9 +318,9 @@
             return;
         }
 
-        // Abrir Modal de Adicionar
+        // Abrir Modal de Adicionar (aponta para /pagamento-create)
         openBtn.addEventListener('click', function () {
-            frame.src = '<%= request.getContextPath() %>/view/Pagamento/cadastrarPagamento.jsp?modal=1';
+            frame.src = '${pageContext.request.contextPath}/pagamento-create';
             modal.classList.add('open');
             modal.setAttribute('aria-hidden', 'false');
         });
@@ -331,8 +330,9 @@
             modal.classList.remove('open');
             modal.setAttribute('aria-hidden', 'true');
             frame.src = 'about:blank';
-            // Descomente a linha abaixo para recarregar a tabela ao fechar
-            // window.location.reload();
+0
+            // Recarrega a página para mostrar dados atualizados
+            window.location.reload();
         }
 
         closeBtn.addEventListener('click', closeModal);
@@ -342,10 +342,10 @@
             }
         });
 
-        // Abrir Modal de Editar
+        // Abrir Modal de Editar (aponta para /pagamento-update)
         window.abrirModalEditar = function (id) {
             if (!id) return;
-            frame.src = '<%= request.getContextPath() %>/view/Pagamento/atualizarPagamento.jsp?id=' + id + '&modal=1';
+            frame.src = '${pageContext.request.contextPath}/pagamento-update?id=' + id;
             modal.classList.add('open');
             modal.setAttribute('aria-hidden', 'false');
         };
