@@ -113,10 +113,14 @@
             <div class="field-group">
                 <label for="tipoPagto">Tipo de Pagamento</label>
                 <select id="tipoPagto" name="tipoPagto" required>
-                    <option value="PIX" <%= "PIX".equals(pag.getTipoPagto()) ? "selected" : "" %>>PIX</option>
+                    <option value="">Selecione o tipo</option>
+                    <option value="Cartão Débito" <%= "Cartão Débito".equals(pag.getTipoPagto()) ? "selected" : "" %>>Cartão Débito</option>
+                    <option value="Cartão Crédito" <%= "Cartão Crédito".equals(pag.getTipoPagto()) ? "selected" : "" %>>Cartão Crédito</option>
                     <option value="Boleto" <%= "Boleto".equals(pag.getTipoPagto()) ? "selected" : "" %>>Boleto</option>
-                    <option value="Cartão" <%= "Cartão".equals(pag.getTipoPagto()) ? "selected" : "" %>>Cartão</option>
+                    <option value="Dinheiro" <%= "Dinheiro".equals(pag.getTipoPagto()) ? "selected" : "" %>>Dinheiro</option>
                     <option value="Transferência" <%= "Transferência".equals(pag.getTipoPagto()) ? "selected" : "" %>>Transferência</option>
+                    <option value="PIX" <%= "PIX".equals(pag.getTipoPagto()) ? "selected" : "" %>>PIX</option>
+
                 </select>
             </div>
 

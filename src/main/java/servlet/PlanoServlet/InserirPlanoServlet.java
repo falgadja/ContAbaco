@@ -29,38 +29,34 @@ public class InserirPlanoServlet extends HttpServlet {
 
         String nome = request.getParameter("nome");
         String precoStr = request.getParameter("preco");
-        double preco;
-
-        RequestDispatcher formDispatcher =
-                request.getRequestDispatcher("/WEB-INF/view/Plano/cadastrarPlano.jsp");
 
         try {
-            preco = Double.parseDouble(precoStr);
-        } catch (NumberFormatException e) {
-            request.setAttribute("mensagem", "Preço inválido. Digite um número válido.");
-            formDispatcher.forward(request, response);
-            return;
-        }
+            double preco = Double.parseDouble(precoStr);
 
-        Plano plano = new Plano();
-        plano.setNome(nome);
-        plano.setPreco(preco);
+            Plano plano = new Plano();
+            plano.setNome(nome);
+            plano.setPreco(preco);
 
-        PlanoDAO planoDAO = new PlanoDAO();
-
-        try {
+            PlanoDAO planoDAO = new PlanoDAO();
             int idGerado = planoDAO.inserir(plano);
+
             if (idGerado > 0) {
                 request.getSession().setAttribute("mensagem", "Plano cadastrado com sucesso!");
                 response.sendRedirect(request.getContextPath() + "/planos");
             } else {
                 request.setAttribute("mensagem", "Não foi possível inserir, tente novamente mais tarde.");
-                formDispatcher.forward(request, response);
+                doGet(request, response);
             }
+
+        } catch (NumberFormatException e) {
+            request.setAttribute("mensagem", "Preço inválido. Digite um número válido.");
+            doGet(request, response);
+
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("mensagem", "Erro inesperado. Contate o administrador.");
-            formDispatcher.forward(request, response);
+            doGet(request, response);
         }
     }
+
 }

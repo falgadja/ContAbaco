@@ -11,6 +11,8 @@ import model.Administrador;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 @WebServlet("/adm-create")
@@ -27,7 +29,6 @@ public class InserirAdmServlet extends HttpServlet {
         RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/Adm/cadastrarAdm.jsp");
         dispatcher.forward(request, response);
     }
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -36,58 +37,66 @@ public class InserirAdmServlet extends HttpServlet {
         String senha = request.getParameter("senha");
         String confirmarSenha = request.getParameter("confirmarSenha");
 
-        // Validações básicas
+        String mensagem = null;
+
         if (email == null || email.isEmpty() || senha == null || senha.isEmpty()) {
-            request.setAttribute("mensagem", "Preencha todos os campos!");
-            doGet(request, response);
-            return;
+            mensagem = "Preencha todos os campos!";
+        } else if (!EMAIL_REGEX.matcher(email).matches()) {
+            mensagem = "Email inválido!";
+        } else if (!senha.equals(confirmarSenha)) {
+            mensagem = "As senhas não são iguais!";
         }
 
-        if (!EMAIL_REGEX.matcher(email).matches()) {
-            request.setAttribute("mensagem", "Email inválido!");
-            doGet(request, response);
-            return;
-        }
-
-        if (!senha.equals(confirmarSenha)) {
-            request.setAttribute("mensagem", "As senhas não são iguais!");
-            doGet(request, response);
-            return;
-        }
-
-        // Criptografa a senha
-        String senhaHash = BCrypt.hashpw(senha, BCrypt.gensalt());
+        AdmDAO admDAO = new AdmDAO();
+        List<Administrador> adms = new ArrayList<>();
 
         try {
-            AdmDAO admDAO = new AdmDAO();
+            // Verifica duplicidade
+            if (mensagem == null && admDAO.buscarPorEmail(email) != null) {
+                mensagem = "Já existe um administrador com este e-mail!";
+            }
 
-            // Verifica se o email já está cadastrado
-            if (admDAO.buscarPorEmail(email) != null) {
-                request.setAttribute("mensagem", "Já existe um administrador com este e-mail!");
-                doGet(request, response);
+            if (mensagem != null) {
+                adms = admDAO.listar();
+                request.setAttribute("adms", adms);
+                request.setAttribute("mensagem", mensagem);
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/Adm/crudAdm.jsp");
+                dispatcher.forward(request, response);
                 return;
             }
 
-            // Cria objeto administrador
+            // Cria e insere o administrador
+            String senhaHash = BCrypt.hashpw(senha, BCrypt.gensalt());
             Administrador administrador = new Administrador();
             administrador.setEmail(email);
             administrador.setSenha(senhaHash);
 
-            // Insere no banco
             int idAdm = admDAO.inserir(administrador);
 
             if (idAdm > 0) {
-                // Sucesso → redireciona para a listagem
                 response.sendRedirect(request.getContextPath() + "/adm");
             } else {
-                request.setAttribute("mensagem", "Erro ao cadastrar administrador!");
-                doGet(request, response);
+                mensagem = "Erro ao cadastrar administrador!";
+                adms = admDAO.listar();
+                request.setAttribute("adms", adms);
+                request.setAttribute("mensagem", mensagem);
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/Adm/crudAdm.jsp");
+                dispatcher.forward(request, response);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("mensagem", "Erro interno: " + e.getMessage());
-            doGet(request, response);
+            mensagem = "Erro interno: " + e.getMessage();
+            try {
+                adms = admDAO.listar();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            request.setAttribute("adms", adms);
+            request.setAttribute("mensagem", mensagem);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/Adm/crudAdm.jsp");
+            dispatcher.forward(request, response);
         }
     }
+
 }

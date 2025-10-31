@@ -17,7 +17,28 @@ public class AtualizarEnderecoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Mostra o formulário de edição
+
+        String idParam = request.getParameter("id");
+
+        if (idParam != null && !idParam.isEmpty()) {
+            try {
+                int id = Integer.parseInt(idParam);
+                EnderecoDAO enderecoDAO = new EnderecoDAO();
+                Endereco endereco = enderecoDAO.buscarPorId(id);
+
+                if (endereco != null) {
+                    request.setAttribute("endereco", endereco);
+                } else {
+                    request.setAttribute("mensagemAtualizar", "Endereço não encontrado.");
+                }
+
+            } catch (NumberFormatException e) {
+                request.setAttribute("mensagemAtualizar", "ID inválido.");
+            }
+        } else {
+            request.setAttribute("mensagemAtualizar", "ID não informado.");
+        }
+
         RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/Endereco/atualizarEndereco.jsp");
         dispatcher.forward(request, response);
     }
@@ -34,9 +55,9 @@ public class AtualizarEnderecoServlet extends HttpServlet {
         String rua = request.getParameter("rua");
         String numeroParam = request.getParameter("numero");
         String cep = request.getParameter("cep");
-        String idEmpresaParam = request.getParameter("idEmpresa");
 
         EnderecoDAO enderecoDAO = new EnderecoDAO();
+        String mensagemAtualizar = null;
 
         try {
             if (idParam == null || idParam.isEmpty() ||
@@ -46,33 +67,38 @@ public class AtualizarEnderecoServlet extends HttpServlet {
                     bairro == null || bairro.trim().isEmpty() ||
                     rua == null || rua.trim().isEmpty() ||
                     numeroParam == null || numeroParam.isEmpty() ||
-                    cep == null || cep.trim().isEmpty() ||
-                    idEmpresaParam == null || idEmpresaParam.isEmpty()) {
+                    cep == null || cep.trim().isEmpty()) {
 
-                request.setAttribute("mensagemAtualizar", "Preencha todos os campos corretamente.");
-
+                mensagemAtualizar = "Preencha todos os campos corretamente.";
+                request.getSession().setAttribute("mensagem", mensagemAtualizar);
             } else {
                 int id = Integer.parseInt(idParam);
                 int numero = Integer.parseInt(numeroParam);
-                int idEmpresa = Integer.parseInt(idEmpresaParam);
 
-                Endereco endereco = new Endereco(id, pais, estado, cidade, bairro, rua, numero, cep, idEmpresa);
+                Endereco endereco = new Endereco();
+                endereco.setId(id);
+                endereco.setPais(pais);
+                endereco.setEstado(estado);
+                endereco.setCidade(cidade);
+                endereco.setBairro(bairro);
+                endereco.setRua(rua);
+                endereco.setNumero(numero);
+                endereco.setCep(cep);
 
                 if (enderecoDAO.atualizar(endereco) > 0) {
-                    request.getSession().setAttribute("mensagem", "Endereço atualizado com sucesso.");
-                    response.sendRedirect(request.getContextPath() + "/empresa");
-                    return;
+                    request.getSession().setAttribute("mensagem", "Endereço atualizado com sucesso!");
                 } else {
-                    request.setAttribute("mensagemAtualizar", "Não foi possível atualizar o endereço.");
+                    request.getSession().setAttribute("mensagem", "Não foi possível atualizar o endereço.");
                 }
             }
         } catch (NumberFormatException nfe) {
-            request.setAttribute("mensagemAtualizar", "Valores numéricos inválidos.");
+            request.getSession().setAttribute("mensagem", "Valores numéricos inválidos.");
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("mensagemAtualizar", "Erro inesperado ao atualizar o endereço: " + e.getMessage());
+            request.getSession().setAttribute("mensagem", "Erro inesperado ao atualizar o endereço: " + e.getMessage());
         }
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/view/Endereco/atualizarEndereco.jsp");
+        // Redireciona sempre para a tela do CRUD de empresas
+        response.sendRedirect(request.getContextPath() + "/empresas");
     }
 }

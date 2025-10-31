@@ -1,7 +1,7 @@
 package servlet.EmpresaServlet;
 
 import dao.EmpresaDAO;
-import jakarta.servlet.RequestDispatcher; // Importe
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -12,14 +12,12 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
 
-// 1. URL "limpa" para o formulário de cadastro
 @WebServlet("/empresas-create")
 public class InserirEmpresaServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // 2. Apenas mostra o formulário (já estava correto)
         RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/Empresa/cadastrarEmpresa.jsp");
         dispatcher.forward(request, response);
     }
@@ -27,6 +25,7 @@ public class InserirEmpresaServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         try {
             String nome = request.getParameter("nomeEmpresa");
             String cnpj = request.getParameter("cnpj");
@@ -36,15 +35,16 @@ public class InserirEmpresaServlet extends HttpServlet {
             String idPlanoStr = request.getParameter("idPlano");
             String qntdFuncStr = request.getParameter("qntdFuncionarios");
 
-            // 3. Sua lógica de validação (já estava boa)
-            if (nome == null || nome.isBlank() || !senha.equals(confirmarSenha)) {
-                request.setAttribute("mensagem", "As senhas não conferem ou campos obrigatórios estão vazios!");
-                RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/Empresa/cadastrarEmpresa.jsp");
-                dispatcher.forward(request, response);
+            if (nome == null || nome.isBlank() || senha == null || confirmarSenha == null || !senha.equals(confirmarSenha)) {
+                request.getSession().setAttribute("mensagem", "As senhas não conferem ou campos obrigatórios estão vazios!");
+                response.sendRedirect(request.getContextPath() + "/empresas");
                 return;
             }
-            if( senha.length()>8){
-                request.setAttribute("mensagem","A senha deve ter no mínimo 8 caracteres!");
+
+            if (senha.length() < 8) {
+                request.getSession().setAttribute("mensagem", "A senha deve ter no mínimo 8 caracteres!");
+                response.sendRedirect(request.getContextPath() + "/empresas");
+                return;
             }
 
             int idPlano = Integer.parseInt(idPlanoStr);
@@ -64,24 +64,21 @@ public class InserirEmpresaServlet extends HttpServlet {
             int idEmpresa = dao.inserir(empresa);
 
             if (idEmpresa > 0) {
-                // 4. CORREÇÃO: Em caso de sucesso, REDIRECIONA para o servlet de listagem
                 request.getSession().setAttribute("mensagem", "Empresa cadastrada com sucesso!");
-                response.sendRedirect(request.getContextPath() + "/empresas");
             } else {
-                // 5. Em caso de falha, encaminha de volta para o form com erro
-                request.setAttribute("mensagem", "Não foi possível cadastrar a empresa. Tente novamente!");
-                RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/Empresa/cadastrarEmpresa.jsp");
-                dispatcher.forward(request, response);
+                request.getSession().setAttribute("mensagem", "Não foi possível cadastrar a empresa. Tente novamente!");
             }
+
+            response.sendRedirect(request.getContextPath() + "/empresas");
+
         } catch (NumberFormatException e) {
-            request.setAttribute("mensagem", "Valores numéricos inválidos!");
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/Empresa/cadastrarEmpresa.jsp");
-            dispatcher.forward(request, response);
+            request.getSession().setAttribute("mensagem", "Valores numéricos inválidos!");
+            response.sendRedirect(request.getContextPath() + "/empresas");
+
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("mensagem", "Erro ao cadastrar empresa!");
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/Empresa/cadastrarEmpresa.jsp");
-            dispatcher.forward(request, response);
+            request.getSession().setAttribute("mensagem", "Erro ao cadastrar empresa!");
+            response.sendRedirect(request.getContextPath() + "/empresas");
         }
     }
 }

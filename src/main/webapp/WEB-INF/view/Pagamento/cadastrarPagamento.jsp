@@ -60,9 +60,10 @@
                 <label for="tipoPagto">Tipo de Pagamento</label>
                 <select id="tipoPagto" name="tipoPagto" required>
                     <option value="">Selecione o tipo</option>
-                    <option value="PIX">PIX</option>
+                    <option value="Cartão Débito ">Cartão Débito</option>
                     <option value="Boleto">Boleto</option>
-                    <option value="Cartão">Cartão</option>
+                    <option value="Dinheiro">Dinheiro</option>
+                    <option value="Cartão Crédito">Cartão Crédito</option>
                     <option value="Transferência">Transferência</option>
                 </select>
             </div>

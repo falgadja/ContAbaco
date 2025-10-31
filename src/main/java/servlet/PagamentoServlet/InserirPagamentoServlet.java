@@ -46,29 +46,24 @@ public class InserirPagamentoServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/Pagamento/cadastrarPagamento.jsp");
-
         try {
             String tipoPagto = request.getParameter("tipoPagto");
             String totalStr = request.getParameter("total");
             String dataStr = request.getParameter("data");
             String idEmpresaStr = request.getParameter("idEmpresa");
 
-            // Validação básica de campos
             if (tipoPagto == null || tipoPagto.isBlank() ||
                     totalStr == null || totalStr.isBlank() ||
                     dataStr == null || dataStr.isBlank() ||
                     idEmpresaStr == null || idEmpresaStr.isBlank()) {
-
-                request.setAttribute("mensagem", "Todos os campos são obrigatórios!");
-                doGet(request, response);
+                request.getSession().setAttribute("mensagem", "Todos os campos são obrigatórios!");
+                response.sendRedirect(request.getContextPath() + "/pagamento");
                 return;
             }
 
-            // Validação de formato de data
             if (!DATE_REGEX.matcher(dataStr).matches()) {
-                request.setAttribute("mensagem", "O formato da data deve ser AAAA-MM-DD (ex: 2025-10-27).");
-                doGet(request, response);
+                request.getSession().setAttribute("mensagem", "O formato da data deve ser AAAA-MM-DD (ex: 2025-10-27).");
+                response.sendRedirect(request.getContextPath() + "/pagamento");
                 return;
             }
 
@@ -87,24 +82,25 @@ public class InserirPagamentoServlet extends HttpServlet {
 
             if (idPagamento > 0) {
                 request.getSession().setAttribute("mensagem", "Pagamento cadastrado com sucesso!");
-                response.sendRedirect(request.getContextPath() + "/pagamento");
             } else {
-                request.setAttribute("mensagem", "Não foi possível cadastrar o pagamento. Tente novamente!");
-                doGet(request, response);
+                request.getSession().setAttribute("mensagem", "Não foi possível cadastrar o pagamento. Tente novamente!");
             }
 
+            response.sendRedirect(request.getContextPath() + "/pagamento");
+
         } catch (NumberFormatException e) {
-            request.setAttribute("mensagem", "Valor inválido informado (número ou empresa).");
-            doGet(request, response);
+            request.getSession().setAttribute("mensagem", "Valor inválido informado (número ou empresa).");
+            response.sendRedirect(request.getContextPath() + "/pagamento");
 
         } catch (DateTimeParseException e) {
-            request.setAttribute("mensagem", "Data inválida. Use o formato AAAA-MM-DD.");
-            doGet(request, response);
+            request.getSession().setAttribute("mensagem", "Data inválida. Use o formato AAAA-MM-DD.");
+            response.sendRedirect(request.getContextPath() + "/pagamento");
 
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("mensagem", "Erro interno: " + e.getMessage());
-            doGet(request, response);
+            request.getSession().setAttribute("mensagem", "Erro interno: " + e.getMessage());
+            response.sendRedirect(request.getContextPath() + "/pagamento");
         }
     }
+
 }

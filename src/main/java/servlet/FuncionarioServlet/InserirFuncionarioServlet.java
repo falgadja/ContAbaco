@@ -23,83 +23,82 @@ import java.util.regex.Pattern;
 @WebServlet("/funcionarios-create")
 public class InserirFuncionarioServlet extends HttpServlet {
 
-    // Regex de exemplo (validação de email)
-    private static final Pattern EMAIL_REGEX = Pattern.compile("^[\\w-.]+@[\\w-]+\\.[a-z]{2,}$", Pattern.CASE_INSENSITIVE);
+    private static final Pattern EMAIL_REGEX =
+            Pattern.compile("^[\\w-.]+@[\\w-]+\\.[a-z]{2,}$", Pattern.CASE_INSENSITIVE);
 
+    // doGet exibe o formulário de cadastro
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            // Buscar listas para dropdowns
             SetorDAO setorDAO = new SetorDAO();
             EmpresaDAO empresaDAO = new EmpresaDAO();
 
-            List<Setor> setores = setorDAO.listarTodos(); // Todos os setores
-            List<Empresa> empresas = empresaDAO.listar(); // Todas as empresas
+            List<Setor> setores = setorDAO.listarTodos();
+            List<Empresa> empresas = empresaDAO.listar();
 
-            // Enviar listas para a JSP
             request.setAttribute("setores", setores);
             request.setAttribute("empresas", empresas);
-
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("mensagem", "Erro ao carregar listas de setores ou empresas.");
         }
 
-        // Encaminhar para o formulário de cadastro
         RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/Funcionario/cadastrarFuncionario.jsp");
         dispatcher.forward(request, response);
     }
 
+    // doPost processa o cadastro e redireciona para o CRUD com modal
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String nome = request.getParameter("nome");
-        String sobrenome = request.getParameter("sobrenome");
-        String email = request.getParameter("email");
-        String senha = request.getParameter("senha");
-        String confirmarSenha = request.getParameter("confirmarSenha");
-        String dataNascimentoStr = request.getParameter("dataNascimento");
-        int idSetor = Integer.parseInt(request.getParameter("idSetor"));
-        int idEmpresa = Integer.parseInt(request.getParameter("idEmpresa"));
-
-        // Validações básicas
-        if (!senha.equals(confirmarSenha)) {
-            request.setAttribute("mensagem", "As senhas não são iguais!");
-            doGet(request, response); // Recarrega as listas
-            return;
-        }
-
-        if (!EMAIL_REGEX.matcher(email).matches()) {
-            request.setAttribute("mensagem", "Email inválido!");
-            doGet(request, response);
-            return;
-        }
-
-        LocalDate dataNascimento;
         try {
-            dataNascimento = LocalDate.parse(dataNascimentoStr);
-        } catch (DateTimeParseException e) {
-            request.setAttribute("mensagem", "Data de nascimento inválida!");
-            doGet(request, response);
-            return;
-        }
+            String nome = request.getParameter("nome");
+            String sobrenome = request.getParameter("sobrenome");
+            String email = request.getParameter("email");
+            String senha = request.getParameter("senha");
+            String confirmarSenha = request.getParameter("confirmarSenha");
+            String dataNascimentoStr = request.getParameter("dataNascimento");
+            int idSetor = Integer.parseInt(request.getParameter("idSetor"));
+            int idEmpresa = Integer.parseInt(request.getParameter("idEmpresa"));
 
-        // Criptografar senha
-        String senhaHash = BCrypt.hashpw(senha, BCrypt.gensalt());
-
-        try {
-            FuncionarioDAO funcionarioDAO = new FuncionarioDAO();
-
-            // Verifica se já existe email cadastrado
-            if (funcionarioDAO.buscarHashPorEmail(email) != null) {
-                request.setAttribute("mensagem", "Já existe um funcionário com este email!");
-                doGet(request, response);
+            if (nome == null || nome.isBlank() || sobrenome == null || sobrenome.isBlank()) {
+                request.getSession().setAttribute("mensagem", "Preencha todos os campos obrigatórios!");
+                response.sendRedirect(request.getContextPath() + "/funcionarios");
                 return;
             }
 
-            // Cria objeto funcionário
+            if (!senha.equals(confirmarSenha)) {
+                request.getSession().setAttribute("mensagem", "As senhas não conferem!");
+                response.sendRedirect(request.getContextPath() + "/funcionarios");
+                return;
+            }
+
+            if (!EMAIL_REGEX.matcher(email).matches()) {
+                request.getSession().setAttribute("mensagem", "Email inválido!");
+                response.sendRedirect(request.getContextPath() + "/funcionarios");
+                return;
+            }
+
+            LocalDate dataNascimento;
+            try {
+                dataNascimento = LocalDate.parse(dataNascimentoStr);
+            } catch (DateTimeParseException e) {
+                request.getSession().setAttribute("mensagem", "Data de nascimento inválida!");
+                response.sendRedirect(request.getContextPath() + "/funcionarios");
+                return;
+            }
+
+            String senhaHash = BCrypt.hashpw(senha, BCrypt.gensalt());
+            FuncionarioDAO funcionarioDAO = new FuncionarioDAO();
+
+            if (funcionarioDAO.buscarHashPorEmail(email) != null) {
+                request.getSession().setAttribute("mensagem", "Já existe um funcionário com este email!");
+                response.sendRedirect(request.getContextPath() + "/funcionarios");
+                return;
+            }
+
             Funcionario funcionario = new Funcionario();
             funcionario.setNome(nome);
             funcionario.setSobrenome(sobrenome);
@@ -109,20 +108,20 @@ public class InserirFuncionarioServlet extends HttpServlet {
             funcionario.setIdSetor(idSetor);
             funcionario.setIdEmpresa(idEmpresa);
 
-            // Insere no banco
             int id = funcionarioDAO.inserir(funcionario);
+
             if (id > 0) {
-                // Sucesso: redireciona para a listagem
-                response.sendRedirect(request.getContextPath() + "/funcionarios");
+                request.getSession().setAttribute("mensagem", "Funcionário cadastrado com sucesso!");
             } else {
-                request.setAttribute("mensagem", "Erro ao cadastrar funcionário!");
-                doGet(request, response);
+                request.getSession().setAttribute("mensagem", "Erro ao cadastrar funcionário!");
             }
+
+            response.sendRedirect(request.getContextPath() + "/funcionarios");
 
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("mensagem", "Erro interno: " + e.getMessage());
-            doGet(request, response);
+            request.getSession().setAttribute("mensagem", "Erro interno: " + e.getMessage());
+            response.sendRedirect(request.getContextPath() + "/funcionarios");
         }
     }
 }

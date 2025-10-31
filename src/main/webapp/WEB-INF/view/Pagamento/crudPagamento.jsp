@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%-- Imports de DAO removidos --%>
 <%
     String modalParam = request.getParameter("modal");
@@ -221,7 +222,7 @@
 
             <label for="tipos">Tipo de pagamento:</label>
             <select name="tipos" id="tipos">
-                <option value="">-- Todos --</option>
+                <option value="todos">-- Todos --</option>
                 <option value="PIX" ${param.tipos == 'PIX' ? 'selected' : ''}>PIX</option>
                 <option value="Boleto" ${param.tipos == 'Boleto' ? 'selected' : ''}>Boleto</option>
                 <option value="Cartão" ${param.tipos == 'Cartão' ? 'selected' : ''}>Cartão</option>
