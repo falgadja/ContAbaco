@@ -37,11 +37,14 @@ public class InserirEmpresaServlet extends HttpServlet {
             String qntdFuncStr = request.getParameter("qntdFuncionarios");
 
             // 3. Sua lógica de validação (já estava boa)
-            if (nome == null || nome.isBlank() || /* ...outras validações... */ !senha.equals(confirmarSenha)) {
+            if (nome == null || nome.isBlank() || !senha.equals(confirmarSenha)) {
                 request.setAttribute("mensagem", "As senhas não conferem ou campos obrigatórios estão vazios!");
                 RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/Empresa/cadastrarEmpresa.jsp");
                 dispatcher.forward(request, response);
                 return;
+            }
+            if( senha.length()>8){
+                request.setAttribute("mensagem","A senha deve ter no mínimo 8 caracteres!");
             }
 
             int idPlano = Integer.parseInt(idPlanoStr);

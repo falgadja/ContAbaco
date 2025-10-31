@@ -77,6 +77,41 @@ public class FuncionarioDAO {
 
         return funcionario;
     }
+    // READ - BUSCAR TODOS OS FUNCIONÁRIOS PELO ID DA EMPRESA
+    public List<Funcionario> buscarPorIdEmpresa(int idEmpresa) {
+        Conexao conexao = new Conexao();
+        Connection con = conexao.conectar();
+        List<Funcionario> funcionarios = new ArrayList<>();
+        String sql = "SELECT * FROM FUNCIONARIO WHERE id_empresa = ?";
+
+        try {
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setInt(1, idEmpresa);
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                Funcionario funcionario = new Funcionario(
+                        rs.getInt("id"),
+                        rs.getString("nome"),
+                        rs.getString("sobrenome"),
+                        rs.getTimestamp("data_nascimento").toLocalDateTime().toLocalDate(),
+                        rs.getString("email"),
+                        rs.getString("senha"),
+                        rs.getInt("id_empresa"),
+                        rs.getInt("id_setor")
+                );
+                funcionarios.add(funcionario);
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        } finally {
+            conexao.desconectar(con);
+        }
+
+        return funcionarios;
+    }
+
+
 
 
     // BUSCAR PELO EMAIL E RETORNAR A SENHA (Mantido - Essencial para Login)

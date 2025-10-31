@@ -16,16 +16,16 @@ import java.io.IOException;
 public class AtualizarEmpresaServlet extends HttpServlet {
 
     /**
-     * Este é o doGet que corrige a "tela réplica".
-     * Ele carrega os dados da empresa para o formulário de edição.
+     * doGet: Carrega os dados da empresa para o formulário de edição.
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        // Recebendo o ID da empresa da URL
         String idParametro = request.getParameter("id");
         if (idParametro == null || idParametro.isEmpty()) {
-            request.getSession().setAttribute("mensagem", "ID da empresa não encontrado para edição.");
+            request.getSession().setAttribute("mensagem", "ID da empresa não informado.");
             response.sendRedirect(request.getContextPath() + "/empresas");
             return;
         }
@@ -34,54 +34,51 @@ public class AtualizarEmpresaServlet extends HttpServlet {
             int id = Integer.parseInt(idParametro);
             EmpresaDAO empresaDAO = new EmpresaDAO();
 
-            // Assumindo que seu EmpresaDAO tem este método
+            // Busca a empresa pelo ID
             Empresa empresa = empresaDAO.buscarPorId(id);
-
             if (empresa == null) {
                 request.getSession().setAttribute("mensagem", "Empresa não encontrada (ID: " + id + ").");
                 response.sendRedirect(request.getContextPath() + "/empresas");
                 return;
             }
 
-            // Sucesso: Coloca a empresa no request
+            // Coloca a empresa no request para preencher o formulário
             request.setAttribute("empresaParaEditar", empresa);
 
-            // Encaminha (FORWARD) para a JSP do formulário
+            // Encaminha para a página de atualização
             RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/Empresa/atualizarEmpresa.jsp");
             dispatcher.forward(request, response);
 
+        } catch (NumberFormatException nfe) {
+            request.getSession().setAttribute("mensagem", "ID inválido.");
+            response.sendRedirect(request.getContextPath() + "/empresas");
         } catch (Exception e) {
             e.printStackTrace();
-            request.getSession().setAttribute("mensagem", "Erro ao carregar dados para edição: " + e.getMessage());
+            request.getSession().setAttribute("mensagem", "Erro ao carregar empresa: " + e.getMessage());
             response.sendRedirect(request.getContextPath() + "/empresas");
         }
     }
 
     /**
-     * Este é o doPost com a linha 77 CORRIGIDA.
-     * Ele processa as alterações.
+     * doPost: Processa a atualização da empresa.
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Recebendo dados do formulário
+        // Recebendo os parâmetros do formulário
         String idParametro = request.getParameter("id");
         String cnpj = request.getParameter("cnpj");
         String nome = request.getParameter("nome");
         String email = request.getParameter("email");
-        String senha = request.getParameter("senha"); // Senha nova (ou vazia)
+        String senha = request.getParameter("senha"); // Senha nova, pode estar vazia
         String idPlanoParametro = request.getParameter("idPlano");
         String qntdFuncionariosParametro = request.getParameter("qntdFuncionarios");
 
         EmpresaDAO empresaDAO = new EmpresaDAO();
 
         try {
-            // ==================================================================
-            // AQUI ESTÁ A CORREÇÃO (LINHA 77)
-            // O comentário "/* ... */" foi removido e substituído pelas
-            // validações que você já tinha no seu código original.
-            // ==================================================================
+            // Validação básica: checa se todos os campos obrigatórios foram preenchidos
             if (idParametro == null || idParametro.isEmpty() ||
                     cnpj == null || cnpj.trim().isEmpty() ||
                     nome == null || nome.trim().isEmpty() ||
@@ -89,45 +86,47 @@ public class AtualizarEmpresaServlet extends HttpServlet {
                     idPlanoParametro == null || idPlanoParametro.isEmpty() ||
                     qntdFuncionariosParametro == null || qntdFuncionariosParametro.isEmpty()) {
 
-                request.getSession().setAttribute("mensagem", "Parâmetros inválidos. Não foi possível atualizar.");
+                request.getSession().setAttribute("mensagem", "Preencha todos os campos obrigatórios.");
 
             } else {
+                // Convertendo parâmetros para os tipos corretos
                 int id = Integer.parseInt(idParametro);
                 int idPlano = Integer.parseInt(idPlanoParametro);
                 int qntdFuncionarios = Integer.parseInt(qntdFuncionariosParametro);
 
-                // Busca a empresa existente para pegar a senha antiga
+                // Busca a empresa existente para preservar dados como a senha
                 Empresa empresaExistente = empresaDAO.buscarPorId(id);
                 if (empresaExistente == null) {
-                    request.getSession().setAttribute("mensagem", "Erro: Empresa não encontrada para atualizar.");
+                    request.getSession().setAttribute("mensagem", "Empresa não encontrada para atualização.");
                 } else {
-                    // Preenche o objeto com os novos dados
-                    empresaExistente.setId(id);
+                    // Atualiza os dados com os valores do formulário
                     empresaExistente.setCnpj(cnpj.trim());
                     empresaExistente.setNome(nome.trim());
                     empresaExistente.setEmail(email.trim());
                     empresaExistente.setIdPlano(idPlano);
                     empresaExistente.setQntdFuncionarios(qntdFuncionarios);
 
-                    // Só gera novo hash se o usuário alterou a senha
+                    // Atualiza a senha apenas se o usuário digitou uma nova
                     if (senha != null && !senha.trim().isEmpty()) {
                         empresaExistente.setSenha(BCrypt.hashpw(senha, BCrypt.gensalt()));
                     }
-                    // Se a senha veio vazia, a senha antiga (já no objeto) é mantida
 
+                    // Atualiza no banco de dados
                     if (empresaDAO.atualizar(empresaExistente) > 0) {
                         request.getSession().setAttribute("mensagem", "Empresa atualizada com sucesso.");
                     } else {
-                        request.getSession().setAttribute("mensagem", "Não foi possível atualizar a Empresa.");
+                        request.getSession().setAttribute("mensagem", "Não foi possível atualizar a empresa.");
                     }
                 }
             }
+        } catch (NumberFormatException nfe) {
+            request.getSession().setAttribute("mensagem", "Valores numéricos inválidos.");
         } catch (Exception e) {
             e.printStackTrace();
-            request.getSession().setAttribute("mensagem", "Erro inesperado ao tentar atualizar: " + e.getMessage());
+            request.getSession().setAttribute("mensagem", "Erro inesperado ao atualizar empresa: " + e.getMessage());
         }
 
-        // No final, REDIRECIONA para o servlet de listagem
+        // Redireciona para a lista de empresas
         response.sendRedirect(request.getContextPath() + "/empresas");
     }
 }

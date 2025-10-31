@@ -1,5 +1,7 @@
 package servlet.EnderecoServlet;
+
 import dao.EnderecoDAO;
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -9,66 +11,69 @@ import model.Endereco;
 
 import java.io.IOException;
 
-@WebServlet("/InserirEndereco")
+@WebServlet("/endereco-create")
 public class InserirEnderecoServlet extends HttpServlet {
 
-    @Override // Inicializa o servlet de cadastro de endereço
-    public void init() throws ServletException {
-        super.init();
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        // Exibe o formulário de cadastro de endereço
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/Endereco/cadastrarEndereco.jsp");
+        dispatcher.forward(request, response);
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Apenas exibe o formulário de cadastro
-        request.getRequestDispatcher("/view/Endereco/cadastrarEndereco.jsp").forward(request, response);
-    }
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String pais = request.getParameter("pais");
+        String estado = request.getParameter("estado");
+        String cidade = request.getParameter("cidade");
+        String bairro = request.getParameter("bairro");
+        String rua = request.getParameter("rua");
+        String cep = request.getParameter("cep");
+        String numeroStr = request.getParameter("numero");
+        String idEmpresaStr = request.getParameter("idEmpresa");
+
         try {
-            String pais = request.getParameter("pais");
-            String estado = request.getParameter("estado");
-            String cidade = request.getParameter("cidade");
-            String bairro = request.getParameter("bairro");
-            String rua = request.getParameter("rua");
-            String cep = request.getParameter("cep");
-            String numeroStr = request.getParameter("numero");
-            String idEmpresaStr = request.getParameter("idEmpresa");
-
             // Validação de campos obrigatórios
-            if (pais.isBlank() || estado.isBlank() || cidade.isBlank() || bairro.isBlank() ||
+            if (pais == null || estado == null || cidade == null || bairro == null ||
+                    rua == null || cep == null || numeroStr == null || idEmpresaStr == null ||
+                    pais.isBlank() || estado.isBlank() || cidade.isBlank() || bairro.isBlank() ||
                     rua.isBlank() || cep.isBlank() || numeroStr.isBlank() || idEmpresaStr.isBlank()) {
+
                 request.setAttribute("mensagem", "Todos os campos são obrigatórios!");
-                request.getRequestDispatcher("/WEB-INF/view/Endereco/cadastrarEndereco.jsp").forward(request, response);
+                doGet(request, response);
                 return;
             }
 
             int numero = Integer.parseInt(numeroStr);
             int idEmpresa = Integer.parseInt(idEmpresaStr);
 
+            // Cria objeto Endereco
             Endereco endereco = new Endereco(pais, estado, cidade, bairro, rua, numero, cep, idEmpresa);
+
+            // Insere no banco
             EnderecoDAO enderecoDAO = new EnderecoDAO();
             int idGerado = enderecoDAO.inserir(endereco);
 
             if (idGerado > 0) {
-                response.sendRedirect(request.getContextPath() + "/view/Empresa/crudEmpresa.jsp  ");
+                // Redireciona após sucesso
+                response.sendRedirect(request.getContextPath() + "/endereco");
             } else {
                 request.setAttribute("mensagem", "Não foi possível cadastrar o endereço. Tente novamente!");
-                request.getRequestDispatcher("/WEB-INF/view/Endereco/cadastrarEndereco.jsp").forward(request, response);
+                doGet(request, response);
             }
 
         } catch (NumberFormatException e) {
             request.setAttribute("mensagem", "Erro: número inválido informado!");
-            request.getRequestDispatcher("/WEB-INF/view/Endereco/cadastrarEndereco.jsp").forward(request, response);
+            doGet(request, response);
+
         } catch (Exception e) {
-            request.setAttribute("mensagem", "Erro ao processar o cadastro de endereço!");
-            request.getRequestDispatcher("/WEB-INF/view/Endereco/cadastrarEndereco.jsp").forward(request, response);
+            e.printStackTrace();
+            request.setAttribute("mensagem", "Erro interno: " + e.getMessage());
+            doGet(request, response);
         }
-    }
-
-
-    @Override // Finaliza o servlet e libera recursos alocados
-    public void destroy() {
-        super.destroy();
     }
 }

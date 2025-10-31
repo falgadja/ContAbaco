@@ -104,12 +104,12 @@ public class PagamentoDAO {
         int retorno;
 
         try {
-            String sql = "UPDATE PAGAMENTO SET TIPO_PAGTO = ?, TOTAL = ?, DATA_PAGTO = ?, COMPROVANTE = ? WHERE ID = ?";
+            String sql = "UPDATE PAGAMENTO SET TIPO_PAGTO = ?, TOTAL = ?, DATA_PAGTO = ? WHERE ID = ?";
             PreparedStatement pst = conn.prepareStatement(sql);
             pst.setString(1, pagamento.getTipoPagto());
             pst.setDouble(2, pagamento.getTotal());
             pst.setDate(3, Date.valueOf(pagamento.getData()));
-            pst.setInt(5, pagamento.getId());
+            pst.setInt(4, pagamento.getId());
 
             retorno = pst.executeUpdate();
 

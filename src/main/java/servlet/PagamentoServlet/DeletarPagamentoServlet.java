@@ -9,46 +9,48 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-// 1. URL "limpa"
 @WebServlet("/pagamento-delete")
 public class DeletarPagamentoServlet extends HttpServlet {
-    
-    /**
-     * 2. CORREÇÃO: doGet agora redireciona (Evita delete por GET)
-     */
+
+    private static final long serialVersionUID = 1L;
+
+    // GET não deleta, apenas redireciona para a lista de pagamentos
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.sendRedirect(request.getContextPath() + "/pagamento");
     }
 
+    // POST realiza a exclusão do pagamento
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         String idParametro = request.getParameter("id");
-        PagamentoDAO pagamentoDAO = new PagamentoDAO();
+        PagamentoDAO pagamentoDAO = new PagamentoDAO(); // DAO instanciado aqui
+        String mensagem;
 
         try {
             if (idParametro == null || idParametro.isEmpty()) {
-                request.getSession().setAttribute("mensagem", "ID do pagamento não foi encontrado.");
+                mensagem = "ID do pagamento não foi encontrado.";
             } else {
                 int id = Integer.parseInt(idParametro);
 
                 if (pagamentoDAO.deletar(id) > 0) {
-                    request.getSession().setAttribute("mensagem", "Pagamento deletado com sucesso!");
+                    mensagem = "Pagamento deletado com sucesso!";
                 } else {
-                    request.getSession().setAttribute("mensagem", "Não foi possível deletar o pagamento.");
+                    mensagem = "Não foi possível deletar o pagamento.";
                 }
             }
         } catch (NumberFormatException nfe) {
-            request.getSession().setAttribute("mensagem", "ID inválido.");
+            mensagem = "ID inválido.";
         } catch (Exception e) {
             e.printStackTrace();
-            request.getSession().setAttribute("mensagem", "Erro inesperado ao tentar deletar.");
+            mensagem = "Erro inesperado ao tentar deletar o pagamento.";
         }
 
-        // 3. CORREÇÃO: REDIRECIONA para o servlet de listagem
+        // Salva a mensagem na sessão e redireciona para a lista
+        request.getSession().setAttribute("mensagem", mensagem);
         response.sendRedirect(request.getContextPath() + "/pagamento");
     }
 }

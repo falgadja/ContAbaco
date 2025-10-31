@@ -9,40 +9,48 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet("/DeletarEnderecoServlet")
+@WebServlet("/endereco-delete")
 public class DeletarEnderecoServlet extends HttpServlet {
+
+    private static final long serialVersionUID = 1L;
+
+    // GET não deleta, apenas redireciona para a lista de endereços
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doPost(request, response);
+        response.sendRedirect(request.getContextPath() + "/endereco");
     }
 
+    // POST realiza a exclusão do endereço
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         String idParametro = request.getParameter("id");
-        EnderecoDAO enderecoDAO = new EnderecoDAO();
+        EnderecoDAO enderecoDAO = new EnderecoDAO(); // DAO instanciado aqui
+        String mensagem;
 
         try {
             if (idParametro == null || idParametro.isEmpty()) {
-                request.setAttribute("mensagemDeletar", "ID do endereço não foi encontrado.");
+                mensagem = "ID do endereço não foi encontrado.";
             } else {
                 int id = Integer.parseInt(idParametro);
 
                 if (enderecoDAO.deletar(id) > 0) {
-                    request.setAttribute("mensagemDeletar", "Endereço deletado com sucesso!");
+                    mensagem = "Endereço deletado com sucesso!";
                 } else {
-                    request.setAttribute("mensagemDeletar", "Não foi possível deletar.");
+                    mensagem = "Não foi possível deletar o endereço.";
                 }
             }
         } catch (NumberFormatException nfe) {
-            request.setAttribute("mensagemDeletar", "ID inválido.");
+            mensagem = "ID inválido.";
         } catch (Exception e) {
-            request.setAttribute("mensagemDeletar", "Erro inesperado ao tentar deletar.");
+            e.printStackTrace();
+            mensagem = "Erro inesperado ao tentar deletar o endereço.";
         }
 
-        // Caminho absoluto para o JSP de CRUD do endereço
-        request.getRequestDispatcher("/WEB-INF/view/Endereco/crudEndereco.jsp").forward(request, response);
+        // Salva a mensagem na sessão e redireciona para a listagem
+        request.getSession().setAttribute("mensagemDeletar", mensagem);
+        response.sendRedirect(request.getContextPath() + "/empresa");
     }
 }

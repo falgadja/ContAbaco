@@ -7,7 +7,7 @@
 </head>
 <body>
 <h2>Cadastro de Endereço</h2>
-<form action="<%= request.getContextPath() %>/InserirEndereco" method="post">
+<form action="<%= request.getContextPath() %>/endereco-create" method="post">
 
     <!-- Campo hidden para o ID da empresa -->
     <input type="hidden" name="idEmpresa" value="${param.idEmpresa}">

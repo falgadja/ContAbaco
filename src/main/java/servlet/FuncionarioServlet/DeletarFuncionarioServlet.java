@@ -9,46 +9,48 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-// 1. URL "limpa"
 @WebServlet("/funcionarios-delete")
 public class DeletarFuncionarioServlet extends HttpServlet {
 
-    /**
-     * 2. CORREÇÃO: doGet agora redireciona (Evita delete por GET)
-     */
+    private static final long serialVersionUID = 1L;
+
+    // GET não deleta, apenas redireciona para a lista de funcionários
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.sendRedirect(request.getContextPath() + "/funcionarios");
     }
 
+    // POST realiza a exclusão do funcionário
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         String idParametro = request.getParameter("id");
-        FuncionarioDAO funcionarioDAO = new FuncionarioDAO();
+        FuncionarioDAO funcionarioDAO = new FuncionarioDAO(); // DAO instanciado aqui
+        String mensagem;
 
         try {
             if (idParametro == null || idParametro.isEmpty()) {
-                request.getSession().setAttribute("mensagemDeletar", "ID do funcionário não foi encontrado.");
+                mensagem = "ID do funcionário não foi encontrado.";
             } else {
                 int id = Integer.parseInt(idParametro);
 
-                if (funcionarioDAO.deletar(id) > 0) { // (Seu DAO precisa ter 'deletar')
-                    request.getSession().setAttribute("mensagemDeletar", "Funcionário deletado com sucesso!");
+                if (funcionarioDAO.deletar(id) > 0) {
+                    mensagem = "Funcionário deletado com sucesso!";
                 } else {
-                    request.getSession().setAttribute("mensagemDeletar", "Não foi possível deletar.");
+                    mensagem = "Não foi possível deletar o funcionário.";
                 }
             }
         } catch (NumberFormatException nfe) {
-            request.getSession().setAttribute("mensagemDeletar", "ID inválido.");
+            mensagem = "ID inválido.";
         } catch (Exception e) {
             e.printStackTrace();
-            request.getSession().setAttribute("mensagemDeletar", "Erro inesperado ao tentar deletar.");
+            mensagem = "Erro inesperado ao tentar deletar o funcionário.";
         }
 
-        // 3. CORREÇÃO: REDIRECIONA para o servlet de listagem
+        // Salva a mensagem na sessão e redireciona para a lista
+        request.getSession().setAttribute("mensagemDeletar", mensagem);
         response.sendRedirect(request.getContextPath() + "/funcionarios");
     }
 }

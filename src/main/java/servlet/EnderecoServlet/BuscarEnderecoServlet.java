@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet("/BuscarEnderecoServlet")
+@WebServlet("/endereco")
 public class BuscarEnderecoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -66,7 +66,7 @@ public class BuscarEnderecoServlet extends HttpServlet {
         }
 
         // Encaminha para o JSP
-        request.getRequestDispatcher("../Cadastrarendereco.jsp").forward(request, response);
+        request.getRequestDispatcher("../CadastrarEndereco.jsp").forward(request, response);
     }
 
     @Override

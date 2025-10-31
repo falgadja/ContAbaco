@@ -9,46 +9,49 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-// 1. URL "limpa"
 @WebServlet("/empresas-delete")
 public class DeletarEmpresaServlet extends HttpServlet {
 
-    /**
-     * 2. CORREÇÃO: doGet agora redireciona para a lista (Evita delete por GET)
-     */
+    private static final long serialVersionUID = 1L;
+
+    // GET não deleta, apenas redireciona para a listagem
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.sendRedirect(request.getContextPath() + "/empresas");
     }
 
+    // POST realiza a exclusão da empresa
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         String idParametro = request.getParameter("id");
-        EmpresaDAO empresaDAO = new EmpresaDAO();
+        EmpresaDAO empresaDAO = new EmpresaDAO(); // DAO instanciado aqui
+
+        String mensagem;
 
         try {
             if (idParametro == null || idParametro.isEmpty()) {
-                request.getSession().setAttribute("mensagem", "ID da empresa não foi encontrado.");
+                mensagem = "ID da empresa não foi encontrado.";
             } else {
                 int id = Integer.parseInt(idParametro);
 
-                if (empresaDAO.deletar(id) > 0) { // (Seu DAO precisa do método 'deletar')
-                    request.getSession().setAttribute("mensagem", "Empresa deletada com sucesso!");
+                if (empresaDAO.deletar(id) > 0) {
+                    mensagem = "Empresa deletada com sucesso!";
                 } else {
-                    request.getSession().setAttribute("mensagem", "Não foi possível deletar a empresa.");
+                    mensagem = "Não foi possível deletar a empresa.";
                 }
             }
         } catch (NumberFormatException nfe) {
-            request.getSession().setAttribute("mensagem", "ID inválido.");
+            mensagem = "ID inválido.";
         } catch (Exception e) {
             e.printStackTrace();
-            request.getSession().setAttribute("mensagem", "Erro inesperado ao tentar deletar.");
+            mensagem = "Erro inesperado ao tentar deletar.";
         }
 
-        // 3. CORREÇÃO: REDIRECIONA para o servlet de listagem
+        // Salva a mensagem e redireciona para a lista
+        request.getSession().setAttribute("mensagem", mensagem);
         response.sendRedirect(request.getContextPath() + "/empresas");
     }
 }

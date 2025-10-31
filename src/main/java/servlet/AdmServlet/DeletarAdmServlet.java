@@ -9,53 +9,49 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-// 1. URL "limpa" para a ação de deletar
 @WebServlet("/adm-delete")
 public class DeletarAdmServlet extends HttpServlet {
 
-    /**
-     * Ações de exclusão NUNCA devem ser feitas com GET.
-     * Este método redireciona para a lista principal para evitar
-     * que alguém delete dados acidentalmente por um link.
-     */
+    private static final long serialVersionUID = 1L;
+
+    // GET não deleta, apenas redireciona para a listagem
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Redireciona para o servlet de listagem
         response.sendRedirect(request.getContextPath() + "/adm");
     }
 
-    /**
-     * Processa a exclusão do administrador.
-     */
+    // POST realiza a exclusão do administrador
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         String idParametro = request.getParameter("id");
-        AdmDAO admDAO = new AdmDAO();
+        AdmDAO admDAO = new AdmDAO(); // Instancia aqui, como pedido
+
+        String mensagem;
 
         try {
             if (idParametro == null || idParametro.isEmpty()) {
-                request.getSession().setAttribute("mensagemDeletar", "ID do administrador não foi encontrado.");
+                mensagem = "ID do administrador não foi encontrado.";
             } else {
                 int id = Integer.parseInt(idParametro);
 
                 if (admDAO.deletar(id) > 0) {
-                    request.getSession().setAttribute("mensagemDeletar", "Administrador deletado com sucesso!");
+                    mensagem = "Administrador deletado com sucesso!";
                 } else {
-                    request.getSession().setAttribute("mensagemDeletar", "Não foi possível deletar.");
+                    mensagem = "Não foi possível deletar o administrador.";
                 }
             }
         } catch (NumberFormatException nfe) {
-            request.getSession().setAttribute("mensagemDeletar", "ID Inválido.");
+            mensagem = "ID inválido.";
         } catch (Exception e) {
-            request.getSession().setAttribute("mensagemDeletar", "Erro inesperado ao tentar deletar.");
+            mensagem = "Erro inesperado ao tentar deletar o administrador.";
+            e.printStackTrace(); // simples, para debug
         }
 
-        // 2. CORREÇÃO PRINCIPAL (Post-Redirect-Get):
-        // Redireciona de volta para o servlet de LISTAGEM (/adm).
-        // O servlet /adm vai carregar a lista (sem o item deletado) e mostrar a mensagem.
+        // Salva a mensagem e redireciona para a lista
+        request.getSession().setAttribute("mensagemDeletar", mensagem);
         response.sendRedirect(request.getContextPath() + "/adm");
     }
 }

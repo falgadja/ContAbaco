@@ -31,7 +31,7 @@
 </div>
 
 <!-- Link para adicionar novo endereço -->
-<a href="<%= request.getContextPath() %>/view/Endereco/cadastrarEndereco.jsp" class="button">Adicionar Novo Endereço</a>
+<a href="<%= request.getContextPath() %>/endereco-create" class="button">Adicionar Novo Endereço</a>
 
 <!-- Tabela de endereços -->
 <table>

@@ -45,15 +45,15 @@
             border-radius: 12px;
             border: 2px solid rgba(24, 0, 204, 0.1);
             display: flex;
-            flex-wrap: nowrap;     
+            flex-wrap: nowrap;
             align-items: center;
             gap: 16px;
             width: calc(100% - 32px);
             max-width: 1180px;
             margin-left: auto;
             margin-right: auto;
-            overflow-x: auto;     
-            padding-bottom: 20px;  
+            overflow-x: auto;
+            padding-bottom: 20px;
         }
         .filtros label {
             font-weight: 600;

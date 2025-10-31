@@ -1,6 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%-- Removemos TODOS os imports de DAO e scriptlets de busca --%>
+<%@ page import="java.util.*, model.Pagamento, model.Empresa" %>
+
+<%
+    // Recupera os atributos enviados pelo Servlet
+    Pagamento pag = (Pagamento) request.getAttribute("pagamentoParaEditar");
+    List<Empresa> empresas = (List<Empresa>) request.getAttribute("empresas");
+    String mensagem = (String) request.getAttribute("mensagem");
+%>
 
 <!doctype html>
 <html lang="pt-BR">
@@ -81,76 +87,73 @@
 </head>
 <body style="background:transparent;">
 
-<%-- O servlet envia 'pagamentoParaEditar' e 'empresas' --%>
-<c:set var="pag" value="${pagamentoParaEditar}" />
-
 <div class="container">
-    <c:choose>
-        <c:when test="${empty pag}">
-            <div class="form-inner" role="alert" style="align-items: center;">
-                <div class="title">Pagamento não encontrado</div>
-                <div class="actions">
-                    <button type="button" class="btn-sec"
-                            onclick="try{ parent.document.getElementById('modalClose').click(); }catch(e){ window.close(); }">
-                        Fechar
-                    </button>
-                </div>
+    <div class="form-inner">
+
+        <% if (pag == null) { %>
+        <div class="title">Pagamento não encontrado</div>
+        <div class="actions">
+            <button type="button" class="btn-sec"
+                    onclick="try{ parent.document.getElementById('modalClose').click(); }catch(e){ window.close(); }">
+                Fechar
+            </button>
+        </div>
+        <% } else { %>
+
+        <div class="title">Atualizar</div>
+        <div class="subtitle">Pagamento</div>
+
+        <% if (mensagem != null) { %>
+        <div class="alert"><%= mensagem %></div>
+        <% } %>
+
+        <form action="<%= request.getContextPath() %>/pagamento-update" method="post" target="_top">
+            <input type="hidden" name="id" value="<%= pag.getId() %>">
+
+            <div class="field-group">
+                <label for="tipoPagto">Tipo de Pagamento</label>
+                <select id="tipoPagto" name="tipoPagto" required>
+                    <option value="PIX" <%= "PIX".equals(pag.getTipoPagto()) ? "selected" : "" %>>PIX</option>
+                    <option value="Boleto" <%= "Boleto".equals(pag.getTipoPagto()) ? "selected" : "" %>>Boleto</option>
+                    <option value="Cartão" <%= "Cartão".equals(pag.getTipoPagto()) ? "selected" : "" %>>Cartão</option>
+                    <option value="Transferência" <%= "Transferência".equals(pag.getTipoPagto()) ? "selected" : "" %>>Transferência</option>
+                </select>
             </div>
-        </c:when>
 
-        <c:otherwise>
-            <div class="form-inner" role="dialog" aria-modal="true">
-                <div class="title">Atualizar</div>
-                <div class="subtitle">Pagamento</div>
-
-                <c:if test="${not empty mensagem}">
-                    <div class="alert">${mensagem}</div>
-                </c:if>
-
-                <form action="${pageContext.request.contextPath}/pagamento-update" method="post" target="_top">
-                    <input type="hidden" name="id" value="${pag.id}">
-
-                    <div class="field-group">
-                        <label for="tipoPagto">Tipo de Pagamento</label>
-                        <select id="tipoPagto" name="tipoPagto" required>
-                            <option value="PIX" ${pag.tipoPagto == 'PIX' ? 'selected' : ''}>PIX</option>
-                            <option value="Boleto" ${pag.tipoPagto == 'Boleto' ? 'selected' : ''}>Boleto</option>
-                            <option value="Cartão" ${pag.tipoPagto == 'Cartão' ? 'selected' : ''}>Cartão</option>
-                            <option value="Transferência" ${pag.tipoPagto == 'Transferência' ? 'selected' : ''}>Transferência</option>
-                        </select>
-                    </div>
-                    <div class="field-group">
-                        <label for="total">Total (R$)</label>
-                        <input type="number" step="0.01" id="total" name="total" value="${pag.total}" required>
-                    </div>
-                    <div class="field-group">
-                        <label for="data">Data</label>
-                        <input type="date" id="data" name="data" value="${pag.data}" required>
-                    </div>
-
-                    <div class="field-group">
-                        <label for="idEmpresa">Empresa</label>
-                        <select id="idEmpresa" name="idEmpresa" required>
-                            <option value="">Selecione a empresa</option>
-                            <c:forEach var="empresa" items="${empresas}">
-                                <option value="${empresa.id}" ${empresa.id == pag.idEmpresa ? 'selected' : ''}>
-                                        ${empresa.nome}
-                                </option>
-                            </c:forEach>
-                        </select>
-                    </div>
-
-                    <div class="actions">
-                        <button type="submit" class="btn">Salvar alterações</button>
-                        <button type="button" class="btn-sec"
-                                onclick="try{ parent.document.getElementById('modalClose').click(); }catch(e){ window.close(); }">
-                            Cancelar
-                        </button>
-                    </div>
-                </form>
+            <div class="field-group">
+                <label for="total">Total (R$)</label>
+                <input type="number" step="0.01" id="total" name="total" value="<%= pag.getTotal() %>" required>
             </div>
-        </c:otherwise>
-    </c:choose>
+
+            <div class="field-group">
+                <label for="data">Data</label>
+                <input type="date" id="data" name="data" value="<%= pag.getData() %>" required>
+            </div>
+
+            <div class="field-group">
+                <label for="idEmpresa">Empresa</label>
+                <select id="idEmpresa" name="idEmpresa" required>
+                    <option value="">Selecione a empresa</option>
+                    <% if (empresas != null) {
+                        for (Empresa empresa : empresas) { %>
+                    <option value="<%= empresa.getId() %>" <%= (empresa.getId() == pag.getIdEmpresa()) ? "selected" : "" %>>
+                        <%= empresa.getNome() %>
+                    </option>
+                    <%  }
+                    } %>
+                </select>
+            </div>
+
+            <div class="actions">
+                <button type="submit" class="btn">Salvar alterações</button>
+                <button type="button" class="btn-sec"
+                        onclick="try{ parent.document.getElementById('modalClose').click(); }catch(e){ window.close(); }">
+                    Cancelar
+                </button>
+            </div>
+        </form>
+        <% } %>
+    </div>
 </div>
 </body>
 </html>

@@ -1,7 +1,7 @@
 package servlet.AdmServlet;
 
 import dao.AdmDAO;
-import jakarta.servlet.RequestDispatcher; // IMPORTANTE
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -16,16 +16,16 @@ import java.io.IOException;
 public class AtualizarAdmServlet extends HttpServlet {
 
     /**
-     * CORRIGIDO: Este método carrega os dados do admin PARA DENTRO do formulário de edição.
+     * doGet: Carrega os dados do administrador para o formulário de edição.
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        // Recebendo o ID do administrador
         String idParametro = request.getParameter("id");
         if (idParametro == null || idParametro.isEmpty()) {
-            // Se não tiver ID, aí sim redireciona com erro
-            request.getSession().setAttribute("mensagem", "ID do administrador não foi encontrado para edição.");
+            request.getSession().setAttribute("mensagem", "ID do administrador não informado.");
             response.sendRedirect(request.getContextPath() + "/adm");
             return;
         }
@@ -34,41 +34,42 @@ public class AtualizarAdmServlet extends HttpServlet {
             int id = Integer.parseInt(idParametro);
             AdmDAO admDAO = new AdmDAO();
 
-            // 1. Busca o administrador no banco
+            // Busca o administrador pelo ID
             Administrador adm = admDAO.buscarPorId(id);
-
             if (adm == null) {
-                // Se o ID não existir, redireciona com erro
                 request.getSession().setAttribute("mensagem", "Administrador não encontrado (ID: " + id + ").");
                 response.sendRedirect(request.getContextPath() + "/adm");
                 return;
             }
 
-            // 2. Coloca o objeto "adm" no request com o nome "admParaEditar"
-            // (O seu atualizarAdm.jsp já está esperando por esse nome)
+            // Coloca o objeto no request para preencher o formulário
             request.setAttribute("admParaEditar", adm);
 
-            // 3. Encaminha (FORWARD) para a JSP do formulário
+            // Encaminha para a JSP de atualização
             RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/Adm/atualizarAdm.jsp");
             dispatcher.forward(request, response);
 
+        } catch (NumberFormatException nfe) {
+            request.getSession().setAttribute("mensagem", "ID inválido.");
+            response.sendRedirect(request.getContextPath() + "/adm");
         } catch (Exception e) {
             e.printStackTrace();
-            request.getSession().setAttribute("mensagem", "Erro ao carregar dados para edição: " + e.getMessage());
+            request.getSession().setAttribute("mensagem", "Erro ao carregar administrador: " + e.getMessage());
             response.sendRedirect(request.getContextPath() + "/adm");
         }
     }
 
     /**
-     * CORRIGIDO: Este método processa o formulário de atualização.
+     * doPost: Processa a atualização do administrador.
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        // Recebendo os parâmetros do formulário
         String idParametro = request.getParameter("id");
         String email = request.getParameter("email");
-        String senha = request.getParameter("senha"); // Senha nova (ou vazia)
+        String senha = request.getParameter("senha"); // Senha nova (pode estar vazia)
 
         AdmDAO admDAO = new AdmDAO();
 
@@ -78,36 +79,35 @@ public class AtualizarAdmServlet extends HttpServlet {
             } else {
                 int id = Integer.parseInt(idParametro);
 
-                // 1. Busca o administrador que JÁ EXISTE no banco
+                // Busca o administrador existente no banco
                 Administrador adm = admDAO.buscarPorId(id);
-
                 if (adm == null) {
-                    request.getSession().setAttribute("mensagem", "Erro: Administrador não encontrado para atualizar.");
+                    request.getSession().setAttribute("mensagem", "Administrador não encontrado para atualização.");
                 } else {
-                    // 2. Atualiza os campos
+                    // Atualiza os campos com os dados do formulário
                     adm.setEmail(email);
 
-                    // 3. SÓ atualiza a senha se o usuário digitou uma nova
+                    // Atualiza a senha apenas se foi digitada uma nova
                     if (senha != null && !senha.trim().isEmpty()) {
-                        String senhaHash = BCrypt.hashpw(senha, BCrypt.gensalt());
-                        adm.setSenha(senhaHash);
+                        adm.setSenha(BCrypt.hashpw(senha, BCrypt.gensalt()));
                     }
-                    // Se a senha veio vazia, ele NÃO mexe na senha antiga.
 
-                    // 4. Manda o DAO atualizar (usando o método inteligente que criamos)
+                    // Executa a atualização no banco
                     if (admDAO.atualizar(adm) > 0) {
                         request.getSession().setAttribute("mensagem", "Administrador atualizado com sucesso!");
                     } else {
-                        request.getSession().setAttribute("mensagem", "Não foi possível atualizar o administrador no banco.");
+                        request.getSession().setAttribute("mensagem", "Não foi possível atualizar o administrador.");
                     }
                 }
             }
+        } catch (NumberFormatException nfe) {
+            request.getSession().setAttribute("mensagem", "ID inválido.");
         } catch (Exception e) {
-            request.getSession().setAttribute("mensagem", "Erro inesperado ao tentar atualizar: " + e.getMessage());
+            request.getSession().setAttribute("mensagem", "Erro inesperado ao atualizar administrador: " + e.getMessage());
             e.printStackTrace();
         }
 
-        // 5. Redireciona de volta para o servlet de LISTAGEM
+        // Redireciona para a listagem de administradores
         response.sendRedirect(request.getContextPath() + "/adm");
     }
 }

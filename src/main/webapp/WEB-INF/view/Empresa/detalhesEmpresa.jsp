@@ -31,19 +31,19 @@
 </p>
 
 <!-- Botão para atualizar o endereço -->
-<button onclick="window.location.href='<%= request.getContextPath() %>/atualizarEnderecoServletid=<%= endereco.getId() %>'">
+<button onclick="window.location.href='<%= request.getContextPath() %>/endereco-update?i=<%= endereco.getId() %>'">
   Atualizar
 </button>
 
 <!-- Botão para deletar o endereço com confirmação -->
 <button onclick="if(confirm('Deseja excluir este endereço?'))
-        window.location.href='<%= request.getContextPath() %>/deletarEnderecoServlet?id=<%= endereco.getId() %>'">
+        window.location.href='<%= request.getContextPath() %>/endereco-delete?id=<%= endereco.getId() %>'">
   Deletar
 </button>
 
 <% } else { %>
 <!-- Caso não exista endereço, exibe link para adicionar -->
-<a href="<%= request.getContextPath() %>/InserirEndereco?idEmpresa=<%= empresa.getId() %>">
+<a href="<%= request.getContextPath() %>/endereco-create?idEmpresa=<%= empresa.getId() %>">
   Adicionar Endereço
 </a>
 <% } %>

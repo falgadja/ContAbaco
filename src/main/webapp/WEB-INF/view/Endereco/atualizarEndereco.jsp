@@ -34,7 +34,7 @@
 <body>
 <h1>Atualizar Endereço</h1>
 
-<form action="<%= request.getContextPath() %>/AtualizarEnderecoServlet" method="post">
+<form action="<%= request.getContextPath() %>/endereco-update" method="post">
     <input type="hidden" name="id" value="<%= endereco.getId() %>"/>
     <input type="hidden" name="idEmpresa" value="<%=endereco.getIdEmpresa()%>">
 
@@ -61,7 +61,7 @@
 
 
     <button type="submit">Atualizar</button>
-    <a href="<%= request.getContextPath() %>/view/Endereco/crudEndereco.jsp">Cancelar</a>
+    <a href="<%= request.getContextPath() %>/empresas">Cancelar</a>
 
 
     <p>${mensagemAtualizar}</p>
