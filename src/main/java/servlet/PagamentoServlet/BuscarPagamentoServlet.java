@@ -1,16 +1,15 @@
 package servlet.PagamentoServlet;
 
 import dao.PagamentoDAO;
-import jakarta.servlet.RequestDispatcher; // Importe
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession; // Importe
+import jakarta.servlet.http.HttpSession;
 import model.Pagamento;
 import filtros.PagamentoFiltro;
-// import model.Plano; // (Não usado neste servlet)
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -33,7 +32,7 @@ public class BuscarPagamentoServlet extends HttpServlet {
             session.removeAttribute("mensagem"); // Limpa a mensagem
         }
 
-        // --- Sua lógica de filtro (já estava correta) ---
+        // --- lógica de filtro 
         String id = request.getParameter("id");
         String inicio = request.getParameter("inicio");
         String fim = request.getParameter("fim");
@@ -69,13 +68,10 @@ public class BuscarPagamentoServlet extends HttpServlet {
                     request.setAttribute("pagamentos", pagamentos);
                 }
                 if (tipos != null && !tipos.isEmpty()) {
-                    // ... (lógica de filtro de tipo) ...
                 }
                 if (inicio != null && !inicio.trim().isEmpty() && fim != null && !fim.trim().isEmpty()) {
-                    // ... (lógica de filtro de data) ...
                 }
                 if (tipoOrdenacao != null && !tipoOrdenacao.isEmpty() && pagamentos != null && !pagamentos.isEmpty()) {
-                    // ... (lógica de ordenação) ...
                 }
                 request.setAttribute("pagamentos", pagamentos);
             }
@@ -89,7 +85,7 @@ public class BuscarPagamentoServlet extends HttpServlet {
         }
         // --- Fim da lógica de filtro ---
 
-        // 3. Encaminha para o JSP (já estava correto)
+        // 3. Encaminha para o JSP 
         RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/Pagamento/crudPagamento.jsp");
         dispatcher.forward(request, response);
     }

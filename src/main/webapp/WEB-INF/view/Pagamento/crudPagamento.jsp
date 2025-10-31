@@ -1,8 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%-- CORREÇÃO: URIs atualizadas para o Jakarta EE / Tomcat 11 --%>
-<%@ taglib uri="jakarta.tags.core" prefix="c" %>
-<%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%-- Imports de DAO removidos --%>
+<%
+    String modalParam = request.getParameter("modal");
+    boolean isModal = "1".equals(modalParam);
+%>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -43,15 +45,15 @@
             border-radius: 12px;
             border: 2px solid rgba(24, 0, 204, 0.1);
             display: flex;
-            flex-wrap: nowrap;     /* Força linha única */
+            flex-wrap: nowrap;     
             align-items: center;
             gap: 16px;
             width: calc(100% - 32px);
             max-width: 1180px;
             margin-left: auto;
             margin-right: auto;
-            overflow-x: auto;      /* Adiciona rolagem horizontal */
-            padding-bottom: 20px;  /* Espaço para a barra de rolagem */
+            overflow-x: auto;     
+            padding-bottom: 20px;  
         }
         .filtros label {
             font-weight: 600;
@@ -85,7 +87,7 @@
             border: 0;
             cursor: pointer;
             font-size: 14px;
-            margin-left: auto; /* Empurra o botão para o fim */
+            margin-left: auto;
             flex-shrink: 0;
         }
         .mensagem {
@@ -260,16 +262,8 @@
                                 <tr>
                                     <td>${p.id}</td>
                                     <td>${p.tipoPagto}</td>
-                                    <td>
-                                        <c:if test="${not empty p.total}">
-                                            <fmt:formatNumber value="${p.total}" type="currency" currencySymbol="R$" minFractionDigits="2" maxFractionDigits="2"/>
-                                        </c:if>
-                                    </td>
-                                    <td>
-                                        <c:if test="${not empty p.data}">
-                                            <fmt:formatDate value="${p.data}" pattern="dd/MM/yyyy" />
-                                        </c:if>
-                                    </td>
+                                    <td>${p.total}</td>
+                                    <td>${p.data}</td>
                                     <td>${p.idEmpresa}</td>
                                     <td class="acoes">
                                         <button class="btn" title="Editar"
@@ -330,7 +324,7 @@
             modal.classList.remove('open');
             modal.setAttribute('aria-hidden', 'true');
             frame.src = 'about:blank';
-0
+
             // Recarrega a página para mostrar dados atualizados
             window.location.reload();
         }

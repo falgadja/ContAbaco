@@ -45,7 +45,7 @@ public class FuncionarioDAO {
         return idGerado; // Retorna ID gerado ou -1 se falhar
     }
 
-    // READ - BUSCAR FUNCIONARIO PELO ID
+    // READ - BUSCAR FUNCIONARIO PELO ID (Mantido)
     public Funcionario buscarPorId(int id) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
@@ -78,73 +78,8 @@ public class FuncionarioDAO {
         return funcionario;
     }
 
-    // READ - BUSCAR FUNCIONARIO PELO NOME E SOBRENOME
-    public List<Funcionario> buscarPorNomeESobrenome(String nome, String sobrenome) {
-        Conexao conexao = new Conexao();
-        Connection con = conexao.conectar();
-        List<Funcionario> funcionarios = new ArrayList<>();
-        String sql = "SELECT * FROM funcionario WHERE nome LIKE ? OR sobrenome LIKE ?";
 
-        try {
-            PreparedStatement pst = con.prepareStatement(sql);
-            pst.setString(1, "%" + nome + "%");
-            pst.setString(2, "%" + sobrenome + "%");
-            ResultSet rs = pst.executeQuery();
-
-            while (rs.next()) {
-                funcionarios.add( new Funcionario(
-                        rs.getInt("id"),
-                        rs.getString("nome"),
-                        rs.getString("sobrenome"),
-                        rs.getTimestamp("data_nascimento").toLocalDateTime().toLocalDate(),
-                        rs.getString("email"),
-                        rs.getString("senha"),
-                        rs.getInt("id_empresa"),
-                        rs.getInt("id_setor")
-                ));
-            }
-        } catch (SQLException sqle) {
-            sqle.printStackTrace();
-        } finally {
-            conexao.desconectar(con);
-        }
-
-        return funcionarios;
-    }
-
-    // READ - BUSCAR FUNCIONARIO PELO NOME E SOBRENOME
-    public List<Funcionario> buscarPorNome(String nome) {
-        Conexao conexao = new Conexao();
-        Connection con = conexao.conectar();
-        List<Funcionario> funcionarios = new ArrayList<>();
-        String sql = "SELECT * FROM FUNCIONARIO WHERE nome LIKE ?";
-
-        try {
-            PreparedStatement pst = con.prepareStatement(sql);
-            pst.setString(1, "%" + nome + "%");
-            ResultSet rs = pst.executeQuery();
-
-            while (rs.next()) {
-                funcionarios.add( new Funcionario(
-                        rs.getInt("id"),
-                        rs.getString("nome"),
-                        rs.getString("sobrenome"),
-                        rs.getTimestamp("data_nascimento").toLocalDateTime().toLocalDate(),
-                        rs.getString("email"),
-                        rs.getString("senha"),
-                        rs.getInt("id_empresa"),
-                        rs.getInt("id_setor")
-                ));
-            }
-        } catch (SQLException sqle) {
-            sqle.printStackTrace();
-        } finally {
-            conexao.desconectar(con);
-        }
-
-        return funcionarios;
-    }
-    //BUSCAR PELO EMAIL E RETORNAR A SENHA
+    // BUSCAR PELO EMAIL E RETORNAR A SENHA (Mantido - Essencial para Login)
     public String buscarHashPorEmail(String email) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
@@ -168,41 +103,8 @@ public class FuncionarioDAO {
         return hash;
     }
 
-    // READ - BUSCAR FUNCIONARIOS PELO ID DA EMPRESA
-    public List<Funcionario> buscarPorIdEmpresa(int idEmpresa) {
-        Conexao conexao = new Conexao();
-        Connection con = conexao.conectar();
-        List<Funcionario> funcionarios = new ArrayList<>();
-        String sql = "SELECT F.* FROM FUNCIONARIO F JOIN EMPRESA E ON E.ID = F.ID_EMPRESA WHERE F.ID_EMPRESA = ?";
 
-        try {
-            PreparedStatement pst = con.prepareStatement(sql);
-            pst.setInt(1, idEmpresa);
-            ResultSet rs = pst.executeQuery();
-
-            while (rs.next()) {
-                funcionarios.add(new Funcionario(
-                        rs.getInt("id"),
-                        rs.getString("nome"),
-                        rs.getString("sobrenome"),
-                        rs.getTimestamp("data_nascimento").toLocalDateTime().toLocalDate(),
-                        rs.getString("email"),
-                        rs.getString("senha"),
-                        rs.getInt("id_empresa"),
-                        rs.getInt("id_setor")
-                ));
-            }
-        } catch (SQLException sqle) {
-            sqle.printStackTrace();
-        } finally {
-            conexao.desconectar(con);
-        }
-
-        return funcionarios;
-    }
-
-
-    // READ - LISTAR TODOS FUNCIONARIOS
+    // READ - LISTAR TODOS FUNCIONARIOS (Mantido - Usado para carregar dados brutos)
     public List<Funcionario> listar() {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
@@ -234,7 +136,7 @@ public class FuncionarioDAO {
         return funcionarios;
     }
 
-    // UPDATE - ATUALIZAR FUNCIONARIO
+    // UPDATE - ATUALIZAR FUNCIONARIO (Mantido)
     public int atualizar(Funcionario funcionario) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
@@ -263,7 +165,7 @@ public class FuncionarioDAO {
         return retorno; // retorna número de linhas alteradas ou -1 se erro
     }
 
-    // DELETE - DELETAR FUNCIONARIO
+    // DELETE - DELETAR FUNCIONARIO (Mantido)
     public int deletar(int id) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();

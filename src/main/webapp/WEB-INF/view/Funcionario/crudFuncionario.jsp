@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%-- Esta taglib fmt não é mais estritamente necessária se você só a usava para essa data --%>
+<%-- Mantive a taglib fmt por precaução, mas ela não é usada abaixo. --%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <!DOCTYPE html>
@@ -43,10 +43,10 @@
             border-radius: 12px;
             border: 2px solid rgba(24, 0, 204, 0.1);
             display: flex;
-            flex-wrap: nowrap;     /* Alterado */
-            overflow-x: auto;      /* Adicionado */
+            flex-wrap: nowrap;  
+            overflow-x: auto;      
             overflow-y: hidden;
-            padding-bottom: 16px;  /* Adicionado */
+            padding-bottom: 16px;  
             align-items: center;
             gap: 16px;
             width: calc(100% - 32px);
@@ -81,7 +81,7 @@
             border: 0;
             cursor: pointer;
             font-size: 14px;
-            margin-left: auto; /* Joga o botão para o final */
+            margin-left: auto; 
         }
         .mensagem {
             margin: 16px auto 0 auto;
@@ -247,8 +247,9 @@
                                     <td>${f.nome}</td>
                                     <td>${f.sobrenome}</td>
                                     <td>
-                                            <%-- CORREÇÃO APLICADA AQUI --%>
-                                            ${f.dataNascimentoFormatada}
+                                            <%-- Assumindo que o objeto Funcionario tem o atributo dataNascimentoFormatada
+                                                 que já retorna a data no formato desejado (e.g., dd/MM/yyyy). --%>
+                                        **${f.dataNascimentoFormatada}**
                                     </td>
                                     <td>${f.email}</td>
                                     <td>${f.senha}</td>

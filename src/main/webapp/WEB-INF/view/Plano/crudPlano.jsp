@@ -42,10 +42,10 @@
             border-radius: 12px;
             border: 2px solid rgba(24, 0, 204, 0.1);
             display: flex;
-            flex-wrap: nowrap; /* Alterado */
-            overflow-x: auto;  /* Adicionado */
+            flex-wrap: nowrap;
+            overflow-x: auto;
             overflow-y: hidden;
-            padding-bottom: 16px; /* Adicionado */
+            padding-bottom: 16px;
             align-items: center;
             gap: 16px;
             width: calc(100% - 32px);
