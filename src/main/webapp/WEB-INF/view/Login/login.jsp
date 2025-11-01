@@ -220,8 +220,6 @@
 
             <button type="submit" class="btn btn-solid">Entrar</button>
         </form>
-
-        <a href="view/Erros/erro.jsp" class="link-sm link-register">Ainda não tenho cadastro</a>
     </div>
 </div>
 

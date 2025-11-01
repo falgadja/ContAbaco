@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 public class ValidacaoRegex {
     public static boolean verificarEmail(String email) {
-        Pattern pattern = Pattern.compile("^[\\w-.]+@[\\w-]+\\.[a-z]{2,}$");
+        Pattern pattern = Pattern.compile("^[\\w.-]+@([\\w-]+\\.)+[a-zA-Z]{2,}$");
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
     }

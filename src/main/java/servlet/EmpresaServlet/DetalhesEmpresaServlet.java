@@ -19,7 +19,7 @@ import model.Funcionario;
  * Servlet responsável por carregar os detalhes de uma empresa, incluindo
  * seu endereço e funcionários, e encaminhar os dados para o JSP.
  */
-@WebServlet("/detalhesEmpresa") // URL que acessa este Servlet
+@WebServlet("/empresa-detalhes") // URL que acessa este Servlet
 public class DetalhesEmpresaServlet extends HttpServlet {
 
     @Override

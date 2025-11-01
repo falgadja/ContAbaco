@@ -1,71 +1,48 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: annaabreu-ieg
-  Date: 24/10/2025
-  Time: 00:27
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="dao.EnderecoDAO" %>
-<%@ page import="model.Endereco" %>
+<%@ page import="model.Endereco, model.Empresa" %>
 
 <%
-    String idStr = request.getParameter("id");
-    if (idStr == null) {
-        response.sendRedirect(request.getContextPath() + "/view/Endereco/crudEndereco.jsp");
-        return;
-    }
-
-    int id = Integer.parseInt(idStr);
-    EnderecoDAO dao = new EnderecoDAO();
-    Endereco endereco = dao.buscarPorId(id);
-    if (endereco == null) {
-        response.sendRedirect(request.getContextPath() + "/view/Endereco/crudEndereco.jsp");
-        return;
-    }
+    Endereco endereco = (Endereco) request.getAttribute("enderecoParaEditar");
+    Empresa empresa = (Empresa) request.getAttribute("empresa");
 %>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Atualizar Endereço</title>
-</head>
-<body>
-<h1>Atualizar Endereço</h1>
+<h2>Atualizar Endereço</h2>
 
-<form action="<%= request.getContextPath() %>/endereco-update" method="post">
-    <input type="hidden" name="id" value="<%= endereco.getId() %>"/>
-    <input type="hidden" name="idEmpresa" value="<%=endereco.getIdEmpresa()%>">
+<form id="formEndereco" action="<%= request.getContextPath() %>/endereco-update" method="post">
+    <input type="hidden" name="id" value="<%= endereco.getId() %>">
+    <input type="hidden" name="idEmpresa" value="<%= empresa.getId() %>">
 
-    <label>Pais: </label>
-    <input type="text" name="pais" value="<%= endereco.getPais() %>" required/><br/><br/>
-
-    <label>Rua:</label>
-    <input type="text" name="rua" value="<%= endereco.getRua() %>" required/><br/><br/>
-
-    <label>Número:</label>
-    <input type="text" name="numero" value="<%= endereco.getNumero() %>" required/><br/><br/>
-
-    <label>Bairro:</label>
-    <input type="text" name="bairro" value="<%= endereco.getBairro() %>" required/><br/><br/>
-
-    <label>Cidade:</label>
-    <input type="text" name="cidade" value="<%= endereco.getCidade() %>" required/><br/><br/>
+    <label>Pais:</label>
+    <input type="text" name="pais" value="<%= endereco.getPais() %>" required><br>
 
     <label>Estado:</label>
-    <input type="text" name="estado" value="<%= endereco.getEstado() %>" required/><br/><br/>
+    <input type="text" name="estado" value="<%= endereco.getEstado() %>" required><br>
+
+    <label>Cidade:</label>
+    <input type="text" name="cidade" value="<%= endereco.getCidade() %>" required><br>
+
+    <label>Bairro:</label>
+    <input type="text" name="bairro" value="<%= endereco.getBairro() %>" required><br>
+
+    <label>Rua:</label>
+    <input type="text" name="rua" value="<%= endereco.getRua() %>" required><br>
+
+    <label>Número:</label>
+    <input type="text" name="numero" value="<%= endereco.getNumero() %>" required><br>
 
     <label>CEP:</label>
-    <input type="text" name="cep" value="<%= endereco.getCep() %>" required/><br/><br/>
-
+    <input type="text" name="cep" value="<%= endereco.getCep() %>" required><br>
 
     <button type="submit">Atualizar</button>
-    <a href="<%= request.getContextPath() %>/empresas">Cancelar</a>
-
-
-    <p>${mensagemAtualizar}</p>
 </form>
 
-</body>
-</html>
+<script>
+    document.getElementById('formEndereco').addEventListener('submit', function(e){
+        e.preventDefault(); // evita submit normal
+        const formData = new FormData(this);
+        fetch(this.action, { method: 'POST', body: formData })
+            .then(response => response.text())
+            .then(msg => alert(msg))
+            .catch(err => console.error(err));
+    });
+</script>

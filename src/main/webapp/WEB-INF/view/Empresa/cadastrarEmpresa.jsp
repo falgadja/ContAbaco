@@ -128,7 +128,7 @@
                     <option value="">Selecione um plano</option>
                     <option value="1">Mensal</option>
                     <option value="2">Anual</option>
-                    <option value="3">Premium</option>
+                    <option value="3">Trimestral</option>
                 </select>
             </div>
 

@@ -75,7 +75,7 @@ public class InserirEmpresaServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/empresas");
 
         } catch (NumberFormatException e) {
-            request.getSession().setAttribute("mensagem", "Valores numéricos inválidos!");
+            request.getSession().setAttribute("mensagem", "Valores numéricos in válidos!");
             response.sendRedirect(request.getContextPath() + "/empresas");
 
         } catch (Exception e) {

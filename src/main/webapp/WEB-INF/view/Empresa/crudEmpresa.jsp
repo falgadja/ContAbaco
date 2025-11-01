@@ -52,14 +52,10 @@
             border-radius: 12px;
             border: 2px solid rgba(24, 0, 204, 0.1);
             display: flex;
-
-            /* --- CORREÇÕES AQUI --- */
-            flex-wrap: nowrap;     /* 1. Impede a quebra de linha */
-            overflow-x: auto;      /* 2. Adiciona a barra de rolagem horizontal */
-            overflow-y: hidden;    /* 3. Esconde a barra de rolagem vertical (se aparecer) */
-            padding-bottom: 16px;  /* 4. Dá espaço para a barra de rolagem não cobrir os inputs */
-            /* --- FIM DAS CORREÇÕES --- */
-
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding-bottom: 16px;
             align-items: center;
             gap: 16px;
             width: calc(100% - 32px);
@@ -67,39 +63,17 @@
             margin-left: auto;
             margin-right: auto;
         }
-        .filtros label {
-            font-weight: 600;
-            color: var(--cor_falgadja_1);
-            font-size: 14px;
-            margin-right: -8px;
+        .filtros label { font-weight: 600; color: var(--cor_falgadja_1); font-size: 14px; margin-right: -8px; }
+        .filtros input[type="text"], .filtros input[type="number"], .filtros select {
+            padding: 10px 14px; border-radius: 10px; border: 2px solid rgba(24,0,204,0.18); outline: none; font-size:14px; color:#222;
         }
-        .filtros input[type="text"],
-        .filtros input[type="number"], /* Adicionado */
-        .filtros select {
-            padding: 10px 14px;
-            border-radius: 10px;
-            border: 2px solid rgba(24, 0, 204, 0.18);
-            outline: none;
-            font-size: 14px;
-            color: #222;
-        }
-        .filtros input[type="text"] {
-            width: 280px;
-        }
-        .filtros input[type="number"] {
-            width: 80px; /* Tamanho para min/max */
-        }
+        .filtros input[type="text"] { width:280px; }
+        .filtros input[type="number"] { width:80px; }
         .filtros button {
-            padding: 10px 24px;
-            border-radius: 10px;
-            background: linear-gradient(180deg, var(--cor_falgadja_1), var(--cor_falgadja_2));
-            color: #fff;
-            font-weight: 700;
-            border: 0;
-            cursor: pointer;
-            font-size: 14px;
-            margin-left: auto;
+            padding: 10px 24px; border-radius:10px; background:linear-gradient(180deg, var(--cor_falgadja_1), var(--cor_falgadja_2));
+            color:#fff; font-weight:700; border:0; cursor:pointer; font-size:14px; margin-left:auto;
         }
+
         .mensagem {
             margin: 16px auto 0 auto;
             width: calc(100% - 32px);
@@ -112,6 +86,7 @@
             border-radius: 10px;
             text-align: center;
         }
+
         .tabela {
             margin-top:20px;
             border:3px solid rgba(24,0,204,0.95);
@@ -125,15 +100,8 @@
             background:#fff;
             overflow: visible;
         }
-        .tabela-container {
-            width:100%;
-            max-height:calc(100vh - 260px);
-            overflow-y:auto;
-            overflow-x:auto;
-            padding:10px;
-        }
-        .tabela-container::-webkit-scrollbar{ height:10px; width:10px; }
-        .tabela-container::-webkit-scrollbar-thumb{ background: linear-gradient(180deg, rgba(24,0,204,0.2), rgba(12,0,102,0.2)); border-radius:10px; }
+
+        .tabela-container { width:100%; max-height:calc(100vh - 260px); overflow:auto; padding:10px; }
 
         .empresa-style table { width:auto; table-layout:auto; border-collapse:collapse; font-size:14px; white-space:nowrap; }
         .empresa-style thead th, .empresa-style tbody td {
@@ -149,76 +117,34 @@
         }
 
         .empresa-style td.acoes .btn {
-            display:inline-flex;
-            align-items:center;
-            justify-content:center;
-            width:32px;
-            height:32px;
-            border-radius:6px;
-            border:1.5px solid var(--cor_falgadja_1);
-            background:transparent;
-            color: var(--cor_falgadja_1);
-            cursor:pointer;
-            transition:.2s;
-            margin: 0 4px;
+            display:inline-flex; align-items:center; justify-content:center;
+            width:32px; height:32px; border-radius:6px; border:1.5px solid var(--cor_falgadja_1);
+            background:transparent; color: var(--cor_falgadja_1); cursor:pointer; transition:.2s; margin:0 4px;
         }
-        .empresa-style td.acoes .btn:hover {
-            background: var(--cor_falgadja_1);
-            color: #fff;
-        }
-        /* (CSS do Modal) */
+        .empresa-style td.acoes .btn:hover { background: var(--cor_falgadja_1); color: #fff; }
+
         .in-table-modal {
-            position: fixed;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: min(80%, 900px);
-            min-height: 460px;
-            max-height: calc(100% - 60px);
-            border-radius: 18px;
-            border: 3px solid rgba(24, 0, 204, 0.95);
-            background: #fff;
-            box-shadow: 0 18px 40px rgba(12, 0, 102, 0.12);
-            z-index: 1000;
-            display: none;
-            overflow: hidden;
-            padding: 24px 36px;
+            position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%);
+            width: min(80%, 900px); min-height: 460px; max-height: calc(100% - 60px);
+            border-radius: 18px; border: 3px solid rgba(24, 0, 204, 0.95); background: #fff;
+            box-shadow: 0 18px 40px rgba(12, 0, 102, 0.12); z-index: 1000; display: none; overflow: hidden; padding: 24px 36px;
         }
         .in-table-modal.open { display: block; }
         .in-table-modal .modal-close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: #fff;
-            border: 2px solid rgba(24, 0, 204, 0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 60;
-            box-shadow: 0 6px 14px rgba(24, 0, 204, 0.08);
+            position: absolute; top: 10px; right: 10px; width: 44px; height: 44px; border-radius: 50%;
+            background: #fff; border: 2px solid rgba(24, 0, 204, 0.15);
+            display: flex; align-items:center; justify-content:center; cursor:pointer; z-index:60;
+            box-shadow: 0 6px 14px rgba(24,0,204,0.08);
         }
         .in-table-modal .modal-close i { color: var(--cor_falgadja_1); }
-        .in-table-modal iframe {
-            width: 100%;
-            height: 100%;
-            border: 0;
-            display: block;
-            background: transparent;
-            min-height: 460px;
-        }
+        .in-table-modal iframe { width:100%; height:100%; border:0; display:block; background:transparent; min-height:460px; }
     </style>
 </head>
 <body>
 <div class="esquerda">
     <div class="sidebar">
         <div class="aplicativo">
-            <div class="logo">
-                <img src="${pageContext.request.contextPath}/img/CelularFotoContabaco.png" alt="logo">
-            </div>
+            <div class="logo"><img src="${pageContext.request.contextPath}/img/CelularFotoContabaco.png" alt="logo"></div>
             <div>
                 <div class="titulo_app">Contábaco</div>
                 <div class="subtitulo_app">adm</div>
@@ -258,12 +184,10 @@
         <form action="${pageContext.request.contextPath}/empresas" method="get" class="filtros">
             <label for="nome">Buscar por Nome:</label>
             <input type="text" name="nome" id="nome" placeholder="Digite o nome da empresa" value="${param.nome}">
-
             <label for="min">Funcionários (min):</label>
             <input type="number" name="min" id="min" value="${param.min}" style="width: 80px;">
             <label for="max"> (max):</label>
             <input type="number" name="max" id="max" value="${param.max}" style="width: 80px;">
-
             <label for="tipoOrdenacao">Ordenar por:</label>
             <select name="tipoOrdenacao" id="tipoOrdenacao">
                 <option value="">-- Nenhum --</option>
@@ -274,7 +198,6 @@
                 <option value="qtndFuncionarioCrescente" ${param.tipoOrdenacao == 'qtndFuncionarioCrescente' ? 'selected' : ''}>Qtd. Func. Crescente</option>
                 <option value="qtndFuncionarioDecrescente" ${param.tipoOrdenacao == 'qtndFuncionarioDecrescente' ? 'selected' : ''}>Qtd. Func. Decrescente</option>
             </select>
-
             <button type="submit">Filtrar</button>
         </form>
 
@@ -284,7 +207,6 @@
 
         <div class="tabela empresa-style">
             <div class="tabela-container">
-
                 <c:choose>
                     <c:when test="${not empty empresas}">
                         <table>
@@ -311,23 +233,27 @@
                                     <td>${e.idPlano}</td>
                                     <td>${e.qntdFuncionarios}</td>
                                     <td class="acoes">
-
+                                    <td class="acoes">
+                                        <!-- Botão Detalhes (modal) -->
                                         <button class="btn" title="Detalhes" onclick="abrirModalDetalhes(${e.id})">
                                             <i class="fa-solid fa-info"></i>
                                         </button>
 
-
+                                        <!-- Botão Editar (modal) -->
                                         <button class="btn" title="Editar" onclick="abrirModalEditar(${e.id})">
                                             <i class="fa-solid fa-pen"></i>
                                         </button>
 
-                                        <form action="${pageContext.request.contextPath}/empresas-delete" method="post" style="display: inline;" onsubmit="return confirm('Deseja realmente excluir esta empresa?');">
+                                        <!-- Botão Excluir (form POST) -->
+                                        <form action="${pageContext.request.contextPath}/entidade-delete" method="post" style="display:inline;"
+                                              onsubmit="return confirm('Deseja realmente excluir este registro?');">
                                             <input type="hidden" name="id" value="${e.id}">
                                             <button class="btn" title="Excluir" type="submit">
                                                 <i class="fa-solid fa-trash"></i>
                                             </button>
                                         </form>
                                     </td>
+
                                 </tr>
                             </c:forEach>
                             </tbody>
@@ -339,11 +265,10 @@
                 </c:choose>
             </div>
 
-            <div class="in-table-modal" id="inTableModal" ... >
+            <div class="in-table-modal" id="inTableModal">
                 <button class="modal-close" id="modalClose" title="Fechar"><i class="fa-solid fa-xmark"></i></button>
-                <iframe id="modalFrame" src="" ...></iframe>
+                <iframe id="modalFrame" src="" width="100%" height="100%"></iframe>
             </div>
-
         </div>
     </div>
 </div>
@@ -352,55 +277,53 @@
     (function () {
         const modal = document.getElementById('inTableModal');
         const frame = document.getElementById('modalFrame');
-        const openBtn = document.getElementById('openModal');
-        const closeBtn = document.getElementById('modalClose');
+        const botaoAbrir = document.getElementById('openModal');
+        const botaoFechar = document.getElementById('modalClose');
 
-        if (!modal || !frame || !openBtn || !closeBtn) {
+        if (!modal || !frame || !botaoAbrir || !botaoFechar) {
             console.error('Elementos do modal não encontrados.');
             return;
         }
 
-        // --- Abrir Modal de Adicionar (aponta para /empresas-create) ---
-        openBtn.addEventListener('click', function () {
-            frame.src = '${pageContext.request.contextPath}/empresas-create';
+        // Abrir Modal de Adicionar
+        botaoAbrir.addEventListener('click', function () {
+            frame.src = '${pageContext.request.contextPath}/pagamento-create';
             modal.classList.add('open');
             modal.setAttribute('aria-hidden', 'false');
         });
 
-        // --- Fechar o Modal ---
-        function closeModal() {
+        // Fechar Modal
+        function fecharModal() {
             modal.classList.remove('open');
             modal.setAttribute('aria-hidden', 'true');
             frame.src = 'about:blank';
-
-            // ATIVADO: Recarrega a página principal para ver mudanças.
-            window.location.reload();
+            window.location.reload(); // Recarrega a página para atualizar os dados
         }
 
-        closeBtn.addEventListener('click', closeModal);
+        botaoFechar.addEventListener('click', fecharModal);
+
+        // Fechar com a tecla Escape
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape' && modal.classList.contains('open')) {
-                closeModal();
+                fecharModal();
             }
         });
 
-        // --- Abrir Modal de Editar ---
-        window.abrirModalEditar = function (id) {
-            if (!id) return;
-            frame.src = '${pageContext.request.contextPath}/empresas-update?id=' + id;
-            modal.classList.add('open');
-            modal.setAttribute('aria-hidden', 'false');
-        };
-
-        // ---Abrir modal de Detalhes Empresa --
+        // Abrir Modal de Detalhes
         window.abrirModalDetalhes = function (id) {
             if (!id) return;
-            frame.src = '${pageContext.request.contextPath}/detalhesEmpresa?id=' + id;
+            frame.src = '${pageContext.request.contextPath}/empresa-detalhes?id=' + id;
             modal.classList.add('open');
             modal.setAttribute('aria-hidden', 'false');
         };
 
-
+        // Abrir Modal de Editar
+        window.abrirModalEditar = function (id) {
+            if (!id) return;
+            frame.src = '${pageContext.request.contextPath}/pagamento-update?id=' + id;
+            modal.classList.add('open');
+            modal.setAttribute('aria-hidden', 'false');
+        };
     })();
 </script>
 

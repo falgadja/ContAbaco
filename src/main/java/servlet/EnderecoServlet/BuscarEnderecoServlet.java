@@ -66,7 +66,7 @@ public class BuscarEnderecoServlet extends HttpServlet {
         }
 
         // Encaminha para o JSP
-        request.getRequestDispatcher("../CadastrarEndereco.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/view/Endereco/cadastrarEndereco.jsp").forward(request, response);
     }
 
     @Override
