@@ -1,15 +1,17 @@
 package servlet.EmpresaServlet;
 
 import dao.EmpresaDAO;
+import dao.EnderecoDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.Endereco;
 
 import java.io.IOException;
 
-@WebServlet("/empresas-delete")
+@WebServlet("/empresa-delete")
 public class DeletarEmpresaServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -27,7 +29,11 @@ public class DeletarEmpresaServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String idParametro = request.getParameter("id");
-        EmpresaDAO empresaDAO = new EmpresaDAO(); // DAO instanciado aqui
+        // DAOs instanciadas
+        EmpresaDAO empresaDAO = new EmpresaDAO();
+        EnderecoDAO enderecoDAO = new EnderecoDAO();
+        Endereco endereco = new Endereco();
+
 
         String mensagem;
 
@@ -36,8 +42,9 @@ public class DeletarEmpresaServlet extends HttpServlet {
                 mensagem = "ID da empresa não foi encontrado.";
             } else {
                 int id = Integer.parseInt(idParametro);
+                endereco = enderecoDAO.buscarPorEmpresa(id);
 
-                if (empresaDAO.deletar(id) > 0) {
+                if (enderecoDAO.deletar(endereco.getId())>0 && empresaDAO.deletar(id)>0) {
                     mensagem = "Empresa deletada com sucesso!";
                 } else {
                     mensagem = "Não foi possível deletar a empresa.";

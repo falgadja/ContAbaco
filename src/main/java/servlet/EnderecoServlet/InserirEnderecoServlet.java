@@ -37,6 +37,7 @@ public class InserirEnderecoServlet extends HttpServlet {
         String numeroStr = request.getParameter("numero");
         String idEmpresaStr = request.getParameter("idEmpresa");
         String cepValidado = ValidacaoRegex.verificarCep(request.getParameter("cep"));
+        System.out.println("CEP: " + cepValidado+ numeroStr +idEmpresaStr);
 
         try {
             // Validação de campos obrigatórios
@@ -58,7 +59,7 @@ public class InserirEnderecoServlet extends HttpServlet {
             int idEmpresa = Integer.parseInt(idEmpresaStr);
 
             // Cria objeto Endereco
-            Endereco endereco = new Endereco(pais, estado, cidade, bairro, rua, numero, cep, idEmpresa);
+            Endereco endereco = new Endereco(pais, estado, cidade, bairro, rua, numero, cepValidado, idEmpresa);
 
             // Insere no banco
             EnderecoDAO enderecoDAO = new EnderecoDAO();

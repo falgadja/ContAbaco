@@ -1,73 +1,366 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.List" %>
-<%@ page import="dao.EnderecoDAO" %>
-<%@ page import="model.Endereco" %>
-
-<%
-    EnderecoDAO dao = new EnderecoDAO();
-    List<Endereco> enderecos = dao.listar();
-%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%-- Mantive a taglib fmt por precaução, mas ela não é usada abaixo. --%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>CRUD de Endereços</title>
+    <title>Funcionários - Área Restrita</title>
+    <link rel="icon" href="${pageContext.request.contextPath}/img/logo%20azul%20bonito%20sem%20fundo%202%20(1).png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+
     <style>
-        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-        th { background-color: #f2f2f2; }
-        a.button { text-decoration: none; padding: 6px 12px; border: 1px solid #333; border-radius: 4px; background-color: #eee; color: black; }
-        a.button:hover { background-color: #ddd; }
+        :root { --cor_falgadja_1:#1800CC; --cor_falgadja_2:#0C0066; --cor_sair:#b71c1c; --branco:#ffffff; }
+        *{ box-sizing:border-box; margin:0; padding:0; font-family:'Poppins',system-ui,-apple-system,'Segoe UI',Roboto,Arial; }
+        html,body{ height:100%; width:100%; background:var(--branco); color:var(--cor_falgadja_1); }
+        .esquerda{ display:flex; height:100vh; width:100%; overflow:hidden; }
+        .sidebar{ width:255px; padding:28px 20px; display:flex; flex-direction:column; gap:18px; }
+        .aplicativo{ display:flex; gap:15px; align-items:center; }
+        .logo{ width:56px; height:56px; border-radius:10px; border:2px solid var(--cor_falgadja_1); display:flex; align-items:center; justify-content:center; overflow:hidden; }
+        .logo img{ max-width:100%; max-height:100%; display:block; }
+        .titulo_app{ font-weight:700; color:var(--cor_falgadja_1); font-size:20px; }
+        .subtitulo_app{ font-size:12px; color:grey; margin-top:2px; }
+        .linha{ height:6px; border-radius:30px; background:linear-gradient(90deg,var(--cor_falgadja_1),var(--cor_falgadja_2)); width:80%; margin:6px 0; }
+        .nav{ display:flex; flex-direction:column; gap:12px; margin-top:10px; }
+        .botao{ display:flex; align-items:center; gap:12px; padding:12px 18px; border-radius:10px; border:2px solid var(--cor_falgadja_1); background:transparent; color:var(--cor_falgadja_1); font-weight:600; width:190px; cursor:pointer; text-decoration:none; }
+        .botao.selecionado{ background:linear-gradient(180deg,var(--cor_falgadja_1),var(--cor_falgadja_2)); color:#fff; border-color:transparent; box-shadow:0 6px 18px rgba(12,0,102,0.25); }
+        .main{ flex:1; padding:36px 48px; overflow:auto; }
+        .titulos{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
+        #AR{ font-size:30px; font-weight:800; color:var(--cor_falgadja_1); }
+        #CRUD{ color:grey; font-weight:600; margin-top:-10px; }
+        .adicionador{ margin-top:28px; }
+        .botao-add{ padding:12px 18px; border-radius:12px; background:linear-gradient(180deg,var(--cor_falgadja_1),var(--cor_falgadja_2)); color:#fff; font-weight:700; border:0; cursor:pointer; display:inline-flex; align-items:center; gap:10px; text-decoration:none; }
+        .sair{ margin-top:auto;}
+        .botao-sair{padding:12px 18px; border-radius:12px; background:var(--cor_sair); color:white; border:0; cursor:pointer; font-weight:700; width:100%; display:inline-flex; align-items:center; gap:10px;}
+        .filtros {
+            margin-top: 24px;
+            margin-bottom: -10px;
+            padding: 16px;
+            background: #fafaff;
+            border-radius: 12px;
+            border: 2px solid rgba(24, 0, 204, 0.1);
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding-bottom: 16px;
+            align-items: center;
+            gap: 16px;
+            width: calc(100% - 32px);
+            max-width: 1180px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .filtros label {
+            font-weight: 600;
+            color: var(--cor_falgadja_1);
+            font-size: 14px;
+            margin-right: -8px;
+        }
+        .filtros input[type="text"],
+        .filtros input[type="number"],
+        .filtros select {
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 2px solid rgba(24, 0, 204, 0.18);
+            outline: none;
+            font-size: 14px;
+            color: #222;
+        }
+        .filtros input[type="text"] { width: 250px; }
+        .filtros input[type="number"] { width: 180px; }
+        .filtros button {
+            padding: 10px 24px;
+            border-radius: 10px;
+            background: linear-gradient(180deg, var(--cor_falgadja_1), var(--cor_falgadja_2));
+            color: #fff;
+            font-weight: 700;
+            border: 0;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: auto;
+        }
+        .mensagem {
+            margin: 16px auto 0 auto;
+            width: calc(100% - 32px);
+            max-width: 1180px;
+            color: var(--cor_falgadja_1);
+            font-weight: 600;
+            padding: 10px 16px;
+            background: #f0f4ff;
+            border: 1px solid #c8d3ff;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .tabela {
+            margin-top:20px;
+            border:3px solid rgba(24,0,204,0.95);
+            border-radius:14px;
+            padding:10px;
+            width: calc(100% - 32px);
+            max-width:1180px;
+            margin-left:auto; margin-right:auto;
+            box-shadow:0 10px 22px rgba(12,0,102,0.08);
+            position:relative;
+            background:#fff;
+            overflow: visible;
+        }
+        .tabela-container {
+            width:100%;
+            max-height:calc(100vh - 260px);
+            overflow-y:auto;
+            overflow-x:auto;
+            padding:10px;
+        }
+        .tabela-container::-webkit-scrollbar{ height:10px; width:10px; }
+        .tabela-container::-webkit-scrollbar-thumb{ background: linear-gradient(180deg, rgba(24,0,204,0.2), rgba(12,0,102,0.2)); border-radius:10px; }
+        .func-style table { width:auto; table-layout:auto; border-collapse:collapse; font-size:14px; white-space:nowrap; }
+        .func-style thead th, .func-style tbody td {
+            padding:14px 16px; overflow:visible; text-overflow:clip; white-space:nowrap;
+            font-weight:600; text-align:center;
+        }
+        .func-style tbody tr:nth-child(even){ background:#fafaff; }
+        .func-style tbody tr:hover{ background:rgba(24,0,204,0.04); }
+        .func-style th.acoes-col, .func-style td.acoes {
+            position:sticky; right:0; background:#fff; box-shadow:-8px 0 12px rgba(12,0,102,0.06);
+            min-width:170px; padding:0 8px; vertical-align:middle; text-align:center; overflow:visible; white-space:nowrap;
+        }
+        .func-style td.acoes .btn {
+            display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px;
+            border-radius:6px; border:1.5px solid var(--cor_falgadja_1); background:transparent;
+            color: var(--cor_falgadja_1); cursor:pointer; transition:.2s; margin: 0 4px;
+        }
+        .func-style td.acoes .btn:hover { background: var(--cor_falgadja_1); color: #fff; }
+        .in-table-modal {
+            position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%);
+            width: min(80%, 900px); min-height: 460px; max-height: calc(100% - 60px);
+            border-radius: 18px; border: 3px solid rgba(24, 0, 204, 0.95);
+            background: #fff; box-shadow: 0 18px 40px rgba(12, 0, 102, 0.12);
+            z-index: 1000; display: none; overflow: hidden; padding: 24px 36px;
+        }
+        .in-table-modal.open { display: block; }
+        .in-table-modal .modal-close {
+            position: absolute; top: 10px; right: 10px; width: 44px; height: 44px;
+            border-radius: 50%; background: #fff; border: 2px solid rgba(24, 0, 204, 0.15);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 60; box-shadow: 0 6px 14px rgba(24, 0, 204, 0.08);
+        }
+        .in-table-modal .modal-close i { color: var(--cor_falgadja_1); }
+        .in-table-modal iframe {
+            width: 100%; height: 100%; border: 0; display: block;
+            background: transparent; min-height: 460px;
+        }
     </style>
 </head>
 <body>
-<div class="menu">
-    <a href="<%= request.getContextPath() %>/view/Adm/crudAdm.jsp">Adm</a>
-    <a href="<%= request.getContextPath() %>/view/Empresa/crudEmpresa.jsp">Empresas</a>
-    <a href="<%= request.getContextPath() %>/view/Funcionario/crudFuncionario.jsp" class="active">Funcionários</a>
-    <a href="<%= request.getContextPath() %>/view/Plano/crudPlano.jsp">Planos</a>
-    <a href="<%= request.getContextPath() %>/view/Pagamento/crudPagamento.jsp">Pagamentos</a>
+<div class="esquerda">
+    <div class="sidebar">
+        <div class="aplicativo">
+            <div class="logo">
+                <img src="${pageContext.request.contextPath}/img/CelularFotoContabaco.png" alt="logo">
+            </div>
+            <div>
+                <div class="titulo_app">Contábaco</div>
+                <div class="subtitulo_app">adm</div>
+            </div>
+        </div>
+        <div class="linha"></div>
+
+        <div class="nav">
+            <a href="${pageContext.request.contextPath}/adm" class="botao"><i class="fa-solid fa-crown"></i> Adm</a>
+            <a href="${pageContext.request.contextPath}/empresas" class="botao"><i class="fa-solid fa-building"></i> Empresas</a>
+            <a href="${pageContext.request.contextPath}/funcionarios" class="botao"><i class="fa-solid fa-user-tie"></i> Funcionários</a>
+            <a href="${pageContext.request.contextPath}/planos" class="botao"><i class="fa-solid fa-clipboard-list"></i> Planos</a>
+            <a href="${pageContext.request.contextPath}/pagamento" class="botao"><i class="fa-solid fa-credit-card"></i> Pagamento</a>
+            <a href="${pageContext.request.contextPath}/endereco" class="botao selecionado"><i class="fa-solid fa-user-tie"></i> Endereços</a>
+        </div>
+
+        <div class="sair">
+            <button class="botao-sair" onclick="location.href='${pageContext.request.contextPath}/logout'">
+                <i class="fa-solid fa-right-from-bracket"></i> Sair
+            </button>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="titulos">
+            <div>
+                <div id="AR">Área Restrita</div>
+                <div id="CRUD">CRUD</div>
+            </div>
+        </div>
+
+        <div class="adicionador">
+            <button id="openModal" class="botao-add" type="button">
+                <i class="fa-solid fa-plus"></i> Adicionar Novo
+            </button>
+        </div>
+
+        <form action="${pageContext.request.contextPath}/endereco" method="get" class="filtros">
+            <label for="nome">Buscar por nome:</label>
+            <input type="text" name="cep" id="cep" placeholder="Digite o CEP do endereço" value="${param.cep}">
+
+            <label for="estado">Estado:</label>
+            <select name="estado" id="estado">
+                <option value="todos">-- Todos --</option>
+                <option value="AC" ${param.estado == 'AC' ? 'selected' : ''}>AC</option>
+                <option value="AL" ${param.estado == 'AL' ? 'selected' : ''}>AL</option>
+                <option value="AP" ${param.estado == 'AP' ? 'selected' : ''}>AP</option>
+                <option value="AM" ${param.estado == 'AM' ? 'selected' : ''}>AM</option>
+                <option value="BA" ${param.estado == 'BA' ? 'selected' : ''}>BA</option>
+                <option value="CE" ${param.estado == 'CE' ? 'selected' : ''}>CE</option>
+                <option value="DF" ${param.estado == 'DF' ? 'selected' : ''}>DF</option>
+                <option value="ES" ${param.estado == 'ES' ? 'selected' : ''}>ES</option>
+                <option value="GO" ${param.estado == 'GO' ? 'selected' : ''}>GO</option>
+                <option value="MA" ${param.estado == 'MA' ? 'selected' : ''}>MA</option>
+                <option value="MT" ${param.estado == 'MT' ? 'selected' : ''}>MT</option>
+                <option value="MS" ${param.estado == 'MS' ? 'selected' : ''}>MS</option>
+                <option value="MG" ${param.estado == 'MG' ? 'selected' : ''}>MG</option>
+                <option value="PA" ${param.estado == 'PA' ? 'selected' : ''}>PA</option>
+                <option value="PB" ${param.estado == 'PB' ? 'selected' : ''}>PB</option>
+                <option value="PR" ${param.estado == 'PR' ? 'selected' : ''}>PR</option>
+                <option value="PE" ${param.estado == 'PE' ? 'selected' : ''}>PE</option>
+                <option value="PI" ${param.estado == 'PI' ? 'selected' : ''}>PI</option>
+                <option value="RJ" ${param.estado == 'RJ' ? 'selected' : ''}>RJ</option>
+                <option value="RN" ${param.estado == 'RN' ? 'selected' : ''}>RN</option>
+                <option value="RS" ${param.estado == 'RS' ? 'selected' : ''}>RS</option>
+                <option value="RO" ${param.estado == 'RO' ? 'selected' : ''}>RO</option>
+                <option value="RR" ${param.estado == 'RR' ? 'selected' : ''}>RR</option>
+                <option value="SC" ${param.estado == 'SC' ? 'selected' : ''}>SC</option>
+                <option value="SP" ${param.estado == 'SP' ? 'selected' : ''}>SP</option>
+                <option value="SE" ${param.estado == 'SE' ? 'selected' : ''}>SE</option>
+                <option value="TO" ${param.estado == 'TO' ? 'selected' : ''}>TO</option>
+            </select>
+
+            <label for="tipoOrdenacao">Ordenar por:</label>
+            <select name="tipoOrdenacao" id="tipoOrdenacao">
+                <option value="">-- Nenhum --</option>
+                <option value="idCrescente" ${param.tipoOrdenacao == 'idCrescente' ? 'selected' : ''}>ID Crescente</option>
+                <option value="idDecrescente" ${param.tipoOrdenacao == 'idDecrescente' ? 'selected' : ''}>ID Decrescente</option>
+            </select>
+
+            <button type="submit">Filtrar</button>
+        </form>
+
+        <c:if test="${not empty mensagem}">
+            <p class="mensagem">${mensagem}</p>
+        </c:if>
+
+        <div class="tabela func-style">
+            <div class="tabela-container">
+
+                <c:choose>
+                    <c:when test="${not empty enderecos}">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>ID da empresa</th>
+                                <th>CEP</th>
+                                <th>País</th>
+                                <th>Estado</th>
+                                <th>Cidade</th>
+                                <th>Bairro</th>
+                                <th>Rua</th>
+                                <th>Numero</th>
+                                <th class="acoes-col">Ações</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <c:forEach var="e" items="${enderecos}">
+                                <tr>
+                                    <td>${e.id}</td>
+                                    <td>${e.idEmpresa}</td>
+                                    <td>${e.pais}</td>
+                                    <td>${e.estado}</td>
+                                    <td>${e.cidade}</td>
+                                    <td>${e.bairro}</td>
+                                    <td>${e.rua}</td>
+                                    <td>${e.numero}</td>
+                                    <td class="acoes">
+                                        <button class="btn" title="Editar"
+                                                onclick="abrirModalEditar(${e.id})">
+                                            <i class="fa-solid fa-pen"></i>
+                                        </button>
+
+                                        <form action="${pageContext.request.contextPath}/endereco-delete" method="post" style="display: inline;" onsubmit="return confirm('Deseja realmente excluir este endereço?');">
+                                            <input type="hidden" name="id" value="${e.id}">
+                                            <button class="btn" title="Excluir" type="submit">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                            </tbody>
+                        </table>
+                    </c:when>
+                    <c:otherwise>
+                        <p style="padding:10px 6px; color:#666;">Nenhum endereço cadastrado (ou encontrado no filtro).</p>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+
+            <div class="in-table-modal" id="inTableModal" role="dialog" aria-hidden="true"
+                 aria-label="Formulário do Endereço">
+                <button class="modal-close" id="modalClose" title="Fechar"><i
+                        class="fa-solid fa-xmark"></i></button>
+                <iframe id="modalFrame" src="" name="modalFrame"
+                        title="Formulário Cadastrar/Atualizar Endereço"></iframe>
+            </div>
+        </div>
+    </div>
 </div>
 
-<!-- Link para adicionar novo endereço -->
-<a href="<%= request.getContextPath() %>/endereco-create" class="button">Adicionar Novo Endereço</a>
+<script>
+    (function () {
+        const modal = document.getElementById('inTableModal');
+        const frame = document.getElementById('modalFrame');
+        const openBtn = document.getElementById('openModal');
+        const closeBtn = document.getElementById('modalClose');
 
-<!-- Tabela de endereços -->
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Rua</th>
-        <th>Número</th>
-        <th>Bairro</th>
-        <th>Cidade</th>
-        <th>Estado</th>
-        <th>CEP</th>
-        <th>Ações</th>
-    </tr>
-    </thead>
-    <tbody>
-    <%
-        for (Endereco end : enderecos) {
-    %>
-    <tr>
-        <td><%= end.getId() %></td>
-        <td><%= end.getRua() %></td>
-        <td><%= end.getNumero() %></td>
-        <td><%= end.getBairro() %></td>
-        <td><%= end.getCidade() %></td>
-        <td><%= end.getEstado() %></td>
-        <td><%= end.getCep() %></td>
-        <td>
-            <a href="<%= request.getContextPath() %>/view/Endereco/atualizarEndereco.jsp?id=<%= end.getId() %>" class="button">Atualizar</a>
-            <a href="<%= request.getContextPath() %>/view/Endereco/deletarEndereco.jsp?id=<%= end.getId() %>" class="button" onclick="return confirm('Deseja realmente deletar?');">Deletar</a>
-        </td>
-    </tr>
-    <%
+        if (!modal || !frame || !openBtn || !closeBtn) {
+            console.error('Elementos do modal não encontrados.');
+            return;
         }
-    %>
-    </tbody>
-</table>
+
+        // Abrir Modal de Adicionar (aponta para /enderecos-create)
+        openBtn.addEventListener('click', function () {
+            frame.src = '${pageContext.request.contextPath}/endereco-create';
+            modal.classList.add('open');
+            modal.setAttribute('aria-hidden', 'false');
+        });
+
+        // Fechar Modal
+        function closeModal() {
+            modal.classList.remove('open');
+            modal.setAttribute('aria-hidden', 'true');
+            frame.src = 'about:blank';
+
+            // Recarrega a página para mostrar dados atualizados
+            window.location.reload();
+        }
+
+        closeBtn.addEventListener('click', closeModal);
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && modal.classList.contains('open')) {
+                closeModal();
+            }
+        });
+
+        // Abrir Modal de Editar (aponta para /enderecos-update)
+        window.abrirModalEditar = function (id) {
+            if (!id) return;
+            frame.src = '${pageContext.request.contextPath}/endereco-update?id=' + id;
+            modal.classList.add('open');
+            modal.setAttribute('aria-hidden', 'false');
+        };
+
+    })();
+</script>
+
 </body>
 </html>

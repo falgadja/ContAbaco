@@ -119,6 +119,43 @@ public class EnderecoDAO {
         return endereco; // retorna null se não encontrar
     }
 
+    // READ - BUSCAR Endereco PELO CEP
+    public Endereco buscarPorCEP(int cep) {
+        Conexao conexao = new Conexao();
+        Connection con = conexao.conectar();
+        Endereco endereco = null;
+        String sql = "SELECT * FROM endereco WHERE cep = ?";
+
+        try {
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setInt(1, cep);
+
+            ResultSet rs = pst.executeQuery();
+
+            // Se encontrar algum endereço para a empresa, retorna o primeiro
+            if (rs.next()) {
+                endereco = new Endereco(
+                        rs.getInt("id"),
+                        rs.getString("pais"),
+                        rs.getString("estado"),
+                        rs.getString("cidade"),
+                        rs.getString("bairro"),
+                        rs.getString("rua"),
+                        rs.getInt("numero"),
+                        rs.getString("cep"),
+                        rs.getInt("id_empresa")
+                );
+            }
+
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        } finally {
+            conexao.desconectar(con);
+        }
+
+        return endereco; // retorna null se não encontrar
+    }
+
 
     // READ - LISTAR TODOS OS Enderecos
     public List<Endereco> listar() {

@@ -68,9 +68,6 @@ public class AtualizarEnderecoServlet extends HttpServlet {
         String numeroParam = request.getParameter("numero");
         String cep = request.getParameter("cep");
 
-        System.out.println("id do endereco: " + idParam);
-        System.out.println("id da empresa: " + idEmpresaString);
-
         EnderecoDAO enderecoDAO = new EnderecoDAO();
         String mensagem;
 

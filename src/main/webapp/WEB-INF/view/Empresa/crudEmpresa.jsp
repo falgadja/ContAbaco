@@ -158,6 +158,7 @@
             <a href="${pageContext.request.contextPath}/funcionarios" class="botao"><i class="fa-solid fa-user-tie"></i> Funcionários</a>
             <a href="${pageContext.request.contextPath}/planos" class="botao"><i class="fa-solid fa-clipboard-list"></i> Planos</a>
             <a href="${pageContext.request.contextPath}/pagamento" class="botao"><i class="fa-solid fa-credit-card"></i> Pagamento</a>
+            <a href="${pageContext.request.contextPath}/endereco" class="botao"><i class="fa-solid fa-user-tie"></i> Endereços</a>
         </div>
 
         <div class="sair">

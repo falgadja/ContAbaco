@@ -13,7 +13,7 @@ import utils.ValidacaoRegex;
 
 import java.io.IOException;
 
-@WebServlet("/empresas-update")
+@WebServlet("/empresa-update")
 public class AtualizarEmpresaServlet extends HttpServlet {
 
     /**
