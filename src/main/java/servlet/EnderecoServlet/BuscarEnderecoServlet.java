@@ -60,7 +60,6 @@ public class BuscarEnderecoServlet extends HttpServlet {
             } else {
                 // Lista todos os endereços
                 enderecos = enderecoDAO.listar();
-                System.out.println(enderecos.toString());
 
                 // Filtra por estado
                 if (!estados.isEmpty()) {
