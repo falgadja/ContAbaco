@@ -8,6 +8,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Administrador;
+import utils.ValidacaoRegex;
+
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
@@ -83,6 +85,13 @@ public class AtualizarAdmServlet extends HttpServlet {
                 Administrador adm = admDAO.buscarPorId(id);
                 if (adm == null) {
                     request.getSession().setAttribute("mensagem", "Administrador não encontrado para atualização.");
+                } else if (!ValidacaoRegex.verificarEmail(email)) {
+                    request.getSession().setAttribute("mensagem", "Email inválido!");
+
+                } else if(senha!=null && !senha.isEmpty()) {
+                    if (!ValidacaoRegex.verificarSenha(senha)) {
+                        request.getSession().setAttribute("mensagem", "Nova senha inválida! Use ao menos 8 caracteres, você pode usar letras, números e símbolos como @, #, $, não use espaços.");
+                    }
                 } else {
                     // Atualiza os campos com os dados do formulário
                     adm.setEmail(email);

@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Empresa;
 import org.mindrot.jbcrypt.BCrypt;
+import utils.ValidacaoRegex;
 
 import java.io.IOException;
 
@@ -98,6 +99,14 @@ public class AtualizarEmpresaServlet extends HttpServlet {
                 Empresa empresaExistente = empresaDAO.buscarPorId(id);
                 if (empresaExistente == null) {
                     request.getSession().setAttribute("mensagem", "Empresa não encontrada para atualização.");
+                } else if (!ValidacaoRegex.verificarEmail(email)) {
+                    request.getSession().setAttribute("mensagem", "Email inválido!");
+                } else if (senha != null && !senha.isEmpty()) {
+                    if (!ValidacaoRegex.verificarSenha(senha)) {
+                        request.getSession().setAttribute("mensagem", "Nova senha inválida! Use ao menos 8 caracteres, você pode usar letras, números e símbolos como @, #, $, não use espaços.");
+                    }
+                } else if (cnpj == null) {
+                    request.getSession().setAttribute("mensagem", "CNPJ inválido!");
                 } else {
                     // Atualiza os dados com os valores do formulário
                     empresaExistente.setCnpj(cnpj.trim());

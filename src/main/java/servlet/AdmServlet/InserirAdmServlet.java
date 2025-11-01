@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Administrador;
 import org.mindrot.jbcrypt.BCrypt;
+import utils.ValidacaoRegex;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,8 +19,6 @@ import java.util.regex.Pattern;
 @WebServlet("/adm-create")
 public class InserirAdmServlet extends HttpServlet {
 
-    // Regex simples para validar email
-    private static final Pattern EMAIL_REGEX = Pattern.compile("^[\\w-.]+@[\\w-]+\\.[a-z]{2,}$", Pattern.CASE_INSENSITIVE);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -39,12 +38,22 @@ public class InserirAdmServlet extends HttpServlet {
 
         String mensagem = null;
 
-        if (email == null || email.isEmpty() || senha == null || senha.isEmpty()) {
-            mensagem = "Preencha todos os campos!";
-        } else if (!EMAIL_REGEX.matcher(email).matches()) {
-            mensagem = "Email inválido!";
-        } else if (!senha.equals(confirmarSenha)) {
-            mensagem = "As senhas não são iguais!";
+        // Validações básicas
+        if (!ValidacaoRegex.verificarSenha(senha)) {
+            request.setAttribute("mensagem", "Senha inválida! Use ao menos 8 caracteres, você pode usar letras, números e símbolos como @, #, $, não use espaços.");
+            doGet(request, response);
+            return;
+        }
+        if (!ValidacaoRegex.verificarEmail(email)) {
+            request.setAttribute("mensagem", "Email inválido!");
+            doGet(request, response);
+            return;
+        }
+
+        if (!senha.equals(confirmarSenha)) {
+            request.setAttribute("mensagem", "As senhas não são iguais!");
+            doGet(request, response);
+            return;
         }
 
         AdmDAO admDAO = new AdmDAO();

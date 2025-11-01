@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Endereco;
+import utils.ValidacaoRegex;
 
 import java.io.IOException;
 
@@ -55,6 +56,7 @@ public class AtualizarEnderecoServlet extends HttpServlet {
         String rua = request.getParameter("rua");
         String numeroParam = request.getParameter("numero");
         String cep = request.getParameter("cep");
+        String cepValidado = ValidacaoRegex.verificarCep(request.getParameter("cep"));
 
         EnderecoDAO enderecoDAO = new EnderecoDAO();
         String mensagemAtualizar = null;
@@ -71,7 +73,9 @@ public class AtualizarEnderecoServlet extends HttpServlet {
 
                 mensagemAtualizar = "Preencha todos os campos corretamente.";
                 request.getSession().setAttribute("mensagem", mensagemAtualizar);
-            } else {
+            } else if (cepValidado==null || cepValidado.trim().isEmpty()) {
+                request.setAttribute("mensagemAtualizar", "CEP inválido.");}
+            else {
                 int id = Integer.parseInt(idParam);
                 int numero = Integer.parseInt(numeroParam);
 

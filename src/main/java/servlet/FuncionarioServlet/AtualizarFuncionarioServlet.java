@@ -13,6 +13,7 @@ import model.Empresa;
 import model.Funcionario;
 import model.Setor;
 import org.mindrot.jbcrypt.BCrypt;
+import utils.ValidacaoRegex;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -97,6 +98,13 @@ public class AtualizarFuncionarioServlet extends HttpServlet {
 
                 request.getSession().setAttribute("mensagem", "Preencha todos os campos.");
 
+            } else if (!ValidacaoRegex.verificarEmail(email)) {
+                request.getSession().setAttribute("mensagem", "Email inválido!");
+
+            } else if(senha!=null && !senha.isEmpty()) {
+                if (!ValidacaoRegex.verificarSenha(senha)) {
+                    request.getSession().setAttribute("mensagem", "Nova senha inválida! Use ao menos 8 caracteres, você pode usar letras, números e símbolos como @, #, $, não use espaços.");
+                }
             } else {
                 // Convertendo parâmetros
                 int id = Integer.parseInt(idParam);

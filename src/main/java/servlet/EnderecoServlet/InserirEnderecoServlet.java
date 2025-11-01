@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Endereco;
+import utils.ValidacaoRegex;
 
 import java.io.IOException;
 
@@ -35,6 +36,7 @@ public class InserirEnderecoServlet extends HttpServlet {
         String cep = request.getParameter("cep");
         String numeroStr = request.getParameter("numero");
         String idEmpresaStr = request.getParameter("idEmpresa");
+        String cepValidado = ValidacaoRegex.verificarCep(request.getParameter("cep"));
 
         try {
             // Validação de campos obrigatórios
@@ -44,6 +46,10 @@ public class InserirEnderecoServlet extends HttpServlet {
                     rua.isBlank() || cep.isBlank() || numeroStr.isBlank() || idEmpresaStr.isBlank()) {
 
                 request.setAttribute("mensagem", "Todos os campos são obrigatórios!");
+                doGet(request, response);
+                return;
+            }  else if (cepValidado == null || cepValidado.trim().isEmpty()) {
+                request.setAttribute("mensagem", "CEP inválido.");
                 doGet(request, response);
                 return;
             }

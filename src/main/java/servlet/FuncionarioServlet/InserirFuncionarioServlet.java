@@ -13,6 +13,7 @@ import model.Empresa;
 import model.Funcionario;
 import model.Setor;
 import org.mindrot.jbcrypt.BCrypt;
+import utils.ValidacaoRegex;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -22,9 +23,6 @@ import java.util.regex.Pattern;
 
 @WebServlet("/funcionarios-create")
 public class InserirFuncionarioServlet extends HttpServlet {
-
-    private static final Pattern EMAIL_REGEX =
-            Pattern.compile("^[\\w-.]+@[\\w-]+\\.[a-z]{2,}$", Pattern.CASE_INSENSITIVE);
 
     // doGet exibe o formulário de cadastro
     @Override
@@ -70,14 +68,20 @@ public class InserirFuncionarioServlet extends HttpServlet {
             }
 
             if (!senha.equals(confirmarSenha)) {
-                request.getSession().setAttribute("mensagem", "As senhas não conferem!");
-                response.sendRedirect(request.getContextPath() + "/funcionarios");
+                request.setAttribute("mensagem", "As senhas não são iguais!");
+                doGet(request, response); // Recarrega as listas
                 return;
             }
 
-            if (!EMAIL_REGEX.matcher(email).matches()) {
-                request.getSession().setAttribute("mensagem", "Email inválido!");
-                response.sendRedirect(request.getContextPath() + "/funcionarios");
+            if (!ValidacaoRegex.verificarSenha(senha)) {
+                request.setAttribute("mensagem", "Senha inválida! Use ao menos 8 caracteres, você pode usar letras, números e símbolos como @, #, $, não use espaços.");
+                doGet(request, response);
+                return;
+            }
+
+            if (!ValidacaoRegex.verificarEmail(email)) {
+                request.setAttribute("mensagem", "Email inválido!");
+                doGet(request, response);
                 return;
             }
 
