@@ -26,18 +26,21 @@
         <div class="linha"></div>
 
         <div class="nav">
-            <a href="${pageContext.request.contextPath}/adm" class="botao"><i class="fa-solid fa-crown"></i> Adm</a>
-            <a href="${pageContext.request.contextPath}/empresas" class="botao selecionado"><i class="fa-solid fa-building"></i> Empresas</a>
-            <a href="${pageContext.request.contextPath}/funcionarios" class="botao"><i class="fa-solid fa-user-tie"></i> Funcionários</a>
-            <a href="${pageContext.request.contextPath}/planos" class="botao"><i class="fa-solid fa-clipboard-list"></i> Planos</a>
-            <a href="${pageContext.request.contextPath}/pagamento" class="botao"><i class="fa-solid fa-credit-card"></i> Pagamento</a>
-            <a href="${pageContext.request.contextPath}/endereco" class="botao"><i class="fa-solid fa-location-dot"></i> Endereços</a>
+            <a href="${pageContext.request.contextPath}/adm" class="botao"><img src="${pageContext.request.contextPath}/img/icone-adm-azul.png" alt="" style="width: 21px; height: 22px;"> Adm</a>
+
+            <a href="${pageContext.request.contextPath}/empresas" class="botao selecionado"><img src="${pageContext.request.contextPath}/img/icone-empresa-branco.png" alt="" style="width: 20px; height: 18px;"> Empresas</a>
+
+            <a href="${pageContext.request.contextPath}/funcionarios" class="botao"><img src="${pageContext.request.contextPath}/img/icone-funcionario-azul.png" alt="" style="width: 19px; height: 20px;"> Funcionários</a>
+
+            <a href="${pageContext.request.contextPath}/planos" class="botao"><img src="${pageContext.request.contextPath}/img/icone-plano-azul.png" alt="" style="width: 18px; height: 20px;;"> Plano</a>
+
+            <a href="${pageContext.request.contextPath}/pagamento" class="botao"><img src="${pageContext.request.contextPath}/img/icone-pagamento-azul.png" alt="" style="width: 18px; height: 18px;"> Pagamento</a>
+
+            <a href="${pageContext.request.contextPath}/endereco" class="botao"><img src="${pageContext.request.contextPath}/img/icone-endereco-azul.png" alt="" style="width: 15px; height: 20px"> Endereços</a>
         </div>
 
         <div class="sair">
-            <button class="botao-sair" onclick="location.href='${pageContext.request.contextPath}/logout'">
-                <i class="fa-solid fa-right-from-bracket"></i> Sair
-            </button>
+            <button class="botao-sair" onclick="location.href='${pageContext.request.contextPath}/logout'"><img src="${pageContext.request.contextPath}/img/icone-sair.png" alt="" style="width: 17px; height: 20px;"> Sair</button>
         </div>
     </div>
 
@@ -50,9 +53,7 @@
         </div>
 
         <div class="adicionador">
-            <button id="openModal" class="botao-add">
-                <i class="fa-solid fa-plus"></i> Adicionar Novo
-            </button>
+            <button id="openModal" class="botao-add" type="button"><img src="${pageContext.request.contextPath}/img/icone-adicionar.png" alt="" style="width: 20px; height: 20px;"> Adicionar Novo</button>
         </div>
 
         <form action="${pageContext.request.contextPath}/empresas" method="get" class="filtros">
