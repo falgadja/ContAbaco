@@ -1,5 +1,6 @@
 package servlet.PlanoServlet;
 
+// Imports da classe
 import dao.PlanoDAO;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -14,16 +15,21 @@ import filtros.PlanoFiltro;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors; 
+import java.util.stream.Collectors;
 
-// 1. URL "limpa" para o menu
+/**
+ * Servlet responsável por buscar e listar planos.
+ * Permite pesquisa por nome e ordenação da lista de resultados,
+ * Lida também com mensagens temporárias armazenadas na sessão (Padrão PRG).
+ */
+
 @WebServlet("/planos")
 public class BuscarPlanoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // 2. Lógica para ler mensagens da sessão (Padrão PRG)
+        // Leitura de mensagens temporárias da sessão (Padrão PRG)
         HttpSession session = request.getSession();
         String mensagem = (String) session.getAttribute("mensagem");
         if (mensagem != null) {
@@ -31,83 +37,72 @@ public class BuscarPlanoServlet extends HttpServlet {
             session.removeAttribute("mensagem");
         }
 
-        // --- Variáveis de Filtro e DAO ---
-        String nomeFiltro = request.getParameter("nome");
+        // Recebe parâmetros de pesquisa e ordenação do JSP
+        String nome = request.getParameter("nome");
         String tipoOrdenacao = request.getParameter("tipoOrdenacao");
 
+        // Instancia DAO, filtro, mensagem ao JSP e a lista de resultados
         PlanoDAO planoDAO = new PlanoDAO();
         PlanoFiltro planoFiltro = new PlanoFiltro();
         List<Plano> planos = new ArrayList<>();
         String mensagemExibicao = null;
 
         try {
-            // 1. Obter a lista completa (ou pré-filtrada, se seu DAO suportar)
-            List<Plano> listaCompleta = planoDAO.listar();
-            planos = listaCompleta;
 
-            // 2. Aplicar FILTRO por nome (se o parâmetro 'nome' foi enviado)
-            if (nomeFiltro != null && !nomeFiltro.trim().isEmpty()) {
-                final String nomeLower = nomeFiltro.trim().toLowerCase();
+            // Pesquisa por nome se informado
+            if (nome != null && !nome.trim().isEmpty()) {
+                Plano plano = planoDAO.buscarPorNome(nome);
 
-                // Filtra a lista para incluir planos cujo nome contém o filtro
-                planos = listaCompleta.stream()
-                        .filter(p -> p.getNome() != null && p.getNome().toLowerCase().contains(nomeLower))
-                        .collect(Collectors.toList());
+                if (plano == null) {
+                    request.setAttribute("mensagem", "Nenhum plano encontrado com esse nome. Tente novamente.");
+                } else {
+                    // Cria lista com único resultado
+                    planos.add(plano);
+                    request.setAttribute("mensagem", "Plano encontrado com sucesso.");
+                    request.setAttribute("planos", planos);
+                }
+            } else {
+
+
+                // Lista todos os planos se não houver pesquisa por nome
+                List<Plano> listaCompleta = planoDAO.listar();
+                planos = listaCompleta;
+
 
                 if (planos.isEmpty()) {
-                    mensagemExibicao = "Não foi encontrado nenhum plano que contenha o nome: " + nomeFiltro;
+                    mensagemExibicao = "Não foi encontrado nenhum registrado no sistema.";
                 } else {
                     mensagemExibicao = "Foram encontrados " + planos.size() + " planos.";
                 }
-            }
 
 
-            // 3. Aplicar ORDENAÇÃO (se o parâmetro 'tipoOrdenacao' foi enviado)
-            if (tipoOrdenacao != null && !tipoOrdenacao.isEmpty() && !planos.isEmpty()) {
-                switch (tipoOrdenacao) {
-                    case "idCrescente":
+                // Ordena a lista de planos caso tipoOrdenacao seja informado
+                if (tipoOrdenacao != null && !tipoOrdenacao.isEmpty() && !planos.isEmpty()) {
+                    if (tipoOrdenacao.equals("idCrescente")) {
                         planos = planoFiltro.OrdenarIdCrece(planos);
-                        break;
-                    case "idDecrescente":
+                    } else if (tipoOrdenacao.equals("idDecrescente")) {
                         planos = planoFiltro.OrdenarIdDecre(planos);
-                        break;
-                    case "Az":
+                    } else if (tipoOrdenacao.equals("Az")) {
                         planos = planoFiltro.OrdenarNomeAz(planos);
-                        break;
-                    case "Za":
+                    } else if (tipoOrdenacao.equals("Za")) {
                         planos = planoFiltro.OrdenarNomeZa(planos);
-                        break;
-                    case "precoCrescente":
+                    } else if (tipoOrdenacao.equals("precoCrescente")) {
                         planos = planoFiltro.OrdenarPrecoCrece(planos);
-                        break;
-                    case "precoDecrescente":
+                    } else if (tipoOrdenacao.equals("precoDecrescente")) {
                         planos = planoFiltro.OrdenarPrecoDecre(planos);
-                        break;
-                    default:
-                        // Nenhuma ordenação específica
-                        break;
+                    }
                 }
             }
 
-            // 4. Lidar com lista vazia (se não houver filtro por nome)
-            if (planos.isEmpty() && (nomeFiltro == null || nomeFiltro.trim().isEmpty())) {
-                mensagemExibicao = "Não foi encontrado nenhum plano cadastrado.";
-            }
-
-            // 5. Configurar atributos para a JSP
+            // Define a lista de planos como atributo do request
             request.setAttribute("planos", planos);
-            // Prioriza a mensagem do fluxo PRG, senão usa a mensagem de filtro/lista
-            if (request.getAttribute("mensagem") == null && mensagemExibicao != null) {
-                request.setAttribute("mensagem", mensagemExibicao);
-            }
 
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("mensagem", "Erro inesperado ao acessar o banco de dados.");
         }
-        // --- Fim da lógica de filtro e ordenação ---
 
-        // 6. Encaminha para o JSP
+        // Encaminha para o JSP correspondente
         RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/Plano/crudPlano.jsp");
         dispatcher.forward(request, response);
     }

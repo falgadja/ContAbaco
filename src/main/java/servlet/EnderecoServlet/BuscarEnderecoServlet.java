@@ -1,5 +1,6 @@
 package servlet.EnderecoServlet;
 
+// Imports da classe
 import dao.EnderecoDAO;
 import filtros.EnderecoFiltro;
 import jakarta.servlet.RequestDispatcher;
@@ -16,6 +17,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Servlet responsável por buscar e listar endereços.
+ * Permite pesquisa por ID, filtros e ordenação da lista de resultados,
+ * Lida também com mensagens temporárias armazenadas na sessão (Padrão PRG).
+ */
+
 @WebServlet("/endereco")
 public class BuscarEnderecoServlet extends HttpServlet {
 
@@ -23,21 +30,22 @@ public class BuscarEnderecoServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        // Leitura de mensagens temporárias da sessão (Padrão PRG)
         HttpSession session = request.getSession();
-
-        // Recupera mensagem temporária da sessão (PRG)
         String mensagem = (String) session.getAttribute("mensagem");
         if (mensagem != null) {
             request.setAttribute("mensagem", mensagem);
             session.removeAttribute("mensagem");
         }
 
+        // Recebe parâmetros de pesquisa e ordenação do JSP
         String cepParam = request.getParameter("cep");
         String tipoOrdenacao = request.getParameter("tipoOrdenacao");
         String[] estadosParam = request.getParameterValues("estados");
 
         List<String> estados = (estadosParam != null) ? List.of(estadosParam) : new ArrayList<>();
 
+        // Instancia DAO, filtro e a lista de resultados
         EnderecoDAO enderecoDAO = new EnderecoDAO();
         EnderecoFiltro enderecoFiltro = new EnderecoFiltro();
         List<Endereco> enderecos = new ArrayList<>();
@@ -72,19 +80,19 @@ public class BuscarEnderecoServlet extends HttpServlet {
                 } else {
                     mensagem = "Endereços encontrados com sucesso.";
                 }
-            }
 
-            // Ordena se solicitado
-            if (tipoOrdenacao != null && !tipoOrdenacao.isEmpty() && !enderecos.isEmpty()) {
-                switch (tipoOrdenacao) {
-                    case "idCrescente" -> enderecos = enderecoFiltro.OrdenarIdCrece(enderecos);
-                    case "idDecrescente" -> enderecos = enderecoFiltro.OrdenarIdDecre(enderecos);
+                // Ordena a lista de endereços caso tipoOrdenacao seja informado
+                if (tipoOrdenacao != null && !tipoOrdenacao.isEmpty() && !enderecos.isEmpty()) {
+                    if (tipoOrdenacao.equals("idCrescente")) {
+                        enderecos = enderecoFiltro.OrdenarIdCrece(enderecos);
+                    } else if (tipoOrdenacao.equals("idDecrescente")) {
+                        enderecos = enderecoFiltro.OrdenarIdDecre(enderecos);
+                    }
                 }
             }
 
+            // Define a lista de endereços como atributo do request
             request.setAttribute("enderecos", enderecos);
-            request.setAttribute("mensagem", mensagem);
-
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("mensagem", "Erro inesperado ao acessar o banco de dados.");

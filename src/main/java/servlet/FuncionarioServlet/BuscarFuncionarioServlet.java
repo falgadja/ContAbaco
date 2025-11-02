@@ -1,6 +1,8 @@
-package servlet.FuncionarioServlet; 
+package servlet.FuncionarioServlet;
 
-import dao.FuncionarioDAO; 
+// Imports da classe
+import dao.FuncionarioDAO;
+import filtros.FuncionarioFiltro;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -9,115 +11,121 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.Funcionario;
-import filtros.FuncionarioFiltro;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-// Mapeado para a URL de listagem
+/**
+ * Servlet responsável por buscar e listar funcionários.
+ * Permite pesquisa por nome, empresa e ordenação,
+ * além de exibir mensagens temporárias armazenadas na sessão (Padrão PRG).
+ */
 @WebServlet("/funcionarios")
 public class BuscarFuncionarioServlet extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Lógica de Mensagens (PRG Pattern)
+        // Leitura de mensagens temporárias da sessão (Padrão PRG)
         HttpSession session = request.getSession();
         String mensagem = (String) session.getAttribute("mensagem");
+        String mensagemDeletar = (String) session.getAttribute("mensagemDeletar");
+
         if (mensagem != null) {
             request.setAttribute("mensagem", mensagem);
             session.removeAttribute("mensagem");
         }
 
-        // --- Variáveis de Filtro e Ordenação ---
-        String nomeFiltro = request.getParameter("nome");
-        // Parâmetro de filtro por ID da Empresa
-        String idEmpresaFiltro = request.getParameter("idEmpresa");
-        // Parâmetro de ordenação
+        // Recebe parâmetros de pesquisa e ordenação do JSP
+        String nome = request.getParameter("nome");
+        String idEmpresa = request.getParameter("idEmpresa");
         String tipoOrdenacao = request.getParameter("tipoOrdenacao");
 
+        // Instancia DAO e filtro
         FuncionarioDAO funcionarioDAO = new FuncionarioDAO();
         FuncionarioFiltro funcionarioFiltro = new FuncionarioFiltro();
         List<Funcionario> funcionarios = new ArrayList<>();
         String mensagemExibicao = null;
 
         try {
-            // 1. Obter a lista completa de funcionários
-            List<Funcionario> listaCompleta = funcionarioDAO.listar();
-            funcionarios = listaCompleta;
+            // Lista todos os funcionários se não houver pesquisa por nome
+            funcionarios = funcionarioDAO.listar();
 
-            // 2. Aplicar FILTRO por nome (Busca flexível: contém)
-            if (nomeFiltro != null && !nomeFiltro.trim().isEmpty()) {
-                final String nomeLower = nomeFiltro.trim().toLowerCase();
-
-                funcionarios = funcionarios.stream()
-                        .filter(f -> f.getNome() != null && f.getNome().toLowerCase().contains(nomeLower))
-                        .collect(Collectors.toList());
-
-                mensagemExibicao = "Filtrando por nome: foram encontrados " + funcionarios.size() + " funcionários.";
+            if (funcionarios == null || funcionarios.isEmpty()) {
+                request.setAttribute("mensagem", "Nenhum funcionário encontrado.");
             }
 
-            // 3. Aplicar FILTRO por ID da Empresa (se o parâmetro for válido)
-            if (idEmpresaFiltro != null && !idEmpresaFiltro.trim().isEmpty()) {
-                try {
-                    int idEmpresa = Integer.parseInt(idEmpresaFiltro.trim());
-                    // Usa o método da sua classe FuncionarioFiltro
-                    funcionarios = funcionarioFiltro.filtrarPorIdEmpresa(funcionarios, idEmpresa);
-                    mensagemExibicao = "Filtrando por ID da Empresa (" + idEmpresa + "): " + funcionarios.size() + " encontrados.";
-                } catch (NumberFormatException e) {
-                    mensagemExibicao = "O ID da Empresa fornecido não é um número válido.";
+
+            // lógica diferente para pesquisa por nome de funcionário
+            if (nome != null && !nome.isBlank()) {
+                if (nome != null && !nome.trim().isEmpty()) {
+                    final String nomeLower = nome.trim().toLowerCase();
+
+                    funcionarios = funcionarios.stream()
+                            .filter(f -> f.getNome() != null && f.getNome().toLowerCase().contains(nomeLower))
+                            .collect(Collectors.toList());
+
+                    mensagemExibicao = "Filtrando por nome: foram encontrados " + funcionarios.size() + " funcionários.";
+                }
+            } else {
+                // Lista todos os funcionários se não houver pesquisa por nome
+                funcionarios = funcionarioDAO.listar();
+
+                if (funcionarios == null || funcionarios.isEmpty()) {
+                    request.setAttribute("mensagem", "Nenhum funcionário encontrado.");
+                } else {
+
+                    // Filtra por ID da empresa se informado
+                    if (idEmpresa != null && !idEmpresa.isEmpty()) {
+                        int idEmpresaNum = Integer.parseInt(idEmpresa);
+                        funcionarios = funcionarioFiltro.filtrarPorIdEmpresa(funcionarios, idEmpresaNum);
+                        if (funcionarios.isEmpty()) {
+                            request.setAttribute("mensagem", "Nenhum funcionário encontrado para essa empresa.");
+                        } else {
+                            request.setAttribute("mensagem", "Funcionários encontrados para a empresa informada.");
+                        }
+                    }
+
+                    // Ordena a lista de funcionários caso tipoOrdenacao seja informado
+                    if (tipoOrdenacao != null && !tipoOrdenacao.isEmpty() && !funcionarios.isEmpty()) {
+                        if (tipoOrdenacao.equals("idCrescente")) {
+                            funcionarios = funcionarioFiltro.OrdenarIdCrece(funcionarios);
+                        } else if (tipoOrdenacao.equals("idDecrescente")) {
+                            funcionarios = funcionarioFiltro.OrdenarIdDecre(funcionarios);
+                        } else if (tipoOrdenacao.equals("Az")) {
+                            funcionarios = funcionarioFiltro.OrdenarNomeAz(funcionarios);
+                        } else if (tipoOrdenacao.equals("Za")) {
+                            funcionarios = funcionarioFiltro.OrdenarNomeZa(funcionarios);
+                        }
+                    }
                 }
             }
-
-
-            // 4. Aplicar ORDENAÇÃO (se o parâmetro 'tipoOrdenacao' foi enviado e a lista não estiver vazia)
-            if (tipoOrdenacao != null && !tipoOrdenacao.isEmpty() && !funcionarios.isEmpty()) {
-                switch (tipoOrdenacao) {
-                    case "idCrescente":
-                        funcionarios = funcionarioFiltro.OrdenarIdCrece(funcionarios);
-                        break;
-                    case "idDecrescente":
-                        funcionarios = funcionarioFiltro.OrdenarIdDecre(funcionarios);
-                        break;
-                    case "Az":
-                        funcionarios = funcionarioFiltro.OrdenarNomeAz(funcionarios);
-                        break;
-                    case "Za":
-                        funcionarios = funcionarioFiltro.OrdenarNomeZa(funcionarios);
-                        break;
-                    default:
-                        // Nenhuma ordenação específica ou tipo inválido
-                        break;
-                }
-            }
-
-            // 5. Lidar com lista vazia no final
-            if (funcionarios.isEmpty() && mensagemExibicao == null) {
-                mensagemExibicao = "Nenhum funcionário cadastrado (ou nenhum correspondente aos filtros).";
-            }
-
-            // 6. Configurar atributos para a JSP
+            // Define a lista de funcionários como atributo do request
             request.setAttribute("funcionarios", funcionarios);
-            // Prioriza a mensagem do fluxo PRG, senão usa a mensagem de filtro/lista
-            if (request.getAttribute("mensagem") == null && mensagemExibicao != null) {
-                request.setAttribute("mensagem", mensagemExibicao);
-            }
+
+        } catch (NumberFormatException nfe) {
+            // ID inválido
+            nfe.printStackTrace();
+            request.setAttribute("mensagem", "ID inválido, digite apenas números inteiros.");
 
         } catch (Exception e) {
+            // Erro inesperado
             e.printStackTrace();
-            request.setAttribute("mensagem", "Erro inesperado ao buscar funcionários no banco de dados.");
+            request.setAttribute("mensagem", "Erro inesperado ao acessar o banco de dados.");
+        }  finally {
+            // Encaminha para o JSP correspondente
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/Funcionario/crudFuncionario.jsp");
+            dispatcher.forward(request, response);
         }
-
-        // 7. Encaminha para o JSP
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/Funcionario/crudFuncionario.jsp"); // Ajuste o caminho
-        dispatcher.forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Redireciona POST para o mesmo fluxo do GET
         doGet(request, response);
     }
 }

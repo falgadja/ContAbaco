@@ -45,7 +45,7 @@ public class FuncionarioDAO {
         return idGerado; // Retorna ID gerado ou -1 se falhar
     }
 
-    // READ - BUSCAR FUNCIONARIO PELO ID (Mantido)
+    // READ - BUSCAR FUNCIONARIO PELO ID
     public Funcionario buscarPorId(int id) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
@@ -77,6 +77,8 @@ public class FuncionarioDAO {
 
         return funcionario;
     }
+
+
     // READ - BUSCAR TODOS OS FUNCIONÁRIOS PELO ID DA EMPRESA
     public List<Funcionario> buscarPorIdEmpresa(int idEmpresa) {
         Conexao conexao = new Conexao();

@@ -1,49 +1,57 @@
 package servlet.EmpresaServlet;
 
+// Imports da classe
 import dao.EmpresaDAO;
-import jakarta.servlet.RequestDispatcher; // Importe
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession; // Importe
+import jakarta.servlet.http.HttpSession;
 import model.Empresa;
 import filtros.EmpresaFiltro;
-// import model.Funcionario; // (Não usado neste servlet)
-// import model.Plano; // (Não usado neste servlet)
+
+/**
+ * Servlet responsável por buscar e listar pagamentos.
+ * Permite pesquisa por nome, filtro de quantidade de funcionários e ordenação da lista de resultados,
+ * Lida também com mensagens temporárias armazenadas na sessão (Padrão PRG).
+ */
+
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-// 1. URL "limpa" para o menu
+
 @WebServlet("/empresas")
 public class BuscarEmpresaServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // 2. Lógica para ler mensagens de sucesso/erro (Padrão PRG)
+        // Leitura de mensagens temporárias da sessão (Padrão PRG)
         HttpSession session = request.getSession();
         String mensagem = (String) session.getAttribute("mensagem");
         if (mensagem != null) {
             request.setAttribute("mensagem", mensagem);
             session.removeAttribute("mensagem"); // Limpa a mensagem da sessão
         }
-        // (Você pode adicionar outros tipos de mensagem se precisar, ex: "mensagemDeletar")
 
-        // --- Início da sua lógica de filtro (que já estava boa) ---
+        // Recebe parâmetros de pesquisa e ordenação do JSP
         String nome = request.getParameter("filtroNome");
         String min = request.getParameter("filtroMinFuncionarios");
         String max = request.getParameter("filtroMaxFuncionarios");
-        String tipoOrdenacao = request.getParameter("ordenacao");
+        String tipoOrdenacao = request.getParameter("tipoOrdenacao");
+
+        // Instancia DAO, filtro e a lista de resultados
 
         EmpresaDAO empresaDAO = new EmpresaDAO();
         EmpresaFiltro empresaFiltro = new EmpresaFiltro();
         List<Empresa> empresas = new ArrayList<>();
 
         try {
+            // Pesquisa por nome se informado
             if (nome != null && !nome.trim().isEmpty()) {
                 Empresa empresa = empresaDAO.buscarPorNome(nome);
                 if (empresa == null) {
@@ -56,12 +64,14 @@ public class BuscarEmpresaServlet extends HttpServlet {
                     request.setAttribute("empresas", empresas);
                 }
             } else {
-                empresas = empresaDAO.listar();
+                // Lista todas as empresas se não houver pesquisa por nome
+                 empresas = empresaDAO.listar();
                 if (empresas == null || empresas.isEmpty()) {
                     request.setAttribute("mensagemLista", "Não foi encontrado nenhuma empresa");
                 } else {
                     request.setAttribute("empresas", empresas);
                 }
+                // Filtra por quantidade de funcionários casp seja informado um min. e max.
                 if (min!= null && !min.isEmpty() && max!= null && !max.isEmpty()) {
                     int minNum = Integer.parseInt(min);
                     int maxNum = Integer.parseInt(max);
@@ -72,6 +82,7 @@ public class BuscarEmpresaServlet extends HttpServlet {
                         request.setAttribute("mensagem", "funcionários encontrados.");
                     }
                 }
+                // Ordena a lista de pagamentos caso tipoOrdenacao seja informado
                 if (tipoOrdenacao != null && !tipoOrdenacao.isEmpty() && empresas != null && !empresas.isEmpty()) {
                     if (tipoOrdenacao.equals("idCrescente")) {
                         empresas = empresaFiltro.OrdenarIdCrece(empresas);
@@ -87,18 +98,22 @@ public class BuscarEmpresaServlet extends HttpServlet {
                         empresas = empresaFiltro.OrdenarQntdFuncionarioDecre(empresas);
                     }
                 }
+
+                // Define a lista de empresas como atributo do request
                 request.setAttribute("listaEmpresas", empresas);
 
             }
         } catch(NumberFormatException nfe){
+            // Quantidade de funcionários inválida
             request.setAttribute("mensagem", "Número minímo ou maxímo inválido, digite apenas números inteiros.");
         } catch (Exception e) {
+            // Trata erros inesperados
             e.printStackTrace();
             request.setAttribute("mensagem", "Erro inesperado ao acessar o banco de dados.");
         }
-        // --- Fim da sua lógica de filtro ---
 
-        // 3. Encaminha para o JSP (já estava correto)
+
+        // Encaminha para o JSP correspondente
         RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/Empresa/crudEmpresa.jsp");
         dispatcher.forward(request, response);
     }
