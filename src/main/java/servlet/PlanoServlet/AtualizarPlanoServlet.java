@@ -1,7 +1,10 @@
 package servlet.PlanoServlet;
 
+// IMPORTS DO DAO E MODEL
 import dao.PlanoDAO;
 import model.Plano;
+
+// IMPORTS PADRÕES DE SERVLET
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -14,15 +17,14 @@ import java.io.IOException;
 @WebServlet("/planos-update")
 public class AtualizarPlanoServlet extends HttpServlet {
 
-    /**
-     * doGet: Carrega os dados do plano para o formulário de edição.
-     */
+    // DOGET = CARREGA DADOS DO PLANO PARA O FORMULÁRIO //
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Recebendo o ID do plano da URL
         String idParam = request.getParameter("id");
+
+        // VALIDAÇÃO DE ID
         if (idParam == null || idParam.isEmpty()) {
             request.getSession().setAttribute("mensagem", "ID do plano não informado.");
             response.sendRedirect(request.getContextPath() + "/planos");
@@ -31,19 +33,20 @@ public class AtualizarPlanoServlet extends HttpServlet {
 
         try {
             int id = Integer.parseInt(idParam);
+            PlanoDAO planoDAO = new PlanoDAO();
 
-            // Buscando o plano pelo ID
-            Plano plano = new PlanoDAO().buscarPorId(id);
+            // BUSCA PLANO PELO ID
+            Plano plano = planoDAO.buscarPorId(id);
             if (plano == null) {
                 request.getSession().setAttribute("mensagem", "Plano não encontrado (ID: " + id + ").");
                 response.sendRedirect(request.getContextPath() + "/planos");
                 return;
             }
 
-            // Colocando o objeto Plano no request para a JSP
+            // ENVIA OBJETO PARA O JSP
             request.setAttribute("planoParaEditar", plano);
 
-            // Encaminhando para a página de edição
+            // ENCERRA O GET ENCAMINHANDO PARA JSP
             RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/Plano/atualizarPlano.jsp");
             dispatcher.forward(request, response);
 
@@ -57,14 +60,12 @@ public class AtualizarPlanoServlet extends HttpServlet {
         }
     }
 
-    /**
-     * doPost: Processa a atualização do plano.
-     */
+    // DOPOST = PROCESSA ATUALIZAÇÃO DO PLANO //
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Recebendo os parâmetros do formulário
+        // RECEBE PARÂMETROS DO FORMULÁRIO
         String idParam = request.getParameter("id");
         String nome = request.getParameter("nome");
         String precoParam = request.getParameter("preco");
@@ -72,28 +73,33 @@ public class AtualizarPlanoServlet extends HttpServlet {
         PlanoDAO planoDAO = new PlanoDAO();
 
         try {
-            // Validação básica: checa se todos os campos foram preenchidos
+            // VALIDAÇÃO BÁSICA DOS CAMPOS OBRIGATÓRIOS
             if (idParam == null || idParam.isEmpty() ||
                     nome == null || nome.trim().isEmpty() ||
                     precoParam == null || precoParam.isEmpty()) {
 
                 request.getSession().setAttribute("mensagem", "Preencha todos os campos.");
+
             } else {
-                // Convertendo parâmetros para os tipos corretos
+                // CONVERSÃO DE TIPOS
                 int id = Integer.parseInt(idParam);
                 double preco = Double.parseDouble(precoParam);
 
-                // Criando objeto Plano e preenchendo com os dados do formulário
-                Plano plano = new Plano();
-                plano.setId(id);
-                plano.setNome(nome.trim());
-                plano.setPreco(preco);
-
-                // Atualizando no banco de dados
-                if (planoDAO.atualizar(plano) > 0) {
-                    request.getSession().setAttribute("mensagem", "Plano atualizado com sucesso.");
+                // BUSCA PLANO EXISTENTE
+                Plano plano = planoDAO.buscarPorId(id);
+                if (plano == null) {
+                    request.getSession().setAttribute("mensagem", "Plano não encontrado para atualizar.");
                 } else {
-                    request.getSession().setAttribute("mensagem", "Não foi possível atualizar o plano.");
+                    // ATUALIZA DADOS DO PLANO
+                    plano.setNome(nome.trim());
+                    plano.setPreco(preco);
+
+                    // EXECUTA ATUALIZAÇÃO NO BANCO
+                    if (planoDAO.atualizar(plano) > 0) {
+                        request.getSession().setAttribute("mensagem", "Plano atualizado com sucesso.");
+                    } else {
+                        request.getSession().setAttribute("mensagem", "Não foi possível atualizar o plano.");
+                    }
                 }
             }
         } catch (NumberFormatException nfe) {
@@ -103,7 +109,7 @@ public class AtualizarPlanoServlet extends HttpServlet {
             request.getSession().setAttribute("mensagem", "Erro inesperado ao atualizar plano: " + e.getMessage());
         }
 
-        // Redireciona para a lista de planos
+        // REDIRECIONA PARA A LISTA DE PLANOS
         response.sendRedirect(request.getContextPath() + "/planos");
     }
 }

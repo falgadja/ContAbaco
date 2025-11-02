@@ -1,6 +1,8 @@
 package dao;
 
-// IMPORTS DA CLASSE
+import conexao.Conexao;
+import model.Administrador;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,17 +10,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import conexao.Conexao;
-import model.Administrador;
-
 public class AdmDAO {
 
-    // CREATE - INSERIR Administrador
+    // CREATE - INSERIR ADMINISTRADOR
     public int inserir(Administrador adm) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
-        String sql = "INSERT INTO administrador (email, senha) VALUES (?, ?) RETURNING id";
         int idGerado = -1;
+        String sql = "INSERT INTO administrador (email, senha) VALUES (?, ?) RETURNING id";
 
         try {
             PreparedStatement pst = con.prepareStatement(sql);
@@ -30,17 +29,16 @@ public class AdmDAO {
                 idGerado = rs.getInt("id");
                 adm.setId(idGerado);
             }
-
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         } finally {
             conexao.desconectar(con);
         }
 
-        return idGerado; // Retorna o ID gerado se der certo, se falhar retorna -1
+        return idGerado; // Retorna o ID gerado ou -1 se falhar
     }
 
-    // READ - BUSCAR Administrador PELO ID
+    // READ - BUSCAR ADMINISTRADOR PELO ID
     public Administrador buscarPorId(int id) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
@@ -59,40 +57,16 @@ public class AdmDAO {
                         rs.getString("senha")
                 );
             }
-
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         } finally {
             conexao.desconectar(con);
         }
 
-        return adm; // se não encontrar retorna null
-    }
-    // READ - Buscar e retornar o HASH
-    public String buscarHashPorEmail(String email) {
-        Conexao conexao = new Conexao();
-        Connection con = conexao.conectar();
-        String sql = "SELECT senha FROM administrador WHERE email = ?";
-        String hash = null;
-
-        try (
-             PreparedStatement stmt = con.prepareStatement(sql)) {
-
-            stmt.setString(1, email);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                hash = rs.getString("senha");
-            }
-
-        } catch (SQLException e) {
-            System.out.println("Erro ao buscar hash do administrador: " + e.getMessage());
-        }
-
-        return hash;
+        return adm; // retorna null se não encontrar
     }
 
-    // READ - BUSCAR Administrador PELO EMAIL
+    // READ - BUSCAR ADMINISTRADOR PELO EMAIL
     public Administrador buscarPorEmail(String email) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
@@ -111,7 +85,6 @@ public class AdmDAO {
                         rs.getString("senha")
                 );
             }
-
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         } finally {
@@ -121,7 +94,28 @@ public class AdmDAO {
         return adm;
     }
 
-    // READ - LISTAR TODOS OS Administradores
+    // READ - BUSCAR HASH DA SENHA PELO EMAIL
+    public String buscarHashPorEmail(String email) {
+        Conexao conexao = new Conexao();
+        Connection con = conexao.conectar();
+        String sql = "SELECT senha FROM administrador WHERE email = ?";
+        String hash = null;
+
+        try (PreparedStatement pst = con.prepareStatement(sql)) {
+            pst.setString(1, email);
+            ResultSet rs = pst.executeQuery();
+
+            if (rs.next()) {
+                hash = rs.getString("senha");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao buscar hash do administrador: " + e.getMessage());
+        }
+
+        return hash;
+    }
+
+    // READ - LISTAR TODOS OS ADMINISTRADORES
     public List<Administrador> listar() {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
@@ -139,7 +133,6 @@ public class AdmDAO {
                         rs.getString("senha")
                 ));
             }
-
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         } finally {
@@ -149,39 +142,20 @@ public class AdmDAO {
         return adms;
     }
 
-    // UPDATE - ATUALIZAR Administrador
+    // UPDATE - ATUALIZAR ADMINISTRADOR
     public int atualizar(Administrador adm) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
-        int retorno = -1;
-
-        // Vamos construir o SQL dinamicamente
-        StringBuilder sql = new StringBuilder("UPDATE administrador SET email = ?");
-
-        // Verificamos se a senha foi fornecida (o servlet vai passar o hash)
-        boolean senhaFoiAtualizada = (adm.getSenha() != null && !adm.getSenha().isEmpty());
-
-        if (senhaFoiAtualizada) {
-            sql.append(", senha = ?"); // Adiciona a senha ao SQL
-        }
-
-        sql.append(" WHERE id = ?"); // Adiciona o WHERE
+        int retorno;
+        String sql = "UPDATE administrador SET email = ?, senha = ? WHERE id = ?";
 
         try {
-            PreparedStatement pst = con.prepareStatement(sql.toString());
-
-            // Define os parâmetros na ordem correta
+            PreparedStatement pst = con.prepareStatement(sql);
             pst.setString(1, adm.getEmail());
-
-            if (senhaFoiAtualizada) {
-                pst.setString(2, adm.getSenha());
-                pst.setInt(3, adm.getId()); // Posição 3 se a senha existir
-            } else {
-                pst.setInt(2, adm.getId()); // Posição 2 se a senha NÃO existir
-            }
+            pst.setString(2, adm.getSenha());
+            pst.setInt(3, adm.getId());
 
             retorno = pst.executeUpdate();
-
         } catch (SQLException sqle) {
             sqle.printStackTrace();
             retorno = -1;
@@ -189,10 +163,10 @@ public class AdmDAO {
             conexao.desconectar(con);
         }
 
-        return retorno;
+        return retorno; // retorna número de linhas alteradas ou -1 em caso de erro
     }
 
-    // DELETE - DELETAR Administrador
+    // DELETE - DELETAR ADMINISTRADOR
     public int deletar(int id) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
@@ -203,7 +177,6 @@ public class AdmDAO {
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setInt(1, id);
             retorno = pst.executeUpdate();
-
         } catch (SQLException sqle) {
             sqle.printStackTrace();
             retorno = -1;
@@ -211,6 +184,6 @@ public class AdmDAO {
             conexao.desconectar(con);
         }
 
-        return retorno;
+        return retorno; // retorna número de linhas deletadas ou -1 se falhar
     }
 }

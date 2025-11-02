@@ -1,15 +1,19 @@
 package servlet.AdmServlet;
 
+// IMPORTS DO DAO E MODEL
 import dao.AdmDAO;
+import model.Administrador;
+
+// IMPORTS PADRÕES DE SERVLET
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.Administrador;
-import utils.ValidacaoRegex;
 
+// UTILITÁRIOS
+import utils.ValidacaoRegex;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
@@ -17,15 +21,15 @@ import java.io.IOException;
 @WebServlet("/adm-update")
 public class AtualizarAdmServlet extends HttpServlet {
 
-    /**
-     * doGet: Carrega os dados do administrador para o formulário de edição.
-     */
+
+    // DOGET = CARREGA DADOS PARA ATUALIZAR //
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Recebendo o ID do administrador
         String idParametro = request.getParameter("id");
+
+        // VALIDAÇÃO DE ID
         if (idParametro == null || idParametro.isEmpty()) {
             request.getSession().setAttribute("mensagem", "ID do administrador não informado.");
             response.sendRedirect(request.getContextPath() + "/adm");
@@ -36,7 +40,7 @@ public class AtualizarAdmServlet extends HttpServlet {
             int id = Integer.parseInt(idParametro);
             AdmDAO admDAO = new AdmDAO();
 
-            // Busca o administrador pelo ID
+            // BUSCA ADMINISTRADOR PELO ID
             Administrador adm = admDAO.buscarPorId(id);
             if (adm == null) {
                 request.getSession().setAttribute("mensagem", "Administrador não encontrado (ID: " + id + ").");
@@ -44,10 +48,10 @@ public class AtualizarAdmServlet extends HttpServlet {
                 return;
             }
 
-            // Coloca o objeto no request para preencher o formulário
+            // ENVIA OBJETO PARA O FORMULÁRIO DE EDIÇÃO
             request.setAttribute("admParaEditar", adm);
 
-            // Encaminha para a JSP de atualização
+            // ENCERRA O GET ENCAMINHANDO PARA JSP
             RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/Adm/atualizarAdm.jsp");
             dispatcher.forward(request, response);
 
@@ -61,62 +65,73 @@ public class AtualizarAdmServlet extends HttpServlet {
         }
     }
 
-    /**
-     * doPost: Processa a atualização do administrador.
-     */
+
+    // DOPOST = PROCESSA ATUALIZAÇÃO //
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Recebendo os parâmetros do formulário
         String idParametro = request.getParameter("id");
         String email = request.getParameter("email");
-        String senha = request.getParameter("senha"); // Senha nova (pode estar vazia)
+        String senha = request.getParameter("senha"); // NOVA SENHA (OPCIONAL)
 
         AdmDAO admDAO = new AdmDAO();
 
         try {
+            // VALIDAÇÃO DE ID
             if (idParametro == null || idParametro.isEmpty()) {
                 request.getSession().setAttribute("mensagem", "ID inválido. Não foi possível atualizar.");
-            } else {
-                int id = Integer.parseInt(idParametro);
-
-                // Busca o administrador existente no banco
-                Administrador adm = admDAO.buscarPorId(id);
-                if (adm == null) {
-                    request.getSession().setAttribute("mensagem", "Administrador não encontrado para atualização.");
-                } else if (!ValidacaoRegex.verificarEmail(email)) {
-                    request.getSession().setAttribute("mensagem", "Email inválido!");
-
-                } else if(senha!=null && !senha.isEmpty()) {
-                    if (!ValidacaoRegex.verificarSenha(senha)) {
-                        request.getSession().setAttribute("mensagem", "Nova senha inválida! Use ao menos 8 caracteres, você pode usar letras, números e símbolos como @, #, $, não use espaços.");
-                    }
-                } else {
-                    // Atualiza os campos com os dados do formulário
-                    adm.setEmail(email);
-
-                    // Atualiza a senha apenas se foi digitada uma nova
-                    if (senha != null && !senha.trim().isEmpty()) {
-                        adm.setSenha(BCrypt.hashpw(senha, BCrypt.gensalt()));
-                    }
-
-                    // Executa a atualização no banco
-                    if (admDAO.atualizar(adm) > 0) {
-                        request.getSession().setAttribute("mensagem", "Administrador atualizado com sucesso!");
-                    } else {
-                        request.getSession().setAttribute("mensagem", "Não foi possível atualizar o administrador.");
-                    }
-                }
+                response.sendRedirect(request.getContextPath() + "/adm");
+                return;
             }
+
+            int id = Integer.parseInt(idParametro);
+            Administrador adm = admDAO.buscarPorId(id);
+
+            // VERIFICA SE O ADMIN EXISTE
+            if (adm == null) {
+                request.getSession().setAttribute("mensagem", "Administrador não encontrado para atualização.");
+                response.sendRedirect(request.getContextPath() + "/adm");
+                return;
+            }
+
+            // VALIDAÇÃO DE EMAIL
+            if (!ValidacaoRegex.verificarEmail(email)) {
+                request.getSession().setAttribute("mensagem", "Email inválido!");
+                response.sendRedirect(request.getContextPath() + "/adm");
+                return;
+            }
+
+            // VALIDAÇÃO DE SENHA (SE INFORMADA)
+            if (senha != null && !senha.isBlank() && !ValidacaoRegex.verificarSenha(senha)) {
+                request.getSession().setAttribute("mensagem",
+                        "Nova senha inválida! Use ao menos 8 caracteres, letras, números e símbolos como @, #, $, sem espaços.");
+                response.sendRedirect(request.getContextPath() + "/adm");
+                return;
+            }
+
+            // ATUALIZA CAMPOS
+            adm.setEmail(email);
+
+            if (senha != null && !senha.trim().isEmpty()) {
+                adm.setSenha(BCrypt.hashpw(senha, BCrypt.gensalt()));
+            }
+
+            // EXECUTA ATUALIZAÇÃO NO BANCO
+            if (admDAO.atualizar(adm) > 0) {
+                request.getSession().setAttribute("mensagem", "Administrador atualizado com sucesso!");
+            } else {
+                request.getSession().setAttribute("mensagem", "Não foi possível atualizar o administrador.");
+            }
+
         } catch (NumberFormatException nfe) {
             request.getSession().setAttribute("mensagem", "ID inválido.");
         } catch (Exception e) {
-            request.getSession().setAttribute("mensagem", "Erro inesperado ao atualizar administrador: " + e.getMessage());
             e.printStackTrace();
+            request.getSession().setAttribute("mensagem", "Erro inesperado ao atualizar administrador: " + e.getMessage());
         }
 
-        // Redireciona para a listagem de administradores
+        // REDIRECIONA PARA LISTAGEM DE ADMINISTRADORES
         response.sendRedirect(request.getContextPath() + "/adm");
     }
 }

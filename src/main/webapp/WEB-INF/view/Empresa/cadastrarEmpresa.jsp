@@ -23,7 +23,8 @@
             <div class="alert">${mensagem}</div>
         </c:if>
 
-        <form action="${pageContext.request.contextPath}/empresas-create" method="post" target="_top">
+        <form action="${pageContext.request.contextPath}/empresa-create" method="post" target="_top">
+            <h2>Cadastre sua empresa</h2>
 
             <div class="field-group">
                 <label for="nomeEmpresa">Nome da Empresa</label>

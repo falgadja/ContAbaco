@@ -11,60 +11,69 @@ import model.Endereco;
 
 import java.io.IOException;
 
+/**
+ * SERVLET RESPONSÁVEL POR DELETAR EMPRESAS
+ * NÃO PERMITE GET PARA DELEÇÃO, APENAS REDIRECIONA
+ * POST REALIZA A EXCLUSÃO, DELETANDO PRIMEIRO ENDEREÇO SE EXISTIR
+ */
 @WebServlet("/empresa-delete")
 public class DeletarEmpresaServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-    // GET não deleta, apenas redireciona para a listagem
+    // GET NÃO DELETA, APENAS REDIRECIONA PARA LISTAGEM
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.sendRedirect(request.getContextPath() + "/empresas");
+        response.sendRedirect(request.getContextPath() + "/empresas"); // REDIRECIONA PRA LISTA DE EMPRESAS
     }
 
-    // POST realiza a exclusão da empresa
+    // POST REALIZA A EXCLUSÃO DA EMPRESA
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String idParametro = request.getParameter("id");
-        // DAOs instanciadas
+        String idParametro = request.getParameter("id"); // PEGA ID DO FORMULÁRIO
+
+        // INSTANCIA DAOS E OBJETO ENDEREÇO
         EmpresaDAO empresaDAO = new EmpresaDAO();
         EnderecoDAO enderecoDAO = new EnderecoDAO();
         Endereco endereco = new Endereco();
 
-
         String mensagem;
 
         try {
+            // VERIFICA SE ID FOI INFORMADO
             if (idParametro == null || idParametro.isEmpty()) {
                 mensagem = "ID da empresa não foi encontrado.";
             } else {
-                int id = Integer.parseInt(idParametro);
+                int id = Integer.parseInt(idParametro); // CONVERTE ID PARA INTEIRO
+
+                // BUSCA ENDEREÇO ASSOCIADO À EMPRESA
                 endereco = enderecoDAO.buscarPorEmpresa(id);
 
                 if (endereco != null) {
-                    // Deleta primeiro o endereço
+                    // DELETA PRIMEIRO O ENDEREÇO
                     enderecoDAO.deletar(endereco.getId());
                 }
 
-// Agora deleta a empresa
+                // DELETA AGORA A EMPRESA
                 if (empresaDAO.deletar(id) > 0) {
                     mensagem = "Empresa deletada com sucesso!";
                 } else {
                     mensagem = "Não foi possível deletar a empresa.";
                 }
-
             }
         } catch (NumberFormatException nfe) {
+            // TRATA ID INVÁLIDO
             mensagem = "ID inválido.";
         } catch (Exception e) {
-            e.printStackTrace();
+            // ERRO INESPERADO
+            e.printStackTrace(); // PARA DEBUG
             mensagem = "Erro inesperado ao tentar deletar.";
         }
 
-        // Salva a mensagem e redireciona para a lista
+        // SALVA MENSAGEM NA SESSÃO E REDIRECIONA PARA LISTA DE EMPRESAS
         request.getSession().setAttribute("mensagem", mensagem);
         response.sendRedirect(request.getContextPath() + "/empresas");
     }

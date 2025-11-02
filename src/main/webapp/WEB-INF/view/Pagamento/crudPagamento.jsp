@@ -160,49 +160,53 @@
 
 <script>
     (function () {
+        // Pegando os elementos do modal e do iframe
         const modal = document.getElementById('inTableModal');
         const frame = document.getElementById('modalFrame');
         const openBtn = document.getElementById('openModal');
         const closeBtn = document.getElementById('modalClose');
 
+        // Se algum elemento não for encontrado, loga erro e sai
         if (!modal || !frame || !openBtn || !closeBtn) {
             console.error('Elementos do modal não encontrados.');
             return;
         }
 
-        // Abrir Modal de Adicionar (aponta para /pagamento-create)
+        // Abrir modal para cadastrar novo pagamento
         openBtn.addEventListener('click', function () {
-            frame.src = '${pageContext.request.contextPath}/pagamento-create';
-            modal.classList.add('open');
-            modal.setAttribute('aria-hidden', 'false');
+            frame.src = '${pageContext.request.contextPath}/pagamento-create'; // URL do formulário
+            modal.classList.add('open'); // Mostra o modal
+            modal.setAttribute('aria-hidden', 'false'); // Acessibilidade
         });
 
-        // Fechar Modal
+        // Função para fechar o modal
         function closeModal() {
-            modal.classList.remove('open');
+            modal.classList.remove('open'); // Esconde o modal
             modal.setAttribute('aria-hidden', 'true');
-            frame.src = 'about:blank';
-
-            // Recarrega a página para mostrar dados atualizados
-            window.location.reload();
+            frame.src = 'about:blank'; // Limpa o iframe
+            window.location.reload(); // Atualiza a tabela depois de fechar
         }
 
+        // Botão "X" do modal
         closeBtn.addEventListener('click', closeModal);
+
+        // Fechar modal ao apertar ESC
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape' && modal.classList.contains('open')) {
                 closeModal();
             }
         });
 
-        // Abrir Modal de Editar (aponta para /pagamento-update)
+        // Abrir modal para editar um pagamento existente
         window.abrirModalEditar = function (id) {
             if (!id) return;
-            frame.src = '${pageContext.request.contextPath}/pagamento-update?id=' + id;
-            modal.classList.add('open');
-            modal.setAttribute('aria-hidden', 'false');
+            frame.src = '${pageContext.request.contextPath}/pagamento-update?id=' + id; // Passa ID do pagamento
+            modal.classList.add('open'); // Mostra o modal
+            modal.setAttribute('aria-hidden', 'false'); // Acessibilidade
         };
 
     })();
+
 </script>
 
 </body>

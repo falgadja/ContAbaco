@@ -26,6 +26,8 @@
         </c:if>
 
         <form action="${pageContext.request.contextPath}/funcionarios-create" method="post" target="_top">
+            <h2>Cadastre seu funcionário</h2>
+            <br>
 
             <div class="field-group">
                 <label for="nome">Nome</label>

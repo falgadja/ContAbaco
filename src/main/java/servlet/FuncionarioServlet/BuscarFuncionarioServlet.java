@@ -1,6 +1,6 @@
 package servlet.FuncionarioServlet;
 
-// Imports da classe
+// IMPORTS NECESSÁRIOS: DAO, FILTRO, SERVLET, SESSION, MODEL E STREAMS
 import dao.FuncionarioDAO;
 import filtros.FuncionarioFiltro;
 import jakarta.servlet.RequestDispatcher;
@@ -18,9 +18,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Servlet responsável por buscar e listar funcionários.
- * Permite pesquisa por nome, empresa e ordenação,
- * além de exibir mensagens temporárias armazenadas na sessão (Padrão PRG).
+ * SERVLET RESPONSÁVEL POR BUSCAR E LISTAR FUNCIONÁRIOS
+ * PERMITE PESQUISA POR NOME, FILTRO POR EMPRESA, ORDENAR RESULTADOS
+ * EXIBE MENSAGENS TEMPORÁRIAS (PADRÃO PRG)
  */
 @WebServlet("/funcionarios")
 public class BuscarFuncionarioServlet extends HttpServlet {
@@ -29,56 +29,54 @@ public class BuscarFuncionarioServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Leitura de mensagens temporárias da sessão (Padrão PRG)
+        // PEGANDO MENSAGENS TEMPORÁRIAS DA SESSÃO (PADRÃO PRG)
         HttpSession session = request.getSession();
         String mensagem = (String) session.getAttribute("mensagem");
         String mensagemDeletar = (String) session.getAttribute("mensagemDeletar");
 
         if (mensagem != null) {
-            request.setAttribute("mensagem", mensagem);
-            session.removeAttribute("mensagem");
+            request.setAttribute("mensagem", mensagem); // COLOCA MENSAGEM NO REQUEST
+            session.removeAttribute("mensagem"); // REMOVE DA SESSÃO PRA NÃO REPETIR
         }
 
-        // Recebe parâmetros de pesquisa e ordenação do JSP
+        // RECEBE PARAMETROS DE PESQUISA E ORDENACAO
         String nome = request.getParameter("nome");
         String idEmpresa = request.getParameter("idEmpresa");
         String tipoOrdenacao = request.getParameter("tipoOrdenacao");
 
-        // Instancia DAO e filtro
+        // CRIA OBJETOS NECESSÁRIOS: DAO, FILTRO E LISTA
         FuncionarioDAO funcionarioDAO = new FuncionarioDAO();
         FuncionarioFiltro funcionarioFiltro = new FuncionarioFiltro();
         List<Funcionario> funcionarios = new ArrayList<>();
         String mensagemExibicao = null;
 
         try {
-            // Lista todos os funcionários se não houver pesquisa por nome
+            // LISTA TODOS OS FUNCIONÁRIOS INICIALMENTE
             funcionarios = funcionarioDAO.listar();
 
             if (funcionarios == null || funcionarios.isEmpty()) {
                 request.setAttribute("mensagem", "Nenhum funcionário encontrado.");
             }
 
-
-            // lógica diferente para pesquisa por nome de funcionário
+            // PESQUISA POR NOME SE INFORMADO
             if (nome != null && !nome.isBlank()) {
-                if (nome != null && !nome.trim().isEmpty()) {
-                    final String nomeLower = nome.trim().toLowerCase();
+                final String nomeLower = nome.trim().toLowerCase();
 
-                    funcionarios = funcionarios.stream()
-                            .filter(f -> f.getNome() != null && f.getNome().toLowerCase().contains(nomeLower))
-                            .collect(Collectors.toList());
+                // FILTRA FUNCIONÁRIOS PELO NOME INFORMADO
+                funcionarios = funcionarios.stream()
+                        .filter(f -> f.getNome() != null && f.getNome().toLowerCase().contains(nomeLower))
+                        .collect(Collectors.toList());
 
-                    mensagemExibicao = "Filtrando por nome: foram encontrados " + funcionarios.size() + " funcionários.";
-                }
+                mensagemExibicao = "Filtrando por nome: foram encontrados " + funcionarios.size() + " funcionários.";
+
             } else {
-                // Lista todos os funcionários se não houver pesquisa por nome
+                // SE NOME NÃO INFORMADO, LISTA TODOS FUNCIONÁRIOS (REPETIÇÃO PARA CASO NOME NULO)
                 funcionarios = funcionarioDAO.listar();
 
                 if (funcionarios == null || funcionarios.isEmpty()) {
                     request.setAttribute("mensagem", "Nenhum funcionário encontrado.");
                 } else {
-
-                    // Filtra por ID da empresa se informado
+                    // FILTRA POR ID DA EMPRESA SE INFORMADO
                     if (idEmpresa != null && !idEmpresa.isEmpty()) {
                         int idEmpresaNum = Integer.parseInt(idEmpresa);
                         funcionarios = funcionarioFiltro.filtrarPorIdEmpresa(funcionarios, idEmpresaNum);
@@ -89,7 +87,7 @@ public class BuscarFuncionarioServlet extends HttpServlet {
                         }
                     }
 
-                    // Ordena a lista de funcionários caso tipoOrdenacao seja informado
+                    // ORDENACAO CASO TENHA SIDO ESCOLHIDA
                     if (tipoOrdenacao != null && !tipoOrdenacao.isEmpty() && !funcionarios.isEmpty()) {
                         if (tipoOrdenacao.equals("idCrescente")) {
                             funcionarios = funcionarioFiltro.OrdenarIdCrece(funcionarios);
@@ -103,20 +101,22 @@ public class BuscarFuncionarioServlet extends HttpServlet {
                     }
                 }
             }
-            // Define a lista de funcionários como atributo do request
+
+            // DEFINE LISTA FINAL COMO ATRIBUTO DO REQUEST
             request.setAttribute("funcionarios", funcionarios);
 
         } catch (NumberFormatException nfe) {
-            // ID inválido
+            // TRATA ERRO QUANDO ID DA EMPRESA NÃO É NÚMERO
             nfe.printStackTrace();
             request.setAttribute("mensagem", "ID inválido, digite apenas números inteiros.");
 
         } catch (Exception e) {
-            // Erro inesperado
+            // ERROS INESPERADOS
             e.printStackTrace();
             request.setAttribute("mensagem", "Erro inesperado ao acessar o banco de dados.");
-        }  finally {
-            // Encaminha para o JSP correspondente
+
+        } finally {
+            // ENCAMINHA PARA O JSP RESPONSÁVEL PELO CRUD DE FUNCIONÁRIOS
             RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/Funcionario/crudFuncionario.jsp");
             dispatcher.forward(request, response);
         }
@@ -125,7 +125,7 @@ public class BuscarFuncionarioServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Redireciona POST para o mesmo fluxo do GET
+        // REDIRECIONA POST PARA O MESMO FLUXO DO GET
         doGet(request, response);
     }
 }

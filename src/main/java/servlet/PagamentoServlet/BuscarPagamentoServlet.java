@@ -1,7 +1,6 @@
 package servlet.PagamentoServlet;
 
-
-// Imports da classe
+// IMPORTS NECESSÁRIOS: DAO, FILTRO, SERVLET, SESSION, MODEL, DATAS
 import dao.PagamentoDAO;
 import filtros.PagamentoFiltro;
 import jakarta.servlet.RequestDispatcher;
@@ -21,47 +20,46 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Servlet responsável por buscar e listar pagamentos.
- * Permite pesquisa por ID, filtros de data e tipo de pagamento e ordenação da lista de resultados,
- * Lida também com mensagens temporárias armazenadas na sessão (Padrão PRG).
+ * SERVLET RESPONSÁVEL POR BUSCAR E LISTAR PAGAMENTOS
+ * PERMITE PESQUISA POR ID, FILTRO POR DATA, TIPO E ORDENAR RESULTADOS
+ * TRATA MENSAGENS TEMPORÁRIAS (PADRÃO PRG)
  */
-
 @WebServlet("/pagamento")
 public class BuscarPagamentoServlet extends HttpServlet {
 
+    // FORMATADOR DE DATAS PARA CONVERSÃO ENTRE STRING E LOCALDATE
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Leitura de mensagens temporárias da sessão (Padrão PRG)
+        // PEGANDO MENSAGENS TEMPORÁRIAS DA SESSÃO (PADRÃO PRG)
         HttpSession session = request.getSession();
         String mensagemSessao = (String) session.getAttribute("mensagem");
         if (mensagemSessao != null) {
-            request.setAttribute("mensagem", mensagemSessao);
-            session.removeAttribute("mensagem");
+            request.setAttribute("mensagem", mensagemSessao); // COLOCA MENSAGEM NO REQUEST
+            session.removeAttribute("mensagem"); // REMOVE DA SESSÃO PRA NÃO REPETIR
         }
 
-        // Recebe parâmetros de pesquisa e ordenação do JSP
+        // RECEBE PARAMETROS DO FORMULÁRIO
         String id = request.getParameter("id");
         String inicio = request.getParameter("inicio");
         String fim = request.getParameter("fim");
         String[] tiposV = request.getParameterValues("tipos");
         List<String> tipos = new ArrayList<>();
         if (tiposV != null && tiposV.length > 0) {
-            tipos = List.of(tiposV);
+            tipos = List.of(tiposV); // TRANSFORMA ARRAY EM LIST PARA FACILITAR FILTRO
         }
         String tipoOrdenacao = request.getParameter("tipoOrdenacao");
 
-        // Instancia DAO, filtro e a lista de resultados
+        // CRIA OBJETOS NECESSÁRIOS: DAO, FILTRO E LISTA
         PagamentoDAO pagamentoDAO = new PagamentoDAO();
         PagamentoFiltro pagamentoFiltro = new PagamentoFiltro();
         List<Pagamento> pagamentos = new ArrayList<>();
 
         try {
-
-            // Pesquisa por ID se informado
+            // PESQUISA POR ID SE INFORMADO
             if (id != null && !id.trim().isEmpty()) {
                 int idNum = Integer.parseInt(id);
                 Pagamento pagamento = pagamentoDAO.buscarPorId(idNum);
@@ -74,26 +72,26 @@ public class BuscarPagamentoServlet extends HttpServlet {
                 }
 
             } else {
-                // Lista todos os pagamentos se não houver pesquisa por ID
+                // LISTA TODOS OS PAGAMENTOS SE NÃO HOUVER PESQUISA POR ID
                 pagamentos = pagamentoDAO.listar();
 
                 if (pagamentos == null || pagamentos.isEmpty()) {
                     request.setAttribute("mensagem", "Nenhum pagamento cadastrado.");
                 } else {
 
-                    // Filtra por tipo de pagamento se não for "todos"
+                    // FILTRA POR TIPO DE PAGAMENTO SE NÃO FOR "todos"
                     if (!tipos.isEmpty() && !tipos.contains("todos")) {
                         pagamentos = pagamentoFiltro.filtrarPorTipo(pagamentos, tipos);
                     }
 
-                    // Filtra por período de datas se fornecido
+                    // FILTRA POR PERÍODO DE DATAS SE INFORMADO
                     if (inicio != null && !inicio.trim().isEmpty() && fim != null && !fim.trim().isEmpty()) {
                         LocalDate inicioDt = LocalDate.parse(inicio, FORMATTER);
                         LocalDate fimDt = LocalDate.parse(fim, FORMATTER);
                         pagamentos = pagamentoFiltro.filtrarPorData(pagamentos, inicioDt, fimDt);
                     }
 
-                    // Ordena a lista de pagamentos caso tipoOrdenacao seja informado
+                    // ORDENACAO CASO TENHA SIDO ESCOLHIDA
                     if (tipoOrdenacao != null && !tipoOrdenacao.isEmpty() && !pagamentos.isEmpty()) {
                         if (tipoOrdenacao.equals("idCrescente")) {
                             pagamentos = pagamentoFiltro.OrdenarIdCrece(pagamentos);
@@ -112,21 +110,22 @@ public class BuscarPagamentoServlet extends HttpServlet {
                 }
             }
 
-            // Define a lista de pagamentos como atributo do request
+            // DEFINE LISTA FINAL COMO ATRIBUTO DO REQUEST
             request.setAttribute("pagamentos", pagamentos);
 
         } catch (NumberFormatException nfe) {
-            // ID inválido
+            // TRATA ERRO QUANDO ID NÃO É NÚMERO
             request.setAttribute("mensagem", "ID inválido, digite apenas números inteiros.");
         } catch (DateTimeParseException dte) {
-            // data inválida
+            // TRATA ERRO QUANDO DATA É INVÁLIDA
             request.setAttribute("mensagem", "Data inválida. Use o formato dd/MM/yyyy.");
         } catch (Exception e) {
-            // Trata erros inesperados
+            // TRATA ERROS INESPERADOS
             e.printStackTrace();
             request.setAttribute("mensagem", "Erro inesperado ao acessar o banco de dados.");
         }
-        // Encaminha para o JSP correspondente
+
+        // ENCAMINHA PARA O JSP RESPONSÁVEL PELO CRUD DE PAGAMENTOS
         RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/Pagamento/crudPagamento.jsp");
         dispatcher.forward(request, response);
     }
@@ -134,6 +133,7 @@ public class BuscarPagamentoServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // REDIRECIONA POST PARA O MESMO FLUXO DO GET
         doGet(request, response);
     }
 }

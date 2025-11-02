@@ -1,42 +1,50 @@
 package servlet.EnderecoServlet;
 
+// IMPORTS DO DAO E MODEL
 import dao.EmpresaDAO;
 import dao.EnderecoDAO;
+import model.Empresa;
+import model.Endereco;
+
+// IMPORTS PADRÕES DE SERVLET
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.Empresa;
-import model.Endereco;
+
+// UTILIDADES DE VALIDAÇÃO
 import utils.ValidacaoRegex;
 
 import java.io.IOException;
 import java.util.List;
 
+// DEFINE A ROTA DO SERVLET
 @WebServlet("/endereco-create")
 public class InserirEnderecoServlet extends HttpServlet {
 
+    // MÉTODO DOGET → EXIBE FORMULÁRIO DE CADASTRO DE ENDEREÇO
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // --- NOVO: Buscar todas as empresas ---
+        // --- BUSCAR TODAS AS EMPRESAS PRA PREENCHER SELECT ---
         EmpresaDAO empresaDAO = new EmpresaDAO();
         List<Empresa> empresas = empresaDAO.listar();
         request.setAttribute("empresas", empresas);
-        // --- FIM NOVO ---
 
-        // Exibe o formulário de cadastro de endereço
+        // --- REDIRECIONA PRO JSP DE CADASTRO ---
         RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/Endereco/cadastrarEndereco.jsp");
         dispatcher.forward(request, response);
     }
 
+    // MÉTODO DOPOST → RECEBE DADOS DO FORMULÁRIO E INSERE NO BANCO
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        // PEGANDO DADOS DO FORMULÁRIO
         String pais = request.getParameter("pais");
         String estado = request.getParameter("estado");
         String cidade = request.getParameter("cidade");
@@ -46,13 +54,14 @@ public class InserirEnderecoServlet extends HttpServlet {
         String numeroStr = request.getParameter("numero");
         String idEmpresaStr = request.getParameter("idEmpresa");
 
-        //Validar se o cep é nulo antes de validar com regex
+        // VALIDAÇÃO DO CEP (RETORNA NULL SE INVÁLIDO)
         String cepValidado = null;
         if (cep != null && !cep.isBlank()) {
             cepValidado = ValidacaoRegex.verificarCep(cep);
         }
+
         try {
-            // Validação de campos obrigatórios
+            // VALIDAÇÃO DE CAMPOS OBRIGATÓRIOS
             if (pais == null || estado == null || cidade == null || bairro == null ||
                     rua == null || cep == null || numeroStr == null || idEmpresaStr == null ||
                     pais.isBlank() || estado.isBlank() || cidade.isBlank() || bairro.isBlank() ||
@@ -61,24 +70,29 @@ public class InserirEnderecoServlet extends HttpServlet {
                 request.setAttribute("mensagem", "Todos os campos são obrigatórios!");
                 doGet(request, response);
                 return;
-            }  else if (cepValidado == null || cepValidado.trim().isEmpty()) {
+            }
+
+            // VALIDAÇÃO DO CEP
+            if (cepValidado == null || cepValidado.trim().isEmpty()) {
                 request.setAttribute("mensagem", "CEP inválido.");
                 doGet(request, response);
                 return;
             }
 
+            // CONVERSÃO DE VALORES NUMÉRICOS
             int numero = Integer.parseInt(numeroStr);
             int idEmpresa = Integer.parseInt(idEmpresaStr);
 
-            // Cria objeto Endereco
+            // CRIA OBJETO ENDEREÇO
             Endereco endereco = new Endereco(pais, estado, cidade, bairro, rua, numero, cepValidado, idEmpresa);
 
-            // Insere no banco
+            // INSERE ENDEREÇO NO BANCO
             EnderecoDAO enderecoDAO = new EnderecoDAO();
             int idGerado = enderecoDAO.inserir(endereco);
 
+            // VERIFICA SE DEU CERTO
             if (idGerado > 0) {
-                // Redireciona após sucesso
+                // SUCESSO → REDIRECIONA PRA LISTA DE ENDEREÇOS
                 response.sendRedirect(request.getContextPath() + "/endereco");
             } else {
                 request.setAttribute("mensagem", "Não foi possível cadastrar o endereço. Tente novamente!");
@@ -86,10 +100,12 @@ public class InserirEnderecoServlet extends HttpServlet {
             }
 
         } catch (NumberFormatException e) {
+            // TRATA ERRO QUANDO NÚMEROS SÃO INVÁLIDOS
             request.setAttribute("mensagem", "Erro: número inválido informado!");
             doGet(request, response);
 
         } catch (Exception e) {
+            // QUALQUER OUTRO ERRO
             e.printStackTrace();
             request.setAttribute("mensagem", "Erro interno: " + e.getMessage());
             doGet(request, response);

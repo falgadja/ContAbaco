@@ -1,7 +1,6 @@
 package servlet.AdmServlet;
 
-
-// Imports da classe
+// IMPORTS NECESSÁRIOS PARA FUNCIONAR O SERVLET, CONEXÃO COM DAO, FILTROS E JSP
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,43 +17,42 @@ import jakarta.servlet.http.HttpSession;
 import model.Administrador;
 
 /**
- * Servlet responsável por buscar e listar administradores.
- * Permite pesquisa por e-mail e ordenação da lista de resultados,
- * Lida também com mensagens temporárias armazenadas na sessão (Padrão PRG).
+ * SERVLET RESPONSÁVEL POR BUSCAR E LISTAR ADMINISTRADORES
+ * PERMITE PESQUISA POR EMAIL, ORDENAR LISTA E TRATAR MENSAGENS TEMPORÁRIAS
  */
-
 @WebServlet("/adm")
 public class BuscarAdmServlet extends HttpServlet {
-
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Leitura de mensagens temporárias da sessão (Padrão PRG)
+        // PEGANDO MENSAGENS DA SESSÃO (PADRÃO PRG) PARA MOSTRAR NO JSP
         HttpSession session = request.getSession();
         String mensagemSessao = (String) session.getAttribute("mensagem");
         if (mensagemSessao != null) {
-            request.setAttribute("mensagem", mensagemSessao);
-            session.removeAttribute("mensagem");
+            request.setAttribute("mensagem", mensagemSessao); // JOGA A MENSAGEM NO REQUEST
+            session.removeAttribute("mensagem"); // REMOVE DA SESSÃO PRA NÃO REPETIR
         }
 
-        // Recebe parâmetros de pesquisa e ordenação do JSP
+        // RECEBE PARAMETROS DO FORMULÁRIO DE PESQUISA E ORDENACAO
         String email = request.getParameter("email");
         String tipoOrdenacao = request.getParameter("tipoOrdenacao");
 
-        // Instancia DAO, filtro e a lista de resultados
+        // CRIA OBJETOS NECESSÁRIOS: DAO, FILTRO E LISTA DE RESULTADOS
         AdmDAO admDAO = new AdmDAO();
         AdministradorFiltro administradorFiltro = new AdministradorFiltro();
         List<Administrador> adms = new ArrayList<>();
 
         try {
-            // Pesquisa por e-mail se informado
+            // SE EMAIL FOR INFORMADO, FAZ A BUSCA POR EMAIL
             if (email != null && !email.trim().isEmpty()) {
                 Administrador adm = admDAO.buscarPorEmail(email);
                 if (adm == null) {
+                    // SE NAO ENCONTRAR, MENSAGEM DE ERRO
                     request.setAttribute("mensagem", "Não foi encontrado nenhum administrador com esse email, digite novamente.");
                 } else {
+                    // SE ENCONTRAR, COLOCA NA LISTA E PASSA PARA O JSP
                     List<Administrador> lista = new ArrayList<>();
                     lista.add(adm);
                     adms = lista;
@@ -62,7 +60,7 @@ public class BuscarAdmServlet extends HttpServlet {
                     request.setAttribute("adms", adms);
                 }
             } else {
-                // Lista todos os pagamentos se não houver pesquisa por ID
+                // SE EMAIL NAO FOR INFORMADO, LISTA TODOS OS ADMINISTRADORES
                 adms = admDAO.listar();
                 if (adms == null || adms.isEmpty()) {
                     request.setAttribute("mensagem", "Não foi encontrado nenhum administrador");
@@ -70,7 +68,7 @@ public class BuscarAdmServlet extends HttpServlet {
                     request.setAttribute("adms", adms);
                 }
 
-                // Ordena a lista de administradores caso tipoOrdenacao seja informado
+                // SE HOUVER PARAMETRO DE ORDENACAO, ORDENA A LISTA
                 if (tipoOrdenacao != null && !tipoOrdenacao.isEmpty() && adms != null && !adms.isEmpty()) {
                     if (tipoOrdenacao.equals("idCrescente")) {
                         adms = administradorFiltro.OrdenarIdCrece(adms);
@@ -82,21 +80,21 @@ public class BuscarAdmServlet extends HttpServlet {
                         adms = administradorFiltro.OrdenarEmailZa(adms);
                     }
                 }
-                // Define a lista de administradores como atributo do request
+                // PASSA A LISTA ORDENADA (OU ORIGINAL) PARA O JSP
                 request.setAttribute("adms", adms);
             }
         } catch (Exception e) {
-            // Trata erros inesperados
+            // TRATA ERROS INESPERADOS, MOSTRA NO CONSOLE E PASSA MENSAGEM PARA O JSP
             e.printStackTrace();
             request.setAttribute("mensagemBusca", "Erro inesperado ao acessar o banco de dados.");
         }
 
-        // Encaminha para o JSP correspondente
+        // ENCAMINHA PARA O JSP RESPONSÁVEL PELO CRUD
         RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/Adm/crudAdm.jsp");
         dispatcher.forward(request, response);
     }
 
-    // 4. doPost agora chama o doGet (para o formulário de filtro/busca funcionar)
+    // DOPOST CHAMA DOGET PRA FORMULARIO DE FILTRO FUNCIONAR SEM PRECISAR REPETIR CÓDIGO
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

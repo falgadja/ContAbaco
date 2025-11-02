@@ -1,7 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%-- Mantive a taglib fmt por precaução, mas ela não é usada abaixo. --%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -12,7 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
     <link rel="stylesheet" href="<%= request.getContextPath() %>/css/crud.css">
-
 </head>
 <body>
 <div class="esquerda">
@@ -34,7 +31,7 @@
             <a href="${pageContext.request.contextPath}/funcionarios" class="botao selecionado"><i class="fa-solid fa-user-tie"></i> Funcionários</a>
             <a href="${pageContext.request.contextPath}/planos" class="botao"><i class="fa-solid fa-clipboard-list"></i> Planos</a>
             <a href="${pageContext.request.contextPath}/pagamento" class="botao"><i class="fa-solid fa-credit-card"></i> Pagamento</a>
-            <a href="${pageContext.request.contextPath}/endereco" class="botao"><i class="fa-solid fa-user-tie"></i> Endereços</a>
+            <a href="${pageContext.request.contextPath}/endereco" class="botao"><i class="fa-solid fa-location-dot"></i> Endereços</a>
         </div>
 
         <div class="sair">
@@ -48,24 +45,24 @@
         <div class="titulos">
             <div>
                 <div id="AR">Área Restrita</div>
-                <div id="CRUD">CRUD</div>
+                <div id="CRUD">Funcionários</div>
             </div>
         </div>
 
         <div class="adicionador">
-            <button id="openModal" class="botao-add" type="button">
+            <button id="openModal" class="botao-add">
                 <i class="fa-solid fa-plus"></i> Adicionar Novo
             </button>
         </div>
 
         <form action="${pageContext.request.contextPath}/funcionarios" method="get" class="filtros">
-            <label for="nome">Buscar por nome:</label>
-            <input type="text" name="nome" id="nome" placeholder="Digite o nome do fúncionário" value="${param.nome}">
+            <label for="nome">Nome:</label>
+            <input type="text" name="nome" id="nome" placeholder="Digite o nome" value="${param.nome}">
 
             <label for="idEmpresa">ID da empresa:</label>
-            <input type="number" name="idEmpresa" id="idEmpresa" placeholder="Digite o ID da empresa" value="${param.idEmpresa}">
+            <input type="number" name="idEmpresa" id="idEmpresa" placeholder="Digite o ID" value="${param.idEmpresa}">
 
-            <label for="tipoOrdenacao">Ordenar por:</label>
+            <label for="tipoOrdenacao">Ordenar:</label>
             <select name="tipoOrdenacao" id="tipoOrdenacao">
                 <option value="">-- Nenhum --</option>
                 <option value="idCrescente" ${param.tipoOrdenacao == 'idCrescente' ? 'selected' : ''}>ID Crescente</option>
@@ -83,7 +80,6 @@
 
         <div class="tabela func-style">
             <div class="tabela-container">
-
                 <c:choose>
                     <c:when test="${not empty funcionarios}">
                         <table>
@@ -97,7 +93,7 @@
                                 <th>Senha</th>
                                 <th>ID Setor</th>
                                 <th>ID Empresa</th>
-                                <th class="acoes-col">Ações</th>
+                                <th>Ações</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -106,26 +102,18 @@
                                     <td>${f.id}</td>
                                     <td>${f.nome}</td>
                                     <td>${f.sobrenome}</td>
-                                    <td>
-                                            <%-- Assumindo que o objeto Funcionario tem o atributo dataNascimentoFormatada
-                                                 que já retorna a data no formato desejado (e.g., dd/MM/yyyy). --%>
-                                        **${f.dataNascimentoFormatada}**
-                                    </td>
+                                    <td>${f.dataNascimentoFormatada}</td>
                                     <td>${f.email}</td>
                                     <td>${f.senha}</td>
                                     <td>${f.idSetor}</td>
                                     <td>${f.idEmpresa}</td>
                                     <td class="acoes">
-                                        <button class="btn" title="Editar"
-                                                onclick="abrirModalEditar(${f.id})">
+                                        <button class="btn" title="Editar" onclick="abrirModalEditar(${f.id})">
                                             <i class="fa-solid fa-pen"></i>
                                         </button>
-
-                                        <form action="${pageContext.request.contextPath}/funcionarios-delete" method="post" style="display: inline;" onsubmit="return confirm('Deseja realmente excluir este funcionário?');">
+                                        <form action="${pageContext.request.contextPath}/funcionarios-delete" method="post" style="display:inline;" onsubmit="return confirm('Deseja realmente excluir este funcionário?');">
                                             <input type="hidden" name="id" value="${f.id}">
-                                            <button class="btn" title="Excluir" type="submit">
-                                                <i class="fa-solid fa-trash"></i>
-                                            </button>
+                                            <button class="btn" type="submit" title="Excluir"><i class="fa-solid fa-trash"></i></button>
                                         </form>
                                     </td>
                                 </tr>
@@ -134,68 +122,61 @@
                         </table>
                     </c:when>
                     <c:otherwise>
-                        <p style="padding:10px 6px; color:#666;">Nenhum funcionário cadastrado (ou encontrado no filtro).</p>
+                        <p style="padding:10px 6px; color:#666;">Nenhum funcionário encontrado.</p>
                     </c:otherwise>
                 </c:choose>
             </div>
 
-            <div class="in-table-modal" id="inTableModal" role="dialog" aria-hidden="true"
-                 aria-label="Formulário do Funcionário">
-                <button class="modal-close" id="modalClose" title="Fechar"><i
-                        class="fa-solid fa-xmark"></i></button>
-                <iframe id="modalFrame" src="" name="modalFrame"
-                        title="Formulário Cadastrar/Atualizar Funcionário"></iframe>
+            <div class="in-table-modal" id="inTableModal" role="dialog" aria-hidden="true">
+                <button class="modal-close" id="modalClose"><i class="fa-solid fa-xmark"></i></button>
+                <iframe id="modalFrame" src=""></iframe>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    (function () {
-        const modal = document.getElementById('inTableModal');
-        const frame = document.getElementById('modalFrame');
-        const openBtn = document.getElementById('openModal');
-        const closeBtn = document.getElementById('modalClose');
+    // Pegando os elementos do modal e do iframe
+    const modal = document.getElementById('inTableModal');
+    const frame = document.getElementById('modalFrame');
+    const openBtn = document.getElementById('openModal');
+    const closeBtn = document.getElementById('modalClose');
 
-        if (!modal || !frame || !openBtn || !closeBtn) {
-            console.error('Elementos do modal não encontrados.');
-            return;
-        }
+    // Quando clica no botão "Adicionar Novo"
+    openBtn.addEventListener('click', () => {
+        // Define a URL do iframe para o formulário de cadastro
+        frame.src = '${pageContext.request.contextPath}/funcionarios-create';
+        // Abre o modal
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden', 'false');
+    });
 
-        // Abrir Modal de Adicionar (aponta para /funcionarios-create)
-        openBtn.addEventListener('click', function () {
-            frame.src = '${pageContext.request.contextPath}/funcionarios-create';
-            modal.classList.add('open');
-            modal.setAttribute('aria-hidden', 'false');
-        });
+    // Quando clica no "X" do modal
+    closeBtn.addEventListener('click', () => {
+        // Fecha o modal
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden', 'true');
+        // Limpa o iframe
+        frame.src = 'about:blank';
+        // Recarrega a página pra atualizar a tabela
+        window.location.reload();
+    });
 
-        // Fechar Modal
-        function closeModal() {
+    // Fecha o modal quando aperta ESC
+    document.addEventListener('keydown', e => {
+        if(e.key === 'Escape' && modal.classList.contains('open')) {
             modal.classList.remove('open');
             modal.setAttribute('aria-hidden', 'true');
             frame.src = 'about:blank';
-
-            // Recarrega a página para mostrar dados atualizados
             window.location.reload();
         }
+    });
 
-        closeBtn.addEventListener('click', closeModal);
-        document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape' && modal.classList.contains('open')) {
-                closeModal();
-            }
-        });
-
-        // Abrir Modal de Editar (aponta para /funcionarios-update)
-        window.abrirModalEditar = function (id) {
-            if (!id) return;
-            frame.src = '${pageContext.request.contextPath}/funcionarios-update?id=' + id;
-            modal.classList.add('open');
-            modal.setAttribute('aria-hidden', 'false');
-        };
-
-    })();
+    // Função chamada quando clica no botão "Editar" de um funcionário
+    window.abrirModalEditar = id => {
+        // Define o iframe pra abrir o formulário de edição com o ID correto
+        frame.src = '${pageContext.request.contextPath}/funcionarios-update?id=' + id;
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden', 'false');
+    };
 </script>
-
-</body>
-</html>

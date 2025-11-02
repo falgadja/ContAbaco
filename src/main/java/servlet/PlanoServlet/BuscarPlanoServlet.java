@@ -1,6 +1,6 @@
 package servlet.PlanoServlet;
 
-// Imports da classe
+// IMPORTS NECESSÁRIOS: DAO, FILTRO, SERVLET, SESSION, MODEL E STREAMS
 import dao.PlanoDAO;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -18,56 +18,51 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Servlet responsável por buscar e listar planos.
- * Permite pesquisa por nome e ordenação da lista de resultados,
- * Lida também com mensagens temporárias armazenadas na sessão (Padrão PRG).
+ * SERVLET RESPONSÁVEL POR BUSCAR E LISTAR PLANOS
+ * PERMITE PESQUISA POR NOME E ORDENAR RESULTADOS
+ * EXIBE MENSAGENS TEMPORÁRIAS (PADRÃO PRG)
  */
-
 @WebServlet("/planos")
 public class BuscarPlanoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Leitura de mensagens temporárias da sessão (Padrão PRG)
+        // PEGANDO MENSAGENS TEMPORÁRIAS DA SESSÃO (PADRÃO PRG)
         HttpSession session = request.getSession();
         String mensagem = (String) session.getAttribute("mensagem");
         if (mensagem != null) {
-            request.setAttribute("mensagem", mensagem);
-            session.removeAttribute("mensagem");
+            request.setAttribute("mensagem", mensagem); // COLOCA MENSAGEM NO REQUEST
+            session.removeAttribute("mensagem"); // REMOVE DA SESSÃO PRA NÃO REPETIR
         }
 
-        // Recebe parâmetros de pesquisa e ordenação do JSP
+        // RECEBE PARAMETROS DO FORMULÁRIO
         String nome = request.getParameter("nome");
         String tipoOrdenacao = request.getParameter("tipoOrdenacao");
 
-        // Instancia DAO, filtro, mensagem ao JSP e a lista de resultados
+        // CRIA OBJETOS NECESSÁRIOS: DAO, FILTRO, LISTA E MENSAGEM EXIBIÇÃO
         PlanoDAO planoDAO = new PlanoDAO();
         PlanoFiltro planoFiltro = new PlanoFiltro();
         List<Plano> planos = new ArrayList<>();
         String mensagemExibicao = null;
 
         try {
-
-            // Pesquisa por nome se informado
+            // PESQUISA POR NOME SE INFORMADO
             if (nome != null && !nome.trim().isEmpty()) {
                 Plano plano = planoDAO.buscarPorNome(nome);
 
                 if (plano == null) {
                     request.setAttribute("mensagem", "Nenhum plano encontrado com esse nome. Tente novamente.");
                 } else {
-                    // Cria lista com único resultado
+                    // CRIA LISTA COM ÚNICO RESULTADO
                     planos.add(plano);
                     request.setAttribute("mensagem", "Plano encontrado com sucesso.");
                     request.setAttribute("planos", planos);
                 }
             } else {
-
-
-                // Lista todos os planos se não houver pesquisa por nome
+                // LISTA TODOS OS PLANOS SE NÃO HOUVER PESQUISA POR NOME
                 List<Plano> listaCompleta = planoDAO.listar();
                 planos = listaCompleta;
-
 
                 if (planos.isEmpty()) {
                     mensagemExibicao = "Não foi encontrado nenhum registrado no sistema.";
@@ -75,8 +70,7 @@ public class BuscarPlanoServlet extends HttpServlet {
                     mensagemExibicao = "Foram encontrados " + planos.size() + " planos.";
                 }
 
-
-                // Ordena a lista de planos caso tipoOrdenacao seja informado
+                // ORDENACAO CASO TENHA SIDO ESCOLHIDA
                 if (tipoOrdenacao != null && !tipoOrdenacao.isEmpty() && !planos.isEmpty()) {
                     if (tipoOrdenacao.equals("idCrescente")) {
                         planos = planoFiltro.OrdenarIdCrece(planos);
@@ -94,15 +88,16 @@ public class BuscarPlanoServlet extends HttpServlet {
                 }
             }
 
-            // Define a lista de planos como atributo do request
+            // DEFINE LISTA FINAL COMO ATRIBUTO DO REQUEST
             request.setAttribute("planos", planos);
 
         } catch (Exception e) {
+            // TRATA ERROS INESPERADOS
             e.printStackTrace();
             request.setAttribute("mensagem", "Erro inesperado ao acessar o banco de dados.");
         }
 
-        // Encaminha para o JSP correspondente
+        // ENCAMINHA PARA O JSP RESPONSÁVEL PELO CRUD DE PLANOS
         RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/Plano/crudPlano.jsp");
         dispatcher.forward(request, response);
     }
@@ -110,6 +105,7 @@ public class BuscarPlanoServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // REDIRECIONA POST PARA O MESMO FLUXO DO GET
         doGet(request, response);
     }
 }
