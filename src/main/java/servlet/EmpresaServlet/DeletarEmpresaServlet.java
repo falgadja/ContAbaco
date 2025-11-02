@@ -44,11 +44,18 @@ public class DeletarEmpresaServlet extends HttpServlet {
                 int id = Integer.parseInt(idParametro);
                 endereco = enderecoDAO.buscarPorEmpresa(id);
 
-                if (enderecoDAO.deletar(endereco.getId())>0 && empresaDAO.deletar(id)>0) {
+                if (endereco != null) {
+                    // Deleta primeiro o endereço
+                    enderecoDAO.deletar(endereco.getId());
+                }
+
+// Agora deleta a empresa
+                if (empresaDAO.deletar(id) > 0) {
                     mensagem = "Empresa deletada com sucesso!";
                 } else {
                     mensagem = "Não foi possível deletar a empresa.";
                 }
+
             }
         } catch (NumberFormatException nfe) {
             mensagem = "ID inválido.";

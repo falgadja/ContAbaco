@@ -9,142 +9,17 @@
     <link rel="icon" href="${pageContext.request.contextPath}/img/logo%20azul%20bonito%20sem%20fundo%202%20(1).png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
-
-    <style>
-        /* ======== ESTILIZAÇÃO DO ENTORNO ======== */
-        :root { --cor_falgadja_1:#1800CC; --cor_falgadja_2:#0C0066; --cor_sair:#b71c1c; --branco:#ffffff; }
-        *{ box-sizing:border-box; margin:0; padding:0; font-family:'Poppins',system-ui,-apple-system,'Segoe UI',Roboto,Arial; }
-        html,body{ height:100%; width:100%; background:var(--branco); color:var(--cor_falgadja_1); }
-
-        .esquerda{ display:flex; height:100vh; width:100%; overflow:hidden; }
-        .sidebar{ width:255px; padding:28px 20px; display:flex; flex-direction:column; gap:18px; }
-        .aplicativo{ display:flex; gap:15px; align-items:center; }
-        .logo{ width:56px; height:56px; border-radius:10px; border:2px solid var(--cor_falgadja_1); display:flex; align-items:center; justify-content:center; overflow:hidden; }
-        .logo img{ max-width:100%; max-height:100%; display:block; }
-        .titulo_app{ font-weight:700; color:var(--cor_falgadja_1); font-size:20px; }
-        .subtitulo_app{ font-size:12px; color:grey; margin-top:2px; }
-
-        .linha{ height:6px; border-radius:30px; background:linear-gradient(90deg,var(--cor_falgadja_1),var(--cor_falgadja_2)); width:80%; margin:6px 0; }
-
-        .nav{ display:flex; flex-direction:column; gap:12px; margin-top:10px; }
-        .botao{ display:flex; align-items:center; gap:12px; padding:12px 18px; border-radius:10px; border:2px solid var(--cor_falgadja_1); background:transparent; color:var(--cor_falgadja_1); font-weight:600; width:190px; cursor:pointer; text-decoration:none; }
-        .botao.selecionado{ background:linear-gradient(180deg,var(--cor_falgadja_1),var(--cor_falgadja_2)); color:#fff; border-color:transparent; box-shadow:0 6px 18px rgba(12,0,102,0.25); }
-
-        .separator{ width:4px; background:var(--cor_falgadja_1); }
-
-        .main{ flex:1; padding:36px 48px; overflow:auto; }
-
-        .titulos{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
-        #AR{ font-size:30px; font-weight:800; color:var(--cor_falgadja_1); }
-        #CRUD{ color:grey; font-weight:600; margin-top:-10px; }
-
-        .adicionador{ margin-top:28px; }
-        .botao-add{ padding:12px 18px; border-radius:12px; background:linear-gradient(180deg,var(--cor_falgadja_1),var(--cor_falgadja_2)); color:#fff; font-weight:700; border:0; cursor:pointer; display:inline-flex; align-items:center; gap:10px; text-decoration:none; }
-
-        .sair{ margin-top:auto;}
-        .botao-sair{padding:12px 18px; border-radius:12px; background:var(--cor_sair); color:white; border:0; cursor:pointer; font-weight:700; width:100%; display:inline-flex; align-items:center; gap:10px;}
-
-        .filtros {
-            margin-top: 24px;
-            margin-bottom: -10px;
-            padding: 16px;
-            background: #fafaff;
-            border-radius: 12px;
-            border: 2px solid rgba(24, 0, 204, 0.1);
-            display: flex;
-            flex-wrap: nowrap;
-            overflow-x: auto;
-            overflow-y: hidden;
-            padding-bottom: 16px;
-            align-items: center;
-            gap: 16px;
-            width: calc(100% - 32px);
-            max-width: 1180px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .filtros label { font-weight: 600; color: var(--cor_falgadja_1); font-size: 14px; margin-right: -8px; }
-        .filtros input[type="text"], .filtros input[type="number"], .filtros select {
-            padding: 10px 14px; border-radius: 10px; border: 2px solid rgba(24,0,204,0.18); outline: none; font-size:14px; color:#222;
-        }
-        .filtros input[type="text"] { width:280px; }
-        .filtros input[type="number"] { width:80px; }
-        .filtros button {
-            padding: 10px 24px; border-radius:10px; background:linear-gradient(180deg, var(--cor_falgadja_1), var(--cor_falgadja_2));
-            color:#fff; font-weight:700; border:0; cursor:pointer; font-size:14px; margin-left:auto;
-        }
-
-        .mensagem {
-            margin: 16px auto 0 auto;
-            width: calc(100% - 32px);
-            max-width: 1180px;
-            color: var(--cor_falgadja_1);
-            font-weight: 600;
-            padding: 10px 16px;
-            background: #f0f4ff;
-            border: 1px solid #c8d3ff;
-            border-radius: 10px;
-            text-align: center;
-        }
-
-        .tabela {
-            margin-top:20px;
-            border:3px solid rgba(24,0,204,0.95);
-            border-radius:14px;
-            padding:10px;
-            width: calc(100% - 32px);
-            max-width:1180px;
-            margin-left:auto; margin-right:auto;
-            box-shadow:0 10px 22px rgba(12,0,102,0.08);
-            position:relative;
-            background:#fff;
-            overflow: visible;
-        }
-
-        .tabela-container { width:100%; max-height:calc(100vh - 260px); overflow:auto; padding:10px; }
-
-        .empresa-style table { width:auto; table-layout:auto; border-collapse:collapse; font-size:14px; white-space:nowrap; }
-        .empresa-style thead th, .empresa-style tbody td {
-            padding:14px 16px; overflow:visible; text-overflow:clip; white-space:nowrap;
-            font-weight:600; text-align:center;
-        }
-        .empresa-style tbody tr:nth-child(even){ background:#fafaff; }
-        .empresa-style tbody tr:hover{ background:rgba(24,0,204,0.04); }
-
-        .empresa-style th.acoes-col, .empresa-style td.acoes {
-            position:sticky; right:0; background:#fff; box-shadow:-8px 0 12px rgba(12,0,102,0.06);
-            min-width:170px; padding:0 8px; vertical-align:middle; text-align:center; overflow:visible; white-space:nowrap;
-        }
-
-        .empresa-style td.acoes .btn {
-            display:inline-flex; align-items:center; justify-content:center;
-            width:32px; height:32px; border-radius:6px; border:1.5px solid var(--cor_falgadja_1);
-            background:transparent; color: var(--cor_falgadja_1); cursor:pointer; transition:.2s; margin:0 4px;
-        }
-        .empresa-style td.acoes .btn:hover { background: var(--cor_falgadja_1); color: #fff; }
-
-        .in-table-modal {
-            position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%);
-            width: min(80%, 900px); min-height: 460px; max-height: calc(100% - 60px);
-            border-radius: 18px; border: 3px solid rgba(24, 0, 204, 0.95); background: #fff;
-            box-shadow: 0 18px 40px rgba(12, 0, 102, 0.12); z-index: 1000; display: none; overflow: hidden; padding: 24px 36px;
-        }
-        .in-table-modal.open { display: block; }
-        .in-table-modal .modal-close {
-            position: absolute; top: 10px; right: 10px; width: 44px; height: 44px; border-radius: 50%;
-            background: #fff; border: 2px solid rgba(24, 0, 204, 0.15);
-            display: flex; align-items:center; justify-content:center; cursor:pointer; z-index:60;
-            box-shadow: 0 6px 14px rgba(24,0,204,0.08);
-        }
-        .in-table-modal .modal-close i { color: var(--cor_falgadja_1); }
-        .in-table-modal iframe { width:100%; height:100%; border:0; display:block; background:transparent; min-height:460px; }
-    </style>
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/crud.css">
 </head>
 <body>
+
 <div class="esquerda">
+    <!-- Sidebar da área restrita -->
     <div class="sidebar">
         <div class="aplicativo">
-            <div class="logo"><img src="${pageContext.request.contextPath}/img/CelularFotoContabaco.png" alt="logo"></div>
+            <div class="logo">
+                <img src="${pageContext.request.contextPath}/img/CelularFotoContabaco.png" alt="logo">
+            </div>
             <div>
                 <div class="titulo_app">Contábaco</div>
                 <div class="subtitulo_app">adm</div>
@@ -152,15 +27,17 @@
         </div>
         <div class="linha"></div>
 
+        <!-- Navegação principal -->
         <div class="nav">
             <a href="${pageContext.request.contextPath}/adm" class="botao"><i class="fa-solid fa-crown"></i> Adm</a>
             <a href="${pageContext.request.contextPath}/empresas" class="botao selecionado"><i class="fa-solid fa-building"></i> Empresas</a>
             <a href="${pageContext.request.contextPath}/funcionarios" class="botao"><i class="fa-solid fa-user-tie"></i> Funcionários</a>
             <a href="${pageContext.request.contextPath}/planos" class="botao"><i class="fa-solid fa-clipboard-list"></i> Planos</a>
             <a href="${pageContext.request.contextPath}/pagamento" class="botao"><i class="fa-solid fa-credit-card"></i> Pagamento</a>
-            <a href="${pageContext.request.contextPath}/endereco" class="botao"><i class="fa-solid fa-user-tie"></i> Endereços</a>
+            <a href="${pageContext.request.contextPath}/endereco" class="botao"><i class="fa-solid fa-location-dot"></i> Endereços</a>
         </div>
 
+        <!-- Botão de sair -->
         <div class="sair">
             <button class="botao-sair" onclick="location.href='${pageContext.request.contextPath}/logout'">
                 <i class="fa-solid fa-right-from-bracket"></i> Sair
@@ -169,6 +46,7 @@
     </div>
 
     <div class="main">
+        <!-- Cabeçalho da seção -->
         <div class="titulos">
             <div>
                 <div id="AR">Área Restrita</div>
@@ -176,40 +54,48 @@
             </div>
         </div>
 
+        <!-- Botão para adicionar nova empresa -->
         <div class="adicionador">
-            <button id="openModal" class="botao-add" type="button">
+            <button id="abrirModalCriar" class="botao-add" type="button">
                 <i class="fa-solid fa-plus"></i> Adicionar Novo
             </button>
         </div>
 
+        <!-- Filtros de busca -->
         <form action="${pageContext.request.contextPath}/empresas" method="get" class="filtros">
-            <label for="nome">Buscar por Nome:</label>
-            <input type="text" name="nome" id="nome" placeholder="Digite o nome da empresa" value="${param.nome}">
-            <label for="min">Funcionários (min):</label>
-            <input type="number" name="min" id="min" value="${param.min}" style="width: 80px;">
-            <label for="max"> (max):</label>
-            <input type="number" name="max" id="max" value="${param.max}" style="width: 80px;">
-            <label for="tipoOrdenacao">Ordenar por:</label>
-            <select name="tipoOrdenacao" id="tipoOrdenacao">
+            <label for="filtroNome">Buscar por Nome:</label>
+            <input type="text" name="filtroNome" id="filtroNome" placeholder="Digite o nome da empresa" value="${param.filtroNome}">
+
+            <label for="filtroMinFuncionarios">Funcionários (min):</label>
+            <input type="number" name="filtroMinFuncionarios" id="filtroMinFuncionarios" value="${param.filtroMinFuncionarios}" style="width: 80px;">
+
+            <label for="filtroMaxFuncionarios">(max):</label>
+            <input type="number" name="filtroMaxFuncionarios" id="filtroMaxFuncionarios" value="${param.filtroMaxFuncionarios}" style="width: 80px;">
+
+            <label for="ordenacao">Ordenar por:</label>
+            <select name="ordenacao" id="ordenacao">
                 <option value="">-- Nenhum --</option>
-                <option value="idCrescente" ${param.tipoOrdenacao == 'idCrescente' ? 'selected' : ''}>ID Crescente</option>
-                <option value="idDecrescente" ${param.tipoOrdenacao == 'idDecrescente' ? 'selected' : ''}>ID Decrescente</option>
-                <option value="Az" ${param.tipoOrdenacao == 'Az' ? 'selected' : ''}>Nome (A-Z)</option>
-                <option value="Za" ${param.tipoOrdenacao == 'Za' ? 'selected' : ''}>Nome (Z-A)</option>
-                <option value="qtndFuncionarioCrescente" ${param.tipoOrdenacao == 'qtndFuncionarioCrescente' ? 'selected' : ''}>Qtd. Func. Crescente</option>
-                <option value="qtndFuncionarioDecrescente" ${param.tipoOrdenacao == 'qtndFuncionarioDecrescente' ? 'selected' : ''}>Qtd. Func. Decrescente</option>
+                <option value="idCrescente" ${param.ordenacao == 'idCrescente' ? 'selected' : ''}>ID Crescente</option>
+                <option value="idDecrescente" ${param.ordenacao == 'idDecrescente' ? 'selected' : ''}>ID Decrescente</option>
+                <option value="nomeAZ" ${param.ordenacao == 'nomeAZ' ? 'selected' : ''}>Nome (A-Z)</option>
+                <option value="nomeZA" ${param.ordenacao == 'nomeZA' ? 'selected' : ''}>Nome (Z-A)</option>
+                <option value="funcionariosCrescente" ${param.ordenacao == 'funcionariosCrescente' ? 'selected' : ''}>Qtd. Func. Crescente</option>
+                <option value="funcionariosDecrescente" ${param.ordenacao == 'funcionariosDecrescente' ? 'selected' : ''}>Qtd. Func. Decrescente</option>
             </select>
+
             <button type="submit">Filtrar</button>
         </form>
 
+        <!-- Mensagem de feedback (sucesso, erro, etc.) -->
         <c:if test="${not empty mensagem}">
             <p class="mensagem">${mensagem}</p>
         </c:if>
 
+        <!-- Tabela de empresas -->
         <div class="tabela empresa-style">
             <div class="tabela-container">
                 <c:choose>
-                    <c:when test="${not empty empresas}">
+                    <c:when test="${not empty listaEmpresas}">
                         <table>
                             <thead>
                             <tr>
@@ -219,42 +105,41 @@
                                 <th>Email</th>
                                 <th>Senha</th>
                                 <th>ID Plano</th>
-                                <th>Qtd. Func.</th>
+                                <th>Qtd Funcionarios</th>
                                 <th class="acoes-col">Ações</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <c:forEach var="e" items="${empresas}">
+                            <!-- Loop de exibição de empresas -->
+                            <c:forEach var="empresa" items="${listaEmpresas}">
                                 <tr>
-                                    <td>${e.id}</td>
-                                    <td>${e.cnpj}</td>
-                                    <td>${e.nome}</td>
-                                    <td>${e.email}</td>
-                                    <td>${e.senha}</td>
-                                    <td>${e.idPlano}</td>
-                                    <td>${e.qntdFuncionarios}</td>
+                                    <td>${empresa.id}</td>
+                                    <td>${empresa.cnpj}</td>
+                                    <td>${empresa.nome}</td>
+                                    <td>${empresa.email}</td>
+                                    <td>${empresa.senha}</td>
+                                    <td>${empresa.idPlano}</td>
+                                    <td>${empresa.qntdFuncionarios}</td>
                                     <td class="acoes">
-                                    <td class="acoes">
-                                        <!-- Botão Detalhes (modal) -->
-                                        <button class="btn" title="Detalhes" onclick="abrirModalDetalhes(${e.id})">
+                                        <!-- Botão de Detalhes -->
+                                        <button class="btn" title="Detalhes" onclick="abrirModalDetalhes(${empresa.id})">
                                             <i class="fa-solid fa-info"></i>
                                         </button>
 
-                                        <!-- Botão Editar (modal) -->
-                                        <button class="btn" title="Editar" onclick="abrirModalEditar(${e.id})">
+                                        <!-- Botão de Editar -->
+                                        <button class="btn" title="Editar" onclick="abrirModalEditar(${empresa.id})">
                                             <i class="fa-solid fa-pen"></i>
                                         </button>
 
-                                        <!-- Botão Excluir (form POST) -->
-                                        <form action="${pageContext.request.contextPath}/entidade-delete" method="post" style="display:inline;"
-                                              onsubmit="return confirm('Deseja realmente excluir este registro?');">
-                                            <input type="hidden" name="id" value="${e.id}">
+                                        <!-- Botão de Excluir -->
+                                        <form action="${pageContext.request.contextPath}/empresa-delete" method="post" style="display:inline;"
+                                              onsubmit="return confirm('Deseja realmente excluir esta empresa?');">
+                                            <input type="hidden" name="id" value="${empresa.id}">
                                             <button class="btn" title="Excluir" type="submit">
                                                 <i class="fa-solid fa-trash"></i>
                                             </button>
                                         </form>
                                     </td>
-
                                 </tr>
                             </c:forEach>
                             </tbody>
@@ -266,51 +151,57 @@
                 </c:choose>
             </div>
 
-            <div class="in-table-modal" id="inTableModal">
-                <button class="modal-close" id="modalClose" title="Fechar"><i class="fa-solid fa-xmark"></i></button>
-                <iframe id="modalFrame" src="" width="100%" height="100%"></iframe>
+            <!-- Modal reutilizável -->
+            <div class="in-table-modal" id="modalTabela">
+                <button class="modal-close" id="botaoFecharModal" title="Fechar">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <iframe id="iframeModal" src="" width="100%" height="100%"></iframe>
             </div>
         </div>
     </div>
 </div>
 
 <script>
+    // Script para controle dos modais da tabela
     (function () {
-        const modal = document.getElementById('inTableModal');
-        const frame = document.getElementById('modalFrame');
-        const botaoAbrir = document.getElementById('openModal');
-        const botaoFechar = document.getElementById('modalClose');
+        const modal = document.getElementById('modalTabela');
+        const frame = document.getElementById('iframeModal');
+        const botaoAbrir = document.getElementById('abrirModalCriar');
+        const botaoFechar = document.getElementById('botaoFecharModal');
 
+        // Caso algum elemento não exista, mostra erro no console
         if (!modal || !frame || !botaoAbrir || !botaoFechar) {
-            console.error('Elementos do modal não encontrados.');
+            console.error('Algum elemento do modal não foi encontrado.');
             return;
         }
 
-        // Abrir Modal de Adicionar
+        // Abre o modal para cadastrar nova empresa
         botaoAbrir.addEventListener('click', function () {
-            frame.src = '${pageContext.request.contextPath}/pagamento-create';
+            frame.src = '${pageContext.request.contextPath}/empresa-create';
             modal.classList.add('open');
             modal.setAttribute('aria-hidden', 'false');
         });
 
-        // Fechar Modal
+        // Função que fecha o modal e atualiza a página
         function fecharModal() {
             modal.classList.remove('open');
             modal.setAttribute('aria-hidden', 'true');
             frame.src = 'about:blank';
-            window.location.reload(); // Recarrega a página para atualizar os dados
+            window.location.reload(); // Atualiza a tabela automaticamente
         }
 
+        // Fecha o modal no clique do botão “X”
         botaoFechar.addEventListener('click', fecharModal);
 
-        // Fechar com a tecla Escape
+        // Permite fechar com a tecla “ESC”
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape' && modal.classList.contains('open')) {
                 fecharModal();
             }
         });
 
-        // Abrir Modal de Detalhes
+        // Abre o modal de detalhes da empresa
         window.abrirModalDetalhes = function (id) {
             if (!id) return;
             frame.src = '${pageContext.request.contextPath}/empresa-detalhes?id=' + id;
@@ -318,10 +209,10 @@
             modal.setAttribute('aria-hidden', 'false');
         };
 
-        // Abrir Modal de Editar
+        // Abre o modal de edição da empresa
         window.abrirModalEditar = function (id) {
             if (!id) return;
-            frame.src = '${pageContext.request.contextPath}/pagamento-update?id=' + id;
+            frame.src = '${pageContext.request.contextPath}/empresa-update?id=' + id;
             modal.classList.add('open');
             modal.setAttribute('aria-hidden', 'false');
         };

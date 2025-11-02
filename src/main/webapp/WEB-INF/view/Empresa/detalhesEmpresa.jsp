@@ -1,14 +1,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="model.Empresa, model.Endereco" %>
+<%@ page import="model.Empresa, model.Endereco, model.Funcionario, java.util.List" %>
 
 <%
   Empresa empresa = (Empresa) request.getAttribute("empresa");
   Endereco endereco = (Endereco) request.getAttribute("endereco");
+  List<Funcionario> funcionarios = (List<Funcionario>) request.getAttribute("funcionarios");
 %>
 
 <h2>Detalhes da Empresa</h2>
-<p>Nome: <%= empresa.getNome() %></p>
-<p>CNPJ: <%= empresa.getCnpj() %></p>
+<p><strong>Nome:</strong> <%= empresa.getNome() %></p>
+<p><strong>CNPJ:</strong> <%= empresa.getCnpj() %></p>
 
 <h3>Endereço</h3>
 <% if (endereco != null) { %>
@@ -17,14 +18,20 @@
   <%= endereco.getBairro() %>, <%= endereco.getCidade() %>/<%= endereco.getEstado() %> -
   CEP: <%= endereco.getCep() %>
 </p>
-
-<!-- Botão para atualizar endereço -->
-<form action="<%= request.getContextPath() %>/endereco-update" method="get" style="display:inline;">
-  <input type="hidden" name="id" value="<%= endereco.getId() %>">
-  <button type="submit">Atualizar Endereço</button>
-</form>
-
 <% } else { %>
 <p>Empresa sem endereço cadastrado.</p>
-<a href="<%= request.getContextPath() %>/endereco-create?empresaId=<%= empresa.getId() %>">Inserir Endereço</a>
+<% } %>
+
+<hr>
+
+<h3>Funcionários</h3>
+
+<% if (funcionarios != null && !funcionarios.isEmpty()) { %>
+<ul>
+  <% for (Funcionario f : funcionarios) { %>
+  <li><strong><%= f.getNome() %></strong> — (<%= f.getEmail() %>)</li>
+  <% } %>
+</ul>
+<% } else { %>
+<p>Nenhum funcionário cadastrado nesta empresa.</p>
 <% } %>

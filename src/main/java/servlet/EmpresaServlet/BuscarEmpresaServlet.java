@@ -34,10 +34,11 @@ public class BuscarEmpresaServlet extends HttpServlet {
         // (Você pode adicionar outros tipos de mensagem se precisar, ex: "mensagemDeletar")
 
         // --- Início da sua lógica de filtro (que já estava boa) ---
-        String nome = request.getParameter("nome");
-        String min = request.getParameter("min");
-        String max = request.getParameter("max");
-        String tipoOrdenacao = request.getParameter("tipoOrdenacao");
+        String nome = request.getParameter("filtroNome");
+        String min = request.getParameter("filtroMinFuncionarios");
+        String max = request.getParameter("filtroMaxFuncionarios");
+        String tipoOrdenacao = request.getParameter("ordenacao");
+
         EmpresaDAO empresaDAO = new EmpresaDAO();
         EmpresaFiltro empresaFiltro = new EmpresaFiltro();
         List<Empresa> empresas = new ArrayList<>();
@@ -86,7 +87,8 @@ public class BuscarEmpresaServlet extends HttpServlet {
                         empresas = empresaFiltro.OrdenarQntdFuncionarioDecre(empresas);
                     }
                 }
-                request.setAttribute("empresas", empresas);
+                request.setAttribute("listaEmpresas", empresas);
+
             }
         } catch(NumberFormatException nfe){
             request.setAttribute("mensagem", "Número minímo ou maxímo inválido, digite apenas números inteiros.");

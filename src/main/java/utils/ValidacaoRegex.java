@@ -22,8 +22,15 @@ public class ValidacaoRegex {
     }
 
     public static String verificarCep(String cep) {
+        // Evita erro se cep for nulo ou vazio
+        if (cep == null || cep.isBlank()) {
+            return null;
+        }
 
+        // Remove tudo que não for número
         String numeros = cep.replaceAll("\\D", "");
+
+        // Verifica se tem exatamente 8 dígitos
         Pattern pattern = Pattern.compile("\\d{8}");
         if (pattern.matcher(numeros).matches()) {
             return numeros;
@@ -31,6 +38,7 @@ public class ValidacaoRegex {
             return null;
         }
     }
+
 
     public static boolean verificarSenha(String senha) {
         Pattern pattern = Pattern.compile("^[A-Za-z0-9!@#$%^&*()_\\-+=<>?{}\\[\\]~]{8,}$");

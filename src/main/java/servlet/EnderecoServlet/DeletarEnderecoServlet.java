@@ -51,6 +51,6 @@ public class DeletarEnderecoServlet extends HttpServlet {
 
         // Salva a mensagem na sessão e redireciona para a listagem
         request.getSession().setAttribute("mensagemDeletar", mensagem);
-        response.sendRedirect(request.getContextPath() + "/empresas");
+        response.sendRedirect(request.getContextPath() + "/endereco");
     }
 }

@@ -1,5 +1,6 @@
 package servlet.EnderecoServlet;
 
+import dao.EmpresaDAO;
 import dao.EnderecoDAO;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -7,10 +8,12 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.Empresa;
 import model.Endereco;
 import utils.ValidacaoRegex;
 
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet("/endereco-create")
 public class InserirEnderecoServlet extends HttpServlet {
@@ -18,6 +21,12 @@ public class InserirEnderecoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        // --- NOVO: Buscar todas as empresas ---
+        EmpresaDAO empresaDAO = new EmpresaDAO();
+        List<Empresa> empresas = empresaDAO.listar();
+        request.setAttribute("empresas", empresas);
+        // --- FIM NOVO ---
 
         // Exibe o formulário de cadastro de endereço
         RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/Endereco/cadastrarEndereco.jsp");
@@ -36,9 +45,12 @@ public class InserirEnderecoServlet extends HttpServlet {
         String cep = request.getParameter("cep");
         String numeroStr = request.getParameter("numero");
         String idEmpresaStr = request.getParameter("idEmpresa");
-        String cepValidado = ValidacaoRegex.verificarCep(request.getParameter("cep"));
-        System.out.println("CEP: " + cepValidado+ numeroStr +idEmpresaStr);
 
+        //Validar se o cep é nulo antes de validar com regex
+        String cepValidado = null;
+        if (cep != null && !cep.isBlank()) {
+            cepValidado = ValidacaoRegex.verificarCep(cep);
+        }
         try {
             // Validação de campos obrigatórios
             if (pais == null || estado == null || cidade == null || bairro == null ||
