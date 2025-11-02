@@ -1,0 +1,107 @@
+/* =================================
+   VARIÁVEIS GLOBAIS (DO MODELO)
+   ================================= */
+:root {
+    --cor_falgadja_1: #1800CC;
+    --cor_falgadja_2: #0C0066;
+    --cinza: #666666;
+    --cinza_claro: #f5f5f5;
+    --cinza_borda: rgba(24, 0, 204, 0.18);
+}
+
+/* =================================
+   RESET GLOBAL E FONTES
+   ================================= */
+* {
+    box-sizing: border-box;
+    font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
+    margin: 0; padding: 0;
+}
+
+/* =================================
+   CORPO DA PÁGINA
+   ================================= */
+body {
+    height: 100%; width: 100%;
+    background: transparent;
+    color: var(--cor_falgadja_1); 
+    padding: 24px 36px;  
+    overflow-y: auto;  
+}
+
+/* =================================
+   TÍTULOS (h2, h3)
+   ================================= */
+h2 {
+    font-size: 30px; 
+    font-weight: 800;
+    color: var(--cor_falgadja_1);
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--cor_falgadja_1);
+    margin-top: 24px; 
+    margin-bottom: 12px;
+    border-bottom: 2px solid var(--cinza_borda); 
+    padding-bottom: 6px;
+}
+
+/* =================================
+   CONTEÚDO (Parágrafos)
+   ================================= */
+p {
+    font-size: 15px;
+    color: var(--cinza);  
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+ p strong {
+    color: var(--cor_falgadja_1);  
+    font-weight: 600;
+    margin-right: 6px;
+}
+
+/* =================================
+   DIVISOR
+   ================================= */
+hr {
+    border: 0;
+    height: 2px;
+    background-color: var(--cinza_borda);
+    margin: 24px 0;
+}
+
+/* =================================
+   LISTA DE FUNCIONÁRIOS (ul, li)
+   ================================= */
+ul {
+    list-style: none;  
+    padding-left: 0;  
+}
+
+li {
+     background: var(--cinza_claro); 
+    border: 2px solid var(--cinza_borda);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+    font-size: 15px;
+    color: var(--cinza);
+    
+     display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;  
+    gap: 10px;
+}
+
+li strong {
+    color: var(--cor_falgadja_1);
+    font-weight: 700;
+    font-size: 16px;
+}
