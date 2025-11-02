@@ -50,34 +50,36 @@ public class BuscarAdmServlet extends HttpServlet {
                 Administrador adm = admDAO.buscarPorEmail(email);
                 if (adm == null) {
                     // SE NAO ENCONTRAR, MENSAGEM DE ERRO
-                    request.setAttribute("mensagem", "Não foi encontrado nenhum administrador com esse email, digite novamente.");
+                    request.setAttribute("mensagem", "Nenhum administrador encontrado com esse email. Tente novamente.");
                 } else {
                     // SE ENCONTRAR, COLOCA NA LISTA E PASSA PARA O JSP
                     List<Administrador> lista = new ArrayList<>();
                     lista.add(adm);
                     adms = lista;
-                    request.setAttribute("mensagem", "Administrador encontrado.");
+                    request.setAttribute("mensagem", "Administrador encontrado com sucesso.");
                     request.setAttribute("adms", adms);
                 }
             } else {
                 // SE EMAIL NAO FOR INFORMADO, LISTA TODOS OS ADMINISTRADORES
                 adms = admDAO.listar();
                 if (adms == null || adms.isEmpty()) {
-                    request.setAttribute("mensagem", "Não foi encontrado nenhum administrador");
+                    request.setAttribute("mensagem", "Não foi encontrado nenhum administrador registrado no sistema.");
                 } else {
                     request.setAttribute("adms", adms);
-                }
+                    request.setAttribute("mensagem", "Foram encontrados " + adms.size() + " administradores.");
 
-                // SE HOUVER PARAMETRO DE ORDENACAO, ORDENA A LISTA
-                if (tipoOrdenacao != null && !tipoOrdenacao.isEmpty() && adms != null && !adms.isEmpty()) {
-                    if (tipoOrdenacao.equals("idCrescente")) {
-                        adms = administradorFiltro.OrdenarIdCrece(adms);
-                    } else if (tipoOrdenacao.equals("idDecrescente")) {
-                        adms = administradorFiltro.OrdenarIdDecre(adms);
-                    } else if (tipoOrdenacao.equals("Az")) {
-                        adms = administradorFiltro.OrdenarEmailAz(adms);
-                    } else if (tipoOrdenacao.equals("Za")) {
-                        adms = administradorFiltro.OrdenarEmailZa(adms);
+
+                    // SE HOUVER PARAMETRO DE ORDENACAO, ORDENA A LISTA
+                    if (tipoOrdenacao != null && !tipoOrdenacao.isEmpty() && adms != null && !adms.isEmpty()) {
+                        if (tipoOrdenacao.equals("idCrescente")) {
+                            adms = administradorFiltro.OrdenarIdCrece(adms);
+                        } else if (tipoOrdenacao.equals("idDecrescente")) {
+                            adms = administradorFiltro.OrdenarIdDecre(adms);
+                        } else if (tipoOrdenacao.equals("Az")) {
+                            adms = administradorFiltro.OrdenarEmailAz(adms);
+                        } else if (tipoOrdenacao.equals("Za")) {
+                            adms = administradorFiltro.OrdenarEmailZa(adms);
+                        }
                     }
                 }
                 // PASSA A LISTA ORDENADA (OU ORIGINAL) PARA O JSP
@@ -86,7 +88,7 @@ public class BuscarAdmServlet extends HttpServlet {
         } catch (Exception e) {
             // TRATA ERROS INESPERADOS, MOSTRA NO CONSOLE E PASSA MENSAGEM PARA O JSP
             e.printStackTrace();
-            request.setAttribute("mensagemBusca", "Erro inesperado ao acessar o banco de dados.");
+            request.setAttribute("mensagem", "Erro inesperado ao acessar o banco de dados.");
         }
 
         // ENCAMINHA PARA O JSP RESPONSÁVEL PELO CRUD

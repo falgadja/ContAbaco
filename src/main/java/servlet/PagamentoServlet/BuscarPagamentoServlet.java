@@ -65,7 +65,7 @@ public class BuscarPagamentoServlet extends HttpServlet {
                 Pagamento pagamento = pagamentoDAO.buscarPorId(idNum);
 
                 if (pagamento == null) {
-                    request.setAttribute("mensagem", "Nenhum pagamento encontrado com esse ID.");
+                    request.setAttribute("mensagem", "Nenhum pagamento encontrado com esse ID. Tente novamente.");
                 } else {
                     pagamentos.add(pagamento);
                     request.setAttribute("mensagem", "Pagamento encontrado com sucesso.");
@@ -76,7 +76,7 @@ public class BuscarPagamentoServlet extends HttpServlet {
                 pagamentos = pagamentoDAO.listar();
 
                 if (pagamentos == null || pagamentos.isEmpty()) {
-                    request.setAttribute("mensagem", "Nenhum pagamento cadastrado.");
+                    request.setAttribute("mensagem", "Não foi encontrado nenhum pagamento registrado no sistema.");
                 } else {
 
                     // FILTRA POR TIPO DE PAGAMENTO SE NÃO FOR "todos"
@@ -91,7 +91,13 @@ public class BuscarPagamentoServlet extends HttpServlet {
                         pagamentos = pagamentoFiltro.filtrarPorData(pagamentos, inicioDt, fimDt);
                     }
 
-                    // ORDENACAO CASO TENHA SIDO ESCOLHIDA
+                    if (pagamentos.isEmpty()) {
+                        request.setAttribute("mensagem", "Não foi encontrado nenhum pagamento no sistema com os filtros aplicados.");
+                    } else {
+                        request.setAttribute("mensagem", "Foram encontrados " + pagamentos.size() + " pagamentos.");
+                    }
+
+                        // ORDENACAO CASO TENHA SIDO ESCOLHIDA
                     if (tipoOrdenacao != null && !tipoOrdenacao.isEmpty() && !pagamentos.isEmpty()) {
                         if (tipoOrdenacao.equals("idCrescente")) {
                             pagamentos = pagamentoFiltro.OrdenarIdCrece(pagamentos);

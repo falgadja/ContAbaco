@@ -40,11 +40,10 @@ public class BuscarPlanoServlet extends HttpServlet {
         String nome = request.getParameter("nome");
         String tipoOrdenacao = request.getParameter("tipoOrdenacao");
 
-        // CRIA OBJETOS NECESSÁRIOS: DAO, FILTRO, LISTA E MENSAGEM EXIBIÇÃO
+        // CRIA OBJETOS NECESSÁRIOS: DAO, FILTRO E LISTA
         PlanoDAO planoDAO = new PlanoDAO();
         PlanoFiltro planoFiltro = new PlanoFiltro();
         List<Plano> planos = new ArrayList<>();
-        String mensagemExibicao = null;
 
         try {
             // PESQUISA POR NOME SE INFORMADO
@@ -65,9 +64,9 @@ public class BuscarPlanoServlet extends HttpServlet {
                 planos = listaCompleta;
 
                 if (planos.isEmpty()) {
-                    mensagemExibicao = "Não foi encontrado nenhum registrado no sistema.";
+                    request.setAttribute("mensagem", "Não foi encontrado nenhum plano registrado no sistema.");
                 } else {
-                    mensagemExibicao = "Foram encontrados " + planos.size() + " planos.";
+                    request.setAttribute("mensagem", "Foram encontrados " + planos.size() + " planos.");
                 }
 
                 // ORDENACAO CASO TENHA SIDO ESCOLHIDA

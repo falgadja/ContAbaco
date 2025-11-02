@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import model.Empresa;
 import model.Funcionario;
 
 import java.io.IOException;
@@ -32,8 +33,6 @@ public class BuscarFuncionarioServlet extends HttpServlet {
         // PEGANDO MENSAGENS TEMPORÁRIAS DA SESSÃO (PADRÃO PRG)
         HttpSession session = request.getSession();
         String mensagem = (String) session.getAttribute("mensagem");
-        String mensagemDeletar = (String) session.getAttribute("mensagemDeletar");
-
         if (mensagem != null) {
             request.setAttribute("mensagem", mensagem); // COLOCA MENSAGEM NO REQUEST
             session.removeAttribute("mensagem"); // REMOVE DA SESSÃO PRA NÃO REPETIR
@@ -48,43 +47,33 @@ public class BuscarFuncionarioServlet extends HttpServlet {
         FuncionarioDAO funcionarioDAO = new FuncionarioDAO();
         FuncionarioFiltro funcionarioFiltro = new FuncionarioFiltro();
         List<Funcionario> funcionarios = new ArrayList<>();
-        String mensagemExibicao = null;
 
         try {
-            // LISTA TODOS OS FUNCIONÁRIOS INICIALMENTE
-            funcionarios = funcionarioDAO.listar();
-
-            if (funcionarios == null || funcionarios.isEmpty()) {
-                request.setAttribute("mensagem", "Nenhum funcionário encontrado.");
-            }
-
             // PESQUISA POR NOME SE INFORMADO
-            if (nome != null && !nome.isBlank()) {
-                final String nomeLower = nome.trim().toLowerCase();
-
-                // FILTRA FUNCIONÁRIOS PELO NOME INFORMADO
-                funcionarios = funcionarios.stream()
-                        .filter(f -> f.getNome() != null && f.getNome().toLowerCase().contains(nomeLower))
-                        .collect(Collectors.toList());
-
-                mensagemExibicao = "Filtrando por nome: foram encontrados " + funcionarios.size() + " funcionários.";
-
+            if (nome != null && !nome.trim().isEmpty()) {
+                funcionarios = funcionarioDAO.buscarPorNome(nome);
+                if (funcionarios == null) {
+                    request.setAttribute("mensagem", "Nenhum funcionário encontrado com esse nome. Tente novamente.");
+                } else {
+                    request.setAttribute("mensagem", "Funcionários encontrados com sucesso.");
+                    request.setAttribute("funcionarios", funcionarios);
+                }
             } else {
-                // SE NOME NÃO INFORMADO, LISTA TODOS FUNCIONÁRIOS (REPETIÇÃO PARA CASO NOME NULO)
+                // SE NOME NÃO INFORMADO, LISTA TODOS FUNCIONÁRIOS
                 funcionarios = funcionarioDAO.listar();
-
                 if (funcionarios == null || funcionarios.isEmpty()) {
-                    request.setAttribute("mensagem", "Nenhum funcionário encontrado.");
+                    request.setAttribute("mensagem", "Não foi encontrado nenhum funcionário registrado no sistema.");
                 } else {
                     // FILTRA POR ID DA EMPRESA SE INFORMADO
                     if (idEmpresa != null && !idEmpresa.isEmpty()) {
                         int idEmpresaNum = Integer.parseInt(idEmpresa);
                         funcionarios = funcionarioFiltro.filtrarPorIdEmpresa(funcionarios, idEmpresaNum);
-                        if (funcionarios.isEmpty()) {
-                            request.setAttribute("mensagem", "Nenhum funcionário encontrado para essa empresa.");
-                        } else {
-                            request.setAttribute("mensagem", "Funcionários encontrados para a empresa informada.");
-                        }
+                    }
+
+                    if (funcionarios.isEmpty()) {
+                        request.setAttribute("mensagem", "Não foi encontrado nenhum funcionário no sistema com os filtros aplicados.");
+                    } else {
+                        request.setAttribute("mensagem", "Foram encontrados " + funcionarios.size() + " funcionários.");
                     }
 
                     // ORDENACAO CASO TENHA SIDO ESCOLHIDA

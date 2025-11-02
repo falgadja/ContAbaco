@@ -52,49 +52,51 @@ public class BuscarEmpresaServlet extends HttpServlet {
             if (nome != null && !nome.trim().isEmpty()) {
                 Empresa empresa = empresaDAO.buscarPorNome(nome);
                 if (empresa == null) {
-                    request.setAttribute("mensagemBusca", "Não foi encontrado nenhuma empresa com esse nome, digite novamente.");
+                    request.setAttribute("mensagem", "Nenhuma empresa encontrada com esse e-mail. Tente novamente.");
                 } else {
                     List<Empresa> lista = new ArrayList<>();
                     lista.add(empresa);
                     empresas = lista;
-                    request.setAttribute("mensagem", "Empresa encontrada.");
+                    request.setAttribute("mensagem", "Empresa encontrada com sucesso.");
                     request.setAttribute("empresas", empresas);
                 }
             } else {
                 // SE NAO INFORMAR NOME, LISTA TODAS AS EMPRESAS
                 empresas = empresaDAO.listar();
                 if (empresas == null || empresas.isEmpty()) {
-                    request.setAttribute("mensagemLista", "Não foi encontrado nenhuma empresa");
+                    request.setAttribute("mensagem", "Não foi encontrado nenhuma empresa registrada no sistema.");
                 } else {
                     request.setAttribute("empresas", empresas);
-                }
 
-                // FILTRO POR QUANTIDADE DE FUNCIONÁRIOS SE MIN E MAX FOREM INFORMADOS
-                if (min != null && !min.isEmpty() && max != null && !max.isEmpty()) {
-                    int minNum = Integer.parseInt(min);
-                    int maxNum = Integer.parseInt(max);
-                    empresas = empresaFiltro.filtrarPorQtdFuncionario(empresas, minNum, maxNum);
-                    if (empresas.isEmpty()) {
-                        request.setAttribute("mensagem", "Não foram encontradas empresas entre essa faixa de funcionários");
-                    } else {
-                        request.setAttribute("mensagem", "funcionários encontrados.");
+
+                    // FILTRO POR QUANTIDADE DE FUNCIONÁRIOS SE MIN E MAX FOREM INFORMADOS
+                    if (min != null && !min.isEmpty() && max != null && !max.isEmpty()) {
+                        int minNum = Integer.parseInt(min);
+                        int maxNum = Integer.parseInt(max);
+                        empresas = empresaFiltro.filtrarPorQtdFuncionario(empresas, minNum, maxNum);
                     }
-                }
 
-                // ORDENACAO CASO TENHA SIDO ESCOLHIDA
-                if (tipoOrdenacao != null && !tipoOrdenacao.isEmpty() && empresas != null && !empresas.isEmpty()) {
-                    if (tipoOrdenacao.equals("idCrescente")) {
-                        empresas = empresaFiltro.OrdenarIdCrece(empresas);
-                    } else if (tipoOrdenacao.equals("idDecrescente")) {
-                        empresas = empresaFiltro.OrdenarIdDecre(empresas);
-                    } else if (tipoOrdenacao.equals("Az")) {
-                        empresas = empresaFiltro.OrdenarNomeAz(empresas);
-                    } else if (tipoOrdenacao.equals("Za")) {
-                        empresas = empresaFiltro.OrdenarNomeZa(empresas);
-                    } else if (tipoOrdenacao.equals("qtndFuncionarioCrescente")) {
-                        empresas = empresaFiltro.OrdenarQntdFuncionarioCrece(empresas);
-                    } else if (tipoOrdenacao.equals("qtndFuncionarioDecrescente")) {
-                        empresas = empresaFiltro.OrdenarQntdFuncionarioDecre(empresas);
+                    if (empresas.isEmpty()) {
+                        request.setAttribute("mensagem", "Não foi encontrado nenhuma empresa no sistema com os filtros aplicados.");
+                    } else {
+                        request.setAttribute("mensagem", "Foram encontradas " + empresas.size() + " empresas.");
+                    }
+
+                    // ORDENACAO CASO TENHA SIDO ESCOLHIDA
+                    if (tipoOrdenacao != null && !tipoOrdenacao.isEmpty() && empresas != null && !empresas.isEmpty()) {
+                        if (tipoOrdenacao.equals("idCrescente")) {
+                            empresas = empresaFiltro.OrdenarIdCrece(empresas);
+                        } else if (tipoOrdenacao.equals("idDecrescente")) {
+                            empresas = empresaFiltro.OrdenarIdDecre(empresas);
+                        } else if (tipoOrdenacao.equals("Az")) {
+                            empresas = empresaFiltro.OrdenarNomeAz(empresas);
+                        } else if (tipoOrdenacao.equals("Za")) {
+                            empresas = empresaFiltro.OrdenarNomeZa(empresas);
+                        } else if (tipoOrdenacao.equals("qtndFuncionarioCrescente")) {
+                            empresas = empresaFiltro.OrdenarQntdFuncionarioCrece(empresas);
+                        } else if (tipoOrdenacao.equals("qtndFuncionarioDecrescente")) {
+                            empresas = empresaFiltro.OrdenarQntdFuncionarioDecre(empresas);
+                        }
                     }
                 }
 

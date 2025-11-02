@@ -58,12 +58,12 @@ public class BuscarEnderecoServlet extends HttpServlet {
                     Endereco endereco = enderecoDAO.buscarPorCEP(Integer.parseInt(cepValidado));
                     if (endereco != null) {
                         enderecos.add(endereco);
-                        mensagem = "Endereço encontrado com sucesso.";
+                        request.setAttribute("mensagem", "Endereço encontrado com sucesso.");
                     } else {
-                        mensagem = "Nenhum endereço encontrado com esse CEP.";
+                        request.setAttribute("mensagem", "Nenhum endereço encontrado com esse CEP. Tente novamente.");
                     }
-                } else {
-                    mensagem = "CEP inválido. Verifique e tente novamente.";
+                } else{
+                    request.setAttribute("mensagem", "CEP inválido. Verifique e tente novamente.");
                 }
             } else {
                 // LISTA TODOS OS ENDEREÇOS SE CEP NÃO FOR INFORMADO
@@ -76,9 +76,9 @@ public class BuscarEnderecoServlet extends HttpServlet {
 
                 // DEFINE MENSAGEM DE ACORDO COM O RESULTADO
                 if (enderecos.isEmpty()) {
-                    mensagem = "Nenhum endereço encontrado para os filtros aplicados.";
+                    request.setAttribute("mensagem", "Não foi encontrado nenhum endereço no sistema com os filtros aplicados.");
                 } else {
-                    mensagem = "Endereços encontrados com sucesso.";
+                    request.setAttribute("mensagem", "Foram encontrados " + enderecos.size() + " endereços.");
                 }
 
                 // ORDENACAO CASO TENHA SIDO ESCOLHIDA

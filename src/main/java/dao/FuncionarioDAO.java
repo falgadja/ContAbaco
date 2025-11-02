@@ -116,7 +116,7 @@ public class FuncionarioDAO {
 
 
 
-    // BUSCAR PELO EMAIL E RETORNAR A SENHA (Mantido - Essencial para Login)
+    // BUSCAR PELO EMAIL E RETORNAR A SENHA
     public String buscarHashPorEmail(String email) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
@@ -124,10 +124,10 @@ public class FuncionarioDAO {
         String hash = null;
 
         try (
-                PreparedStatement stmt = con.prepareStatement(sql)) {
+                PreparedStatement pst = con.prepareStatement(sql)) {
 
-            stmt.setString(1, email);
-            ResultSet rs = stmt.executeQuery();
+            pst.setString(1, email);
+            ResultSet rs = pst.executeQuery();
 
             if (rs.next()) {
                 hash = rs.getString("senha");
@@ -140,8 +140,40 @@ public class FuncionarioDAO {
         return hash;
     }
 
+    // READ - LISTAR PELO NOME OS FUNCIONÁRIOS
+    public List<Funcionario> buscarPorNome(String nome) {
+        Conexao conexao = new Conexao();
+        Connection con = conexao.conectar();
+        List<Funcionario> funcionarios = new ArrayList<>();
+        String sql = "SELECT * FROM FUNCIONARIO WHERE nome = ?";
 
-    // READ - LISTAR TODOS FUNCIONARIOS (Mantido - Usado para carregar dados brutos)
+        try {
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, nome);
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                funcionarios.add(new Funcionario(
+                        rs.getInt("id"),
+                        rs.getString("nome"),
+                        rs.getString("sobrenome"),
+                        rs.getTimestamp("data_nascimento").toLocalDateTime().toLocalDate(),
+                        rs.getString("email"),
+                        rs.getString("senha"),
+                        rs.getInt("id_empresa"),
+                        rs.getInt("id_setor")
+                ));
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        } finally {
+            conexao.desconectar(con);
+        }
+
+        return funcionarios;
+    }
+
+    // READ - LISTAR TODOS FUNCIONARIOS
     public List<Funcionario> listar() {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
@@ -173,7 +205,7 @@ public class FuncionarioDAO {
         return funcionarios;
     }
 
-    // UPDATE - ATUALIZAR FUNCIONARIO (Mantido)
+    // UPDATE - ATUALIZAR FUNCIONARIO
     public int atualizar(Funcionario funcionario) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
@@ -202,7 +234,7 @@ public class FuncionarioDAO {
         return retorno; // retorna número de linhas alteradas ou -1 se erro
     }
 
-    // DELETE - DELETAR FUNCIONARIO (Mantido)
+    // DELETE - DELETAR FUNCIONARIO
     public int deletar(int id) {
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();

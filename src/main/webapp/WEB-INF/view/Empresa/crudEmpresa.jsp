@@ -80,6 +80,10 @@
             <button type="submit" class="botao-filtrar"><i class="fa-solid fa-filter"></i> Filtrar</button>
         </form>
 
+        <c:if test="${not empty mensagem}">
+            <p class="mensagem">${mensagem}</p>
+        </c:if>
+
         <div class="tabela tabela-adm empresa-style">
             <div class="tabela-container">
                 <c:choose>
