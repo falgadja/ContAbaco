@@ -1,7 +1,7 @@
 :root {
     --cor_falgadja_1: #1800CC;
     --cor_falgadja_2: #0C0066;
-    --cinza: #666666; /* AJUSTADO: De #ffffff para #666666 para o subtítulo ser visível */
+    --cinza: #666666;
 }
 * {
     box-sizing: border-box;
@@ -15,10 +15,10 @@ html, body, .container {
 }
 .container {
     display: flex;
-    align-items: flex-start; /* MUDANÇA: de 'center' para 'flex-start' para alinhar ao topo */
+    align-items: flex-start;
     justify-content: center;
-    overflow-y: auto;      /* MUDANÇA: Adiciona rolagem vertical se o conteúdo for muito alto */
-    padding: 20px 0;       /* MUDANÇA: Adiciona um respiro em cima e embaixo */
+    overflow-y: auto;
+    padding: 20px 0;
 }
 .title {
     font-size: 32px; font-weight: 800; color: var(--cor_falgadja_1); text-align: center;
