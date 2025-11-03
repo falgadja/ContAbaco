@@ -1,9 +1,6 @@
 package filtros;
 
 import model.Empresa;
-import model.Pagamento;
-
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 

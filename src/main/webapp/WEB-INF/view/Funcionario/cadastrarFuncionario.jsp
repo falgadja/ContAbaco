@@ -28,7 +28,7 @@
         <form action="${pageContext.request.contextPath}/funcionarios-create" method="post" target="_top">
             <h2>Cadastre seu funcionário</h2>
             <br>
-
+            <br>
             <div class="field-group">
                 <label for="nome">Nome</label>
                 <input type="text" id="nome" name="nome" placeholder="Nome do funcionário" maxlength="50" required>

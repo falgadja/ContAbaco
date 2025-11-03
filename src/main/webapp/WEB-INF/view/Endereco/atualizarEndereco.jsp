@@ -9,7 +9,6 @@
 <h2>Atualizar Endereço</h2>
 <link rel="stylesheet" href="<%= request.getContextPath() %>/css/atualizar.css">
 
-
 <form id="formEndereco" action="<%= request.getContextPath() %>/endereco-update" method="post">
     <input type="hidden" name="id" value="<%= endereco.getId() %>">
     <input type="hidden" name="idEmpresa" value="<%= empresa.getId() %>">
@@ -38,17 +37,13 @@
     <button type="submit">Atualizar</button>
 </form>
 
-<!-- JS corrigido -->
 <script>
     document.getElementById('formEndereco').addEventListener('submit', function(e){
-        e.preventDefault();
+        e.preventDefault(); // previne reload padrão
 
-        // Converter FormData em URLSearchParams para enviar no formato x-www-form-urlencoded
         const formData = new FormData(this);
         const params = new URLSearchParams();
-        formData.forEach((value, key) => {
-            params.append(key, value);
-        });
+        formData.forEach((value, key) => params.append(key, value));
 
         fetch(this.action, {
             method: 'POST',
@@ -56,7 +51,21 @@
             body: params
         })
             .then(response => response.text())
-            .then(msg => alert(msg))
-            .catch(err => console.error(err));
+            .then(() => {
+                // Fecha o modal
+                const modal = window.parent.document.getElementById('inTableModal');
+                modal.classList.remove('open');
+                modal.setAttribute('aria-hidden', 'true');
+
+                // Limpa o iframe
+                window.parent.document.getElementById('modalFrame').src = 'about:blank';
+
+                // Recarrega o CRUD de endereços
+                window.parent.location.reload();
+            })
+            .catch(err => {
+                console.error('Erro ao atualizar endereço:', err);
+                alert('Erro ao atualizar. Tente novamente.');
+            });
     });
 </script>

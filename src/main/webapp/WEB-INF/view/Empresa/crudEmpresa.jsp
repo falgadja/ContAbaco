@@ -67,17 +67,17 @@
             <input type="number" name="filtroMaxFuncionarios" id="filtroMaxFuncionarios" value="${param.filtroMaxFuncionarios != null ? param.filtroMaxFuncionarios : ''}" style="width:80px;">
 
             <label for="ordenacao">Ordenar:</label>
-            <select name="ordenacao" id="ordenacao">
+            <select name="tipoOrdenacao" id="ordenacao">
                 <option value="">-- Nenhum --</option>
                 <option value="idCrescente" ${param.ordenacao == 'idCrescente' ? 'selected' : ''}>ID Crescente</option>
                 <option value="idDecrescente" ${param.ordenacao == 'idDecrescente' ? 'selected' : ''}>ID Decrescente</option>
-                <option value="nomeAZ" ${param.ordenacao == 'nomeAZ' ? 'selected' : ''}>Nome (A-Z)</option>
-                <option value="nomeZA" ${param.ordenacao == 'nomeZA' ? 'selected' : ''}>Nome (Z-A)</option>
+                <option value="nomeAz" ${param.ordenacao == 'nomeAZ' ? 'selected' : ''}>Nome (A-Z)</option>
+                <option value="nomeZa" ${param.ordenacao == 'nomeZA' ? 'selected' : ''}>Nome (Z-A)</option>
                 <option value="funcionariosCrescente" ${param.ordenacao == 'funcionariosCrescente' ? 'selected' : ''}>Qtd. Funcionários ↑</option>
                 <option value="funcionariosDecrescente" ${param.ordenacao == 'funcionariosDecrescente' ? 'selected' : ''}>Qtd. Funcionários ↓</option>
             </select>
 
-            <button type="submit" class="botao-filtrar"><i class="fa-solid fa-filter"></i> Filtrar</button>
+            <button type="submit" class="botao-filtrar"> Filtrar</button>
         </form>
 
         <c:if test="${not empty mensagem}">
@@ -87,7 +87,7 @@
         <div class="tabela tabela-adm empresa-style">
             <div class="tabela-container">
                 <c:choose>
-                    <c:when test="${not empty listaEmpresas}">
+                    <c:when test="${not empty empresas}">
                         <table>
                             <thead>
                             <tr>
@@ -102,7 +102,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <c:forEach var="empresa" items="${listaEmpresas}">
+                            <c:forEach var="empresa" items="${empresas}">
                                 <tr>
                                     <td>${empresa.id}</td>
                                     <td>${empresa.cnpj}</td>
@@ -114,6 +114,9 @@
                                     <td class="acoes">
                                         <button class="btn" onclick="abrirModalEditar(${empresa.id})" title="Editar">
                                             <i class="fa-solid fa-pen"></i>
+                                        </button>
+                                        <button class="btn" title="Detalhes" onclick="abrirModalDetalhes(${empresa.id})">
+                                            <i class="fa-solid fa-info"></i>
                                         </button>
 
                                         <form action="${pageContext.request.contextPath}/empresa-delete" method="post" style="display:inline;"
@@ -168,6 +171,11 @@
 
     window.abrirModalEditar = id => {
         frame.src = '${pageContext.request.contextPath}/empresa-update?id=' + id + '&modal=1';
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden', 'false');
+    };
+    window.abrirModalDetalhes = function (id) {
+        frame.src = '${pageContext.request.contextPath}/detalhes-empresa?id=' + id;
         modal.classList.add('open');
         modal.setAttribute('aria-hidden', 'false');
     };

@@ -133,6 +133,6 @@ public class AtualizarEnderecoServlet extends HttpServlet {
         }
 
         // REDIRECIONA PARA LISTAGEM DE ENDEREÇOS
-        response.sendRedirect(request.getContextPath() + "/enderecos");
+        response.sendRedirect(request.getContextPath() + "/endereco");
     }
 }

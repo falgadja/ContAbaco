@@ -409,3 +409,26 @@ td.acoes .btn:hover {
         transform: translate(-50%, -45%);
     }
 }
+/* ==========================
+   ESTILO DA TABELA AJUSTADO
+   ========================== */
+
+table {
+    width: auto;                  /* tabela se ajusta ao conteúdo */
+    border-collapse: collapse;    /* remove espaçamentos entre células */
+    table-layout: auto;           /* deixa as células se expandirem */
+    overflow-x: visible;          /* permite crescer pro lado */
+}
+
+th, td {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    white-space: nowrap;          /* impede quebra de linha */
+    overflow: visible;            /* mostra todo o conteúdo */
+    text-overflow: clip;          /* garante que nada seja cortado */
+}
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}

@@ -77,15 +77,16 @@
                 <option value="dataCrescente" ${param.tipoOrdenacao == 'dataCrescente' ? 'selected' : ''}>Data Crescente</option>
                 <option value="dataDecrescente" ${param.tipoOrdenacao == 'dataDecrescente' ? 'selected' : ''}>Data Decrescente</option>
             </select>
-
             <label for="tipos">Tipo de pagamento:</label>
             <select name="tipos" id="tipos">
-                <option value="todos">-- Todos --</option>
-                <option value="PIX" ${param.tipos == 'PIX' ? 'selected' : ''}>PIX</option>
-                <option value="Boleto" ${param.tipos == 'Boleto' ? 'selected' : ''}>Boleto</option>
-                <option value="Cartão" ${param.tipos == 'Cartão' ? 'selected' : ''}>Cartão</option>
-                <option value="Transferência" ${param.tipos == 'Transferência' ? 'selected' : ''}>Transferência</option>
+                <option value="todos" ${fn:contains(paramValues.tipos, 'todos') ? 'selected' : ''}>-- Todos --</option>
+                <option value="Dinheiro" ${fn:contains(paramValues.tipos, 'Dinheiro') ? 'selected' : ''}>Dinheiro</option>
+                <option value="Boleto" ${fn:contains(paramValues.tipos, 'Boleto') ? 'selected' : ''}>Boleto</option>
+                <option value="Cartão Débito" ${fn:contains(paramValues.tipos, 'Cartão Débito') ? 'selected' : ''}>Cartão Débito</option>
+                <option value="Cartão Crédito" ${fn:contains(paramValues.tipos, 'Cartão Crédito') ? 'selected' : ''}>Cartão Crédito</option>
+                <option value="Transferência" ${fn:contains(paramValues.tipos, 'Transferência') ? 'selected' : ''}>Transferência</option>
             </select>
+
 
             <label for="inicio">Data início:</label>
             <input type="date" name="inicio" id="inicio" value="${param.inicio}">

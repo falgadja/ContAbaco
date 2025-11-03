@@ -70,8 +70,8 @@
                     <option value="Az">Email (A-Z)</option>
                     <option value="Za">Email (Z-A)</option>
                 </select>
+                <button type="submit" class="botao-filtrar"> Filtrar</button>
 
-                <button type="submit">Filtrar</button>
             </form>
 
             <c:if test="${not empty mensagem}">

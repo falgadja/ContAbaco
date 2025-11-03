@@ -25,7 +25,8 @@
 
         <form action="${pageContext.request.contextPath}/empresa-create" method="post" target="_top">
             <h2>Cadastre sua empresa</h2>
-
+            <br>
+            <br>
             <div class="field-group">
                 <label for="nomeEmpresa">Nome da Empresa</label>
                 <input type="text" id="nomeEmpresa" name="nomeEmpresa" placeholder="Digite o nome da sua empresa" required>

@@ -88,20 +88,20 @@ public class BuscarEmpresaServlet extends HttpServlet {
                             empresas = empresaFiltro.OrdenarIdCrece(empresas);
                         } else if (tipoOrdenacao.equals("idDecrescente")) {
                             empresas = empresaFiltro.OrdenarIdDecre(empresas);
-                        } else if (tipoOrdenacao.equals("Az")) {
+                        } else if (tipoOrdenacao.equals("nomeAz")) {
                             empresas = empresaFiltro.OrdenarNomeAz(empresas);
-                        } else if (tipoOrdenacao.equals("Za")) {
+                        } else if (tipoOrdenacao.equals("nomeZa")) {
                             empresas = empresaFiltro.OrdenarNomeZa(empresas);
-                        } else if (tipoOrdenacao.equals("qtndFuncionarioCrescente")) {
+                        } else if (tipoOrdenacao.equals("funcionarioCrescente")) {
                             empresas = empresaFiltro.OrdenarQntdFuncionarioCrece(empresas);
-                        } else if (tipoOrdenacao.equals("qtndFuncionarioDecrescente")) {
+                        } else if (tipoOrdenacao.equals("funcionarioDecrescente")) {
                             empresas = empresaFiltro.OrdenarQntdFuncionarioDecre(empresas);
                         }
                     }
                 }
 
                 // DEFINE LISTA FINAL COMO ATRIBUTO DO REQUEST
-                request.setAttribute("listaEmpresas", empresas);
+                request.setAttribute("empresas", empresas);
             }
 
         } catch(NumberFormatException nfe){

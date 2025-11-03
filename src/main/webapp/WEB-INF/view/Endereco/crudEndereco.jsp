@@ -9,10 +9,11 @@
     <link rel="icon" href="${pageContext.request.contextPath}/img/logo%20azul%20bonito%20sem%20fundo%202%20(1).png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/crud.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/crud.css">
 </head>
 <body>
 <div class="esquerda">
+    <!-- Sidebar -->
     <div class="sidebar">
         <div class="aplicativo">
             <div class="logo">
@@ -27,16 +28,11 @@
 
         <div class="nav">
             <a href="${pageContext.request.contextPath}/adm" class="botao"><img src="${pageContext.request.contextPath}/img/icone-adm-azul.png" alt="" style="width: 21px; height: 22px;"> Adm</a>
-
             <a href="${pageContext.request.contextPath}/empresas" class="botao"><img src="${pageContext.request.contextPath}/img/icone-empresa-azul.png" alt="" style="width: 20px; height: 18px;"> Empresas</a>
-
             <a href="${pageContext.request.contextPath}/funcionarios" class="botao"><img src="${pageContext.request.contextPath}/img/icone-funcionario-azul.png" alt="" style="width: 19px; height: 20px;"> Funcionários</a>
-
-            <a href="${pageContext.request.contextPath}/planos" class="botao"><img src="${pageContext.request.contextPath}/img/icone-plano-azul.png" alt="" style="width: 18px; height: 20px;;"> Plano</a>
-
+            <a href="${pageContext.request.contextPath}/planos" class="botao"><img src="${pageContext.request.contextPath}/img/icone-plano-azul.png" alt="" style="width: 18px; height: 20px;"> Plano</a>
             <a href="${pageContext.request.contextPath}/pagamento" class="botao"><img src="${pageContext.request.contextPath}/img/icone-pagamento-azul.png" alt="" style="width: 18px; height: 18px;"> Pagamento</a>
-
-            <a href="${pageContext.request.contextPath}/endereco" class="botao selecionado"><img src="${pageContext.request.contextPath}/img/icone-endereco-branco.png" alt="" style="width: 15px; height: 20px"> Endereços</a>
+            <a href="${pageContext.request.contextPath}/endereco" class="botao selecionado"><img src="${pageContext.request.contextPath}/img/icone-endereco-branco.png" alt="" style="width: 15px; height: 20px;"> Endereços</a>
         </div>
 
         <div class="sair">
@@ -44,6 +40,7 @@
         </div>
     </div>
 
+    <!-- Main -->
     <div class="main">
         <div class="titulos">
             <div>
@@ -56,32 +53,35 @@
             <button id="openModal" class="botao-add" type="button"><img src="${pageContext.request.contextPath}/img/icone-adicionar.png" alt="" style="width: 20px; height: 20px;"> Adicionar Novo</button>
         </div>
 
+        <!-- Formulário de Filtros -->
         <form action="${pageContext.request.contextPath}/endereco" method="get" class="filtros">
             <label for="cep">CEP:</label>
-            <input type="text" name="cep" id="cep" placeholder="Digite o CEP" value="${param.cep}">
+            <input type="text" name="cep" id="cep" placeholder="Digite o CEP" value="${cepParam}">
 
             <label for="estado">Estado:</label>
             <select name="estado" id="estado">
-                <option value="todos">-- Todos --</option>
+                <option value="">-- Todos --</option>
                 <c:forEach var="uf" items="${['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO']}">
-                    <option value="${uf}" ${param.estado == uf ? 'selected' : ''}>${uf}</option>
+                    <option value="${uf}" ${estadoSelecionado == uf ? 'selected' : ''}>${uf}</option>
                 </c:forEach>
             </select>
 
             <label for="tipoOrdenacao">Ordenar:</label>
             <select name="tipoOrdenacao" id="tipoOrdenacao">
                 <option value="">-- Nenhum --</option>
-                <option value="idCrescente" ${param.tipoOrdenacao == 'idCrescente' ? 'selected' : ''}>ID Crescente</option>
-                <option value="idDecrescente" ${param.tipoOrdenacao == 'idDecrescente' ? 'selected' : ''}>ID Decrescente</option>
+                <option value="idCrescente" ${tipoOrdenacao == 'idCrescente' ? 'selected' : ''}>ID Crescente</option>
+                <option value="idDecrescente" ${tipoOrdenacao == 'idDecrescente' ? 'selected' : ''}>ID Decrescente</option>
             </select>
 
             <button type="submit">Filtrar</button>
         </form>
 
+        <!-- Mensagem -->
         <c:if test="${not empty mensagem}">
             <p class="mensagem">${mensagem}</p>
         </c:if>
 
+        <!-- Tabela de Endereços -->
         <div class="tabela func-style">
             <div class="tabela-container">
                 <c:choose>
@@ -133,6 +133,7 @@
                 </c:choose>
             </div>
 
+            <!-- Modal -->
             <div class="in-table-modal" id="inTableModal" role="dialog" aria-hidden="true">
                 <button class="modal-close" id="modalClose"><i class="fa-solid fa-xmark"></i></button>
                 <iframe id="modalFrame" src=""></iframe>

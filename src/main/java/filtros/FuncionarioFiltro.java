@@ -1,8 +1,6 @@
 package filtros;
 
 import model.Funcionario;
-import model.Pagamento;
-
 import java.util.ArrayList;
 import java.util.List;
 

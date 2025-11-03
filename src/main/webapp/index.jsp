@@ -34,7 +34,7 @@
                     </nav>
                     
                     <div class="botoes-acesso">
-                        <a href="${pageContext.request.contextPath}/login" target="_blank" class="botao-secundario">Entrar</a>
+                        <a href="${pageContext.request.contextPath}/login"  class="botao-secundario">Entrar</a>
                         <a href="/WEB-INF/view/Erros/erro.jsp" target="_blank" class="botao-principal">Cadastrar</a>
                     </div>
                 </div>

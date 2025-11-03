@@ -31,12 +31,11 @@
             <div class="field-group">
                 <label for="tipoPagto">Tipo de Pagamento</label>
                 <select id="tipoPagto" name="tipoPagto" required>
-                    <option value="">Selecione o tipo</option>
-                    <option value="Cartão Débito ">Cartão Débito</option>
-                    <option value="Boleto">Boleto</option>
-                    <option value="Dinheiro">Dinheiro</option>
-                    <option value="Cartão Crédito">Cartão Crédito</option>
-                    <option value="Transferencia">Transferência</option>
+                        <option value="Cartão Débito">Cartão Débito</option>
+                        <option value="Cartão Crédito">Cartão Crédito</option>
+                        <option value="Dinheiro">Dinheiro</option>
+                        <option value="Transferência">Transferência</option>
+                        <option value="Boleto">Boleto</option>
                 </select>
             </div>
             <div class="field-group">

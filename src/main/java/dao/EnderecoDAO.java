@@ -120,7 +120,7 @@ public class EnderecoDAO {
     }
 
     // READ - BUSCAR Endereco PELO CEP
-    public Endereco buscarPorCEP(int cep) {
+    public Endereco buscarPorCEP(String cep) { // <-- trocar int por String
         Conexao conexao = new Conexao();
         Connection con = conexao.conectar();
         Endereco endereco = null;
@@ -128,11 +128,11 @@ public class EnderecoDAO {
 
         try {
             PreparedStatement pst = con.prepareStatement(sql);
-            pst.setInt(1, cep);
+            pst.setString(1, cep); // <-- usar setString
 
             ResultSet rs = pst.executeQuery();
 
-            // Se encontrar algum endereço para a empresa, retorna o primeiro
+            // Se encontrar algum endereço, retorna o primeiro
             if (rs.next()) {
                 endereco = new Endereco(
                         rs.getInt("id"),

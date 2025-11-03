@@ -1,7 +1,6 @@
 package filtros;
 
 import model.Endereco;
-import model.Pagamento;
 
 import java.util.ArrayList;
 import java.util.List;
